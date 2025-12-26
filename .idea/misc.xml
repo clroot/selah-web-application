@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AIAssistantCustomInstructionsStorage">
+    <option name="instructions">
+      <map>
+        <entry key="AIAssistant.VCS.GenerateCommitMessage">
+          <value>
+            <AIAssistantStoredInstruction>
+              <option name="actionId" value="AIAssistant.VCS.GenerateCommitMessage" />
+              <option name="content" value="# 효과적인 커밋 메시지 작성 가이드&#10;&#10;변경 사항을 분석하여 다음 형식의 커밋 메시지를 한국어로 생성해주세요:&#10;&#10;```&#10;&lt;type&gt;(&lt;scope&gt;): &lt;제목&gt;&#10;&#10;&lt;본문&gt;&#10;```&#10;&#10;## type 카테고리:&#10;- feat: 새로운 기능 추가&#10;- fix: 버그 수정&#10;- docs: 문서 관련 변경&#10;- style: 코드 스타일 변경 (기능에 영향 없음)&#10;- refactor: 코드 리팩토링&#10;- test: 테스트 코드 추가/수정&#10;- chore: 빌드 프로세스, 도구 변경 등&#10;&#10;## 작성 규칙:&#10;1. 제목은 50자 이내, 명령문 현재 시제로 작성&#10;2. 제목 첫 글자는 대문자로 시작&#10;3. 제목 끝에 마침표 사용하지 않음&#10;4. 본문은 변경 이유와 내용을 자세히 설명 (필요시)&#10;5. 변경 사항 중 가장 중요한 내용에 초점을 맞춤&#10;&#10;## 주의사항:&#10;- 확인된 변경 사항만 포함하세요&#10;- 복잡한 변경의 경우 주요 변경점을 먼저 언급하세요&#10;- 한국어로 작성하세요" />
+            </AIAssistantStoredInstruction>
+          </value>
+        </entry>
+        <entry key="ij.vcs.review-buddy.summarize.short.github">
+          <value>
+            <AIAssistantStoredInstruction>
+              <option name="actionId" value="ij.vcs.review-buddy.summarize.short.github" />
+              <option name="content" value="# 효과적인 Pull Request 요약 작성 가이드&#10;&#10;변경 사항을 분석하여 다음 형식의 Pull Request 요약을 한국어로 생성해주세요:&#10;&#10;## PR 제목&#10;간결하고 명확하게 이 PR의 주요 목적 작성 (80자 이내)&#10;&#10;## 변경 사항 요약&#10;- 주요 변경사항 1&#10;- 주요 변경사항 2&#10;- 주요 변경사항 3&#10;&#10;## 상세 설명&#10;이 PR에서 수행한 작업에 대한 자세한 설명을 작성하세요. 다음 내용을 포함하는 것이 좋습니다:&#10;- 이 변경이 필요한 이유 (관련 이슈/문제점)&#10;- 이 PR이 해결하는 문제&#10;- 구현 방식에 대한 간략한 설명&#10;- 대안으로 고려했던 접근 방식 (있다면)&#10;&#10;## 테스트 방법&#10;이 변경 사항을 테스트하는 방법에 대한 설명:&#10;1. 어떤 환경에서 테스트했는지&#10;2. 어떤 테스트 케이스를 수행했는지&#10;3. 어떻게 재현할 수 있는지&#10;&#10;## 스크린샷 (선택사항)&#10;UI 변경이 있는 경우, 변경 전/후 스크린샷을 넣을 위치를 표시합니다.&#10;&#10;## 체크리스트&#10;- [ ] 코드 품질 검토 완료&#10;- [ ] 테스트 코드 작성/업데이트 완료&#10;- [ ] 문서 업데이트 완료 (필요한 경우)&#10;- [ ] 기존 기능에 영향 없음 확인&#10;- [ ] 성능 이슈 고려함&#10;&#10;## 관련 이슈&#10;관련 이슈 번호: #000&#10;&#10;변경된 코드 또는 작업 내용을 아래에 붙여넣으면, 위 가이드라인에 따라 효과적인 Pull Request 요약을 작성해드리겠습니다." />
+            </AIAssistantStoredInstruction>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
