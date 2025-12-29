@@ -14,15 +14,15 @@
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js (App Router) |
-| Language | TypeScript |
-| UI Components | shadcn/ui |
-| Styling | Tailwind CSS |
+| Category         | Technology             |
+|------------------|------------------------|
+| Framework        | Next.js (App Router)   |
+| Language         | TypeScript             |
+| UI Components    | shadcn/ui              |
+| Styling          | Tailwind CSS           |
 | State Management | TBD (Zustand, Jotai 등) |
-| Package Manager | pnpm |
-| Linting | ESLint, Prettier |
+| Package Manager  | pnpm                   |
+| Linting          | ESLint, Prettier       |
 
 ## 🚨 Critical Rules
 
@@ -39,25 +39,25 @@
 // ✅ Good
 const isEligibleUser = user.age >= 18 && user.isVerified && !user.isBanned;
 if (isEligibleUser) {
-  /* ... */
+    /* ... */
 }
 
 // ❌ Bad
 if (user.age >= 18 && user.isVerified && !user.isBanned) {
-  /* ... */
+    /* ... */
 }
 ```
 
 #### 네이밍 규칙
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Boolean 변수 | `is`, `has`, `should`, `can`, `will` 접두사 | `isLoading`, `hasError` |
-| 이벤트 핸들러 | `handle` 접두사 | `handleClick`, `handleSubmit` |
-| 데이터 페칭 | `fetch`, `get`, `load` 접두사 | `fetchPrayerTopics` |
-| 변환 함수 | `format`, `parse`, `transform` 접두사 | `formatDate` |
-| 검증 함수 | `validate`, `check` 접두사 | `validateEmail` |
-| 컴포넌트 | PascalCase | `PrayerTopicCard` |
+| Type       | Convention                               | Example                       |
+|------------|------------------------------------------|-------------------------------|
+| Boolean 변수 | `is`, `has`, `should`, `can`, `will` 접두사 | `isLoading`, `hasError`       |
+| 이벤트 핸들러    | `handle` 접두사                             | `handleClick`, `handleSubmit` |
+| 데이터 페칭     | `fetch`, `get`, `load` 접두사               | `fetchPrayerTopics`           |
+| 변환 함수      | `format`, `parse`, `transform` 접두사       | `formatDate`                  |
+| 검증 함수      | `validate`, `check` 접두사                  | `validateEmail`               |
+| 컴포넌트       | PascalCase                               | `PrayerTopicCard`             |
 
 ### 2. 폴더 구조 (필수)
 
@@ -88,6 +88,7 @@ src/
 ```
 
 **규칙:**
+
 - `app/` 폴더는 라우팅 전용
 - 비즈니스 로직은 `features/` 폴더에 작성
 - `components/ui/` 폴더는 외부 코드 전용 (수정 금지)
@@ -105,6 +106,7 @@ Infrastructure (api/)
 ```
 
 **절대 규칙:**
+
 - 하위 계층은 상위 계층을 import할 수 없음
 - Feature 간 직접 import 금지 (shared를 통해서만 공유)
 - API는 컴포넌트를 import할 수 없음
@@ -129,29 +131,32 @@ Infrastructure (api/)
 // ✅ Level 1: 순수 비즈니스 로직 - 반드시 격리
 // features/prayer-topic/utils/prayerCalculator.ts
 export function calculateAnsweredRate(topics: PrayerTopic[]): number {
-  const answered = topics.filter(t => t.status === 'ANSWERED').length;
-  return topics.length > 0 ? (answered / topics.length) * 100 : 0;
+    const answered = topics.filter(t => t.status === 'ANSWERED').length;
+    return topics.length > 0 ? (answered / topics.length) * 100 : 0;
 }
 
 // ✅ Level 2: 상태 관리 로직 - 반드시 격리
 // features/prayer-topic/hooks/usePrayerTopics.ts
 export function usePrayerTopics() {
-  const [topics, setTopics] = useState<PrayerTopic[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  // ...
-  return { topics, isLoading, fetchTopics };
+    const [topics, setTopics] = useState<PrayerTopic[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    // ...
+    return {topics, isLoading, fetchTopics};
 }
 
 // ✅ Level 3: UI 컴포넌트 - Next.js 사용 OK
 // features/prayer-topic/components/PrayerTopicCard.tsx
 import Link from 'next/link';
 
-export function PrayerTopicCard({ topic }: Props) {
-  return (
-    <Link href={`/prayer-topics/${topic.id}`}>
-      {/* ... */}
+export function PrayerTopicCard({topic}: Props) {
+    return (
+        <Link href = {`/prayer-topics/${topic.id}`
+}>
+    {/* ... */
+    }
     </Link>
-  );
+)
+    ;
 }
 ```
 
@@ -350,23 +355,23 @@ export type PrayerStatus = (typeof PrayerStatus)[keyof typeof PrayerStatus];
 
 ```typescript
 // 1. React/Framework
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, {useState, useEffect} from 'react';
+import {useRouter} from 'next/navigation';
 import Link from 'next/link';
 
 // 2. 외부 라이브러리
-import { z } from 'zod';
-import { format } from 'date-fns';
+import {z} from 'zod';
+import {format} from 'date-fns';
 
 // 3. 절대 경로 imports (@/)
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/features/auth/hooks/useAuth';
+import {Button} from '@/components/ui/button';
+import {useAuth} from '@/features/auth/hooks/useAuth';
 
 // 4. 상대 경로 imports
-import { PrayerTopicCard } from './PrayerTopicCard';
+import {PrayerTopicCard} from './PrayerTopicCard';
 
 // 5. 타입 imports
-import type { PrayerTopic } from '../types';
+import type {PrayerTopic} from '../types';
 
 // 6. 스타일 imports
 import styles from './PrayerTopic.module.css';
@@ -432,18 +437,18 @@ export default function NotFound() {
 
 ## ⚠️ Common Pitfalls (자주 하는 실수)
 
-| 실수 | 올바른 방법 |
-|------|-------------|
-| `any` 타입 사용 | 구체적인 타입 정의 |
-| `@ts-ignore` 사용 | 타입 에러 해결 |
+| 실수                  | 올바른 방법           |
+|---------------------|------------------|
+| `any` 타입 사용         | 구체적인 타입 정의       |
+| `@ts-ignore` 사용     | 타입 에러 해결         |
 | `eslint-disable` 사용 | 규칙 준수 (외부 코드 제외) |
-| props 5개 초과 | 객체로 묶거나 컴포넌트 분리 |
-| 중첩 3단계 초과 | 함수/컴포넌트 분리 |
-| Feature 간 직접 import | shared를 통해 공유 |
-| shadcn/ui 직접 수정 | 래퍼 컴포넌트 생성 |
-| API 직접 fetch | api 레이어 사용 |
-| 콘솔 로그 남김 | 제거 또는 개발 환경 조건부 |
-| 매직 넘버 사용 | 상수로 추출 |
+| props 5개 초과         | 객체로 묶거나 컴포넌트 분리  |
+| 중첩 3단계 초과           | 함수/컴포넌트 분리       |
+| Feature 간 직접 import | shared를 통해 공유    |
+| shadcn/ui 직접 수정     | 래퍼 컴포넌트 생성       |
+| API 직접 fetch        | api 레이어 사용       |
+| 콘솔 로그 남김            | 제거 또는 개발 환경 조건부  |
+| 매직 넘버 사용            | 상수로 추출           |
 
 ## 코드 생성 시 체크리스트
 
