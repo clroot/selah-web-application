@@ -23,6 +23,7 @@
 | State Management | TBD (Zustand, Jotai 등) |
 | Package Manager  | pnpm                   |
 | Linting          | ESLint, Prettier       |
+| Crypto           | Web Crypto API (AES-256-GCM, PBKDF2) |
 
 ## 🚨 Critical Rules
 
@@ -232,6 +233,255 @@ features/reflection/
 └── types/
     └── reflection.types.ts
 ```
+
+### Encryption (E2E 암호화)
+
+```
+features/encryption/
+├── components/
+│   ├── EncryptionSetupForm.tsx    # 암호화 비밀번호 설정
+│   ├── EncryptionUnlockForm.tsx   # 암호화 해제 (비밀번호 입력)
+│   ├── RecoveryKeyDisplay.tsx     # 복구 키 표시/복사
+│   └── RecoveryKeyInput.tsx       # 복구 키 입력
+├── hooks/
+│   ├── useEncryption.ts           # 암호화 상태 관리
+│   ├── useCrypto.ts               # 암호화/복호화 훅
+│   └── useEncryptionSetup.ts      # 설정 관련 훅
+├── api/
+│   └── encryption.api.ts
+├── lib/
+│   ├── crypto.ts                  # 순수 암호화 함수 (Web Crypto API)
+│   ├── keyDerivation.ts           # PBKDF2 키 파생
+│   └── recoveryKey.ts             # 복구 키 생성/검증
+├── types/
+│   └── encryption.types.ts
+└── utils/
+    └── encryption.utils.ts
+```
+
+---
+
+## E2E 암호화 - Frontend 구현 가이드
+
+클라이언트에서 모든 암호화/복호화를 수행합니다. **암호화 키는 절대 서버로 전송되지 않습니다.**
+
+### 암호화 흐름
+
+```
+[암호화 설정]
+1. 사용자가 암호화 비밀번호 입력
+2. crypto.getRandomValues()로 Salt 생성 (32 bytes)
+3. PBKDF2로 마스터 키 파생 (비밀번호 + Salt → 256-bit key)
+4. 복구 키 생성 (랜덤 256-bit → Base64 인코딩)
+5. 복구 키 해시 계산 (SHA-256)
+6. Salt + 복구 키 해시를 서버에 저장
+7. 마스터 키를 메모리/세션에 보관
+
+[데이터 암호화]
+1. 마스터 키 확인 (없으면 비밀번호 입력 요청)
+2. 랜덤 IV 생성 (12 bytes for GCM)
+3. AES-256-GCM으로 암호화
+4. IV + 암호문을 Base64 인코딩
+5. 서버로 전송
+
+[데이터 복호화]
+1. 서버에서 암호문(Base64) 수신
+2. Base64 디코딩 → IV + 암호문 분리
+3. AES-256-GCM으로 복호화
+4. 평문 반환
+```
+
+### 핵심 암호화 함수 (lib/crypto.ts)
+
+```typescript
+// ✅ 순수 함수로 구현 - 프레임워크 독립
+
+// 키 파생 (PBKDF2)
+export async function deriveKey(
+  password: string,
+  salt: Uint8Array
+): Promise<CryptoKey> {
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    'PBKDF2',
+    false,
+    ['deriveKey']
+  );
+
+  return crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt,
+      iterations: 100000,  // 최소 100,000 권장
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+
+// 암호화 (AES-256-GCM)
+export async function encrypt(
+  plaintext: string,
+  key: CryptoKey
+): Promise<string> {
+  const encoder = new TextEncoder();
+  const iv = crypto.getRandomValues(new Uint8Array(12));  // 12 bytes IV
+
+  const ciphertext = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    encoder.encode(plaintext)
+  );
+
+  // IV + ciphertext를 결합하여 Base64 인코딩
+  const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+  combined.set(iv);
+  combined.set(new Uint8Array(ciphertext), iv.length);
+
+  return btoa(String.fromCharCode(...combined));
+}
+
+// 복호화 (AES-256-GCM)
+export async function decrypt(
+  encrypted: string,
+  key: CryptoKey
+): Promise<string> {
+  const combined = Uint8Array.from(atob(encrypted), c => c.charCodeAt(0));
+  const iv = combined.slice(0, 12);
+  const ciphertext = combined.slice(12);
+
+  const plaintext = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    ciphertext
+  );
+
+  return new TextDecoder().decode(plaintext);
+}
+
+// Salt 생성
+export function generateSalt(): Uint8Array {
+  return crypto.getRandomValues(new Uint8Array(32));
+}
+
+// 복구 키 생성
+export function generateRecoveryKey(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  return btoa(String.fromCharCode(...bytes));
+}
+```
+
+### 암호화 Hook (hooks/useCrypto.ts)
+
+```typescript
+export function useCrypto() {
+  const [masterKey, setMasterKey] = useState<CryptoKey | null>(null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+
+  // 암호화 설정 (최초 1회)
+  const setupEncryption = useCallback(async (password: string) => {
+    const salt = generateSalt();
+    const key = await deriveKey(password, salt);
+    const recoveryKey = generateRecoveryKey();
+    const recoveryKeyHash = await hashRecoveryKey(recoveryKey);
+
+    // 서버에 salt, recoveryKeyHash 저장
+    await encryptionApi.setup({
+      salt: arrayBufferToBase64(salt),
+      recoveryKeyHash,
+    });
+
+    setMasterKey(key);
+    setIsUnlocked(true);
+
+    return recoveryKey;  // 사용자에게 표시 (1회만)
+  }, []);
+
+  // 암호화 해제 (세션 시작 시)
+  const unlock = useCallback(async (password: string) => {
+    const { data } = await encryptionApi.getSettings();
+    if (!data) throw new Error('암호화 설정이 없습니다');
+
+    const salt = base64ToArrayBuffer(data.salt);
+    const key = await deriveKey(password, salt);
+
+    setMasterKey(key);
+    setIsUnlocked(true);
+  }, []);
+
+  // 데이터 암호화
+  const encryptData = useCallback(async (plaintext: string) => {
+    if (!masterKey) throw new Error('암호화가 해제되지 않았습니다');
+    return encrypt(plaintext, masterKey);
+  }, [masterKey]);
+
+  // 데이터 복호화
+  const decryptData = useCallback(async (ciphertext: string) => {
+    if (!masterKey) throw new Error('암호화가 해제되지 않았습니다');
+    return decrypt(ciphertext, masterKey);
+  }, [masterKey]);
+
+  return {
+    isUnlocked,
+    setupEncryption,
+    unlock,
+    encryptData,
+    decryptData,
+  };
+}
+```
+
+### 기도제목 API 연동 예시
+
+```typescript
+// features/prayer-topic/hooks/usePrayerTopics.ts
+export function usePrayerTopics() {
+  const { encryptData, decryptData, isUnlocked } = useCrypto();
+  const [topics, setTopics] = useState<PrayerTopic[]>([]);
+
+  // 조회 시 복호화
+  const fetchTopics = useCallback(async () => {
+    const { data } = await prayerTopicApi.getAll();
+    if (!data) return;
+
+    const decrypted = await Promise.all(
+      data.map(async (topic) => ({
+        ...topic,
+        title: await decryptData(topic.title),
+        reflection: topic.reflection
+          ? await decryptData(topic.reflection)
+          : null,
+      }))
+    );
+    setTopics(decrypted);
+  }, [decryptData]);
+
+  // 저장 시 암호화
+  const createTopic = useCallback(async (title: string) => {
+    const encryptedTitle = await encryptData(title);
+    return prayerTopicApi.create({ title: encryptedTitle });
+  }, [encryptData]);
+
+  return { topics, fetchTopics, createTopic, isUnlocked };
+}
+```
+
+### ⚠️ Frontend 암호화 금지 사항
+
+| 금지 | 이유 |
+|------|------|
+| 암호화 키를 localStorage에 저장 | XSS 공격에 취약 |
+| 암호화 키를 서버로 전송 | E2E 보안 무력화 |
+| 하드코딩된 IV/Salt 사용 | 보안 취약점 |
+| 복구 키를 서버에 저장 요청 | 사용자만 보관해야 함 |
+| 암호화 비밀번호를 상태에 저장 | 키만 저장, 비밀번호는 즉시 폐기 |
+
+---
 
 ## 코딩 컨벤션
 
@@ -449,6 +699,9 @@ export default function NotFound() {
 | API 직접 fetch        | api 레이어 사용       |
 | 콘솔 로그 남김            | 제거 또는 개발 환경 조건부  |
 | 매직 넘버 사용            | 상수로 추출           |
+| 암호화 키를 localStorage에 저장 | 메모리/세션에만 보관 |
+| 암호화 키를 서버로 전송 | 클라이언트에만 존재해야 함 |
+| 하드코딩된 IV/Salt 사용 | 매번 랜덤 생성 필수 |
 
 ## 코드 생성 시 체크리스트
 
@@ -471,6 +724,16 @@ export default function NotFound() {
 - [ ] 외부 코드(shadcn/ui)를 수정하지 않았는가?
 - [ ] 비즈니스 로직이 프레임워크에서 분리되었는가?
 
+### E2E 암호화 체크리스트
+
+- [ ] 암호화 키가 메모리/세션에만 존재하는가? (localStorage 금지)
+- [ ] 암호화 키가 서버로 전송되지 않는가?
+- [ ] 민감 데이터(title, reflection, content) 저장 시 암호화하는가?
+- [ ] 민감 데이터 조회 시 복호화하는가?
+- [ ] IV/Salt가 매번 랜덤 생성되는가?
+- [ ] 복호화 실패 시 적절한 에러 처리가 되어 있는가?
+- [ ] 암호화 함수가 순수 함수로 lib/ 폴더에 분리되어 있는가?
+
 ## 금지 사항
 
 - `any` 타입 사용
@@ -482,6 +745,14 @@ export default function NotFound() {
 - index를 key로 사용 (정적 리스트 제외)
 - 패키지 매니저 혼용 (pnpm만 사용)
 - 외부 코드(shadcn/ui) 직접 수정
+
+### E2E 암호화 금지 사항
+
+- 암호화 키를 localStorage/sessionStorage에 저장 (메모리 상태로만 유지)
+- 암호화 키를 서버로 전송
+- 하드코딩된 IV/Salt 사용
+- 복구 키를 서버에 저장 요청
+- 암호화 비밀번호를 상태에 저장 (즉시 키 파생 후 폐기)
 
 ## 빠른 참조 명령어
 
