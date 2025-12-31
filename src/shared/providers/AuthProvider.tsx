@@ -40,18 +40,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const initializeAuth = async () => {
       try {
         // 백엔드에 세션 쿠키로 프로필 조회 시도
-        const { data: profile, error } = await memberApi.getMyProfile();
+        const result = await memberApi.getMyProfile();
+        console.log('[AuthProvider] getMyProfile result:', result);
+
+        const { data: profile, error } = result;
 
         if (error || !profile) {
           // 세션이 없거나 만료됨
+          console.log('[AuthProvider] No profile or error:', { error, profile });
           setInitialized();
           return;
         }
 
         // 세션이 유효하면 사용자 정보 설정
+        console.log('[AuthProvider] Setting user:', profile);
         setUser(profile);
-      } catch {
+      } catch (e) {
         // 네트워크 오류 등
+        console.error('[AuthProvider] Exception:', e);
         setInitialized();
       }
     };

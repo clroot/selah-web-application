@@ -63,6 +63,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
     }
 
     const json = await response.json();
+    console.log('[API Client] Response:', endpoint, { status: response.status, json });
 
     // 에러 응답 처리
     if (!response.ok || isApiErrorResponse(json)) {
@@ -91,6 +92,7 @@ function isApiErrorResponse(json: unknown): boolean {
     typeof json === 'object' &&
     json !== null &&
     'error' in json &&
+    (json as { error: unknown }).error !== null &&
     typeof (json as { error: unknown }).error === 'object'
   );
 }

@@ -1,0 +1,56 @@
+'use client';
+
+
+import { PrayerCard } from './PrayerCard';
+import { SectionHeader } from './SectionHeader';
+
+import type { Prayer } from '@/features/prayer/types/prayer.types';
+
+interface RecentPrayersPreviewProps {
+  prayers: Prayer[];
+  isLoading?: boolean;
+}
+
+/**
+ * 최근 기도문 미리보기 섹션
+ */
+export function RecentPrayersPreview({
+  prayers,
+  isLoading,
+}: RecentPrayersPreviewProps) {
+  if (isLoading) {
+    return (
+      <section className="px-6">
+        <SectionHeader title="최근 기도문" />
+        <div className="space-y-3">
+          {[1, 2].map((i) => (
+            <div
+              key={i}
+              className="h-[72px] animate-pulse rounded-2xl border border-sand bg-sand/30"
+            />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (prayers.length === 0) {
+    return null; // EmptyHomeState에서 처리
+  }
+
+  return (
+    <section className="px-6">
+      <SectionHeader title="최근 기도문" href="/prayers" />
+      <div className="space-y-3">
+        {prayers.map((prayer) => (
+          <PrayerCard
+            key={prayer.id}
+            id={prayer.id}
+            content={prayer.content}
+            createdAt={prayer.createdAt}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
