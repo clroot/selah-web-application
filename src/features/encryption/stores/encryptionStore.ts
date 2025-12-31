@@ -1,51 +1,72 @@
 import { create } from 'zustand';
 
 import { encryptionApi } from '@/features/encryption/api/encryption.api';
-import { uint8ArrayToBase64 } from '@/shared/lib/crypto/crypto';
 import {
+  cacheDEK,
+  loadCachedDEK,
+  clearDEKCache,
+  hasCachedDEK,
+} from '@/features/encryption/lib/dekCache';
+import {
+  uint8ArrayToBase64,
+  base64ToUint8Array,
+  generateSalt,
+  deriveClientKEK,
+  deriveCombinedKEK,
   generateDEK,
   encryptDEK,
   decryptDEK,
-} from '@/shared/lib/crypto/dek';
-import { deriveKEK, generateSalt } from '@/shared/lib/crypto/keyDerivation';
-import {
   generateRecoveryKey,
   formatRecoveryKey,
   hashRecoveryKey,
   encryptDEKWithRecoveryKey,
-} from '@/shared/lib/crypto/recoveryKey';
+} from '@/shared/lib/crypto';
 
 interface EncryptionState {
   isUnlocked: boolean;
   dek: CryptoKey | null;
+  isRestoring: boolean;
+  /** 설정 완료 후 표시할 복구 키 (1회만 표시) */
+  pendingRecoveryKey: string | null;
 }
 
 interface EncryptionActions {
   /**
    * 회원가입 시 암호화 설정
-   * @param password 로그인 비밀번호
+   * @param pin 6자리 숫자 PIN
    * @returns 포맷팅된 복구 키 (사용자에게 1회만 표시)
    */
-  setupEncryption: (password: string) => Promise<string>;
+  setupEncryption: (pin: string) => Promise<string>;
 
   /**
    * 로그인 시 암호화 해제
-   * @param password 로그인 비밀번호
+   * @param pin 6자리 숫자 PIN
    */
-  unlockWithPassword: (password: string) => Promise<void>;
+  unlockWithPIN: (pin: string) => Promise<void>;
 
   /**
-   * 비밀번호 변경 시 DEK 재암호화
-   * @param newPassword 새 비밀번호
+   * 캐시에서 DEK 복원 (페이지 새로고침 시)
+   * @returns 복원 성공 여부
    */
-  changePassword: (newPassword: string) => Promise<void>;
+  restoreFromCache: () => Promise<boolean>;
+
+  /**
+   * 캐시 존재 여부 확인 (빠른 체크)
+   */
+  hasCachedSession: () => boolean;
+
+  /**
+   * PIN 변경 시 DEK 재암호화
+   * @param newPIN 새 6자리 PIN
+   */
+  changePIN: (newPIN: string) => Promise<void>;
 
   /**
    * 복구 키로 DEK 복구
    * @param recoveryKey 복구 키 (포맷팅된 문자열)
-   * @param newPassword 새 비밀번호
+   * @param newPIN 새 6자리 PIN
    */
-  recoverWithKey: (recoveryKey: string, newPassword: string) => Promise<void>;
+  recoverWithKey: (recoveryKey: string, newPIN: string) => Promise<void>;
 
   /**
    * 복구 키 재생성
@@ -57,25 +78,29 @@ interface EncryptionActions {
    * 암호화 잠금 (로그아웃 시)
    */
   lock: () => void;
+
+  /**
+   * 대기 중인 복구 키 삭제 (복구 키 확인 완료 후)
+   */
+  clearPendingRecoveryKey: () => void;
 }
 
 export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
   (set, get) => ({
     isUnlocked: false,
     dek: null,
+    isRestoring: false,
+    pendingRecoveryKey: null,
 
-    setupEncryption: async (password: string) => {
+    setupEncryption: async (pin: string) => {
       // 1. DEK 랜덤 생성
       const dek = await generateDEK();
 
-      // 2. Salt 생성 및 KEK 파생
+      // 2. Salt 생성 및 Client KEK 파생
       const salt = generateSalt();
-      const kek = await deriveKEK(password, salt);
+      const clientKEK = await deriveClientKEK(pin, salt);
 
-      // 3. KEK로 DEK 암호화
-      const encryptedDEK = await encryptDEK(dek, kek);
-
-      // 4. 복구 키 생성 및 DEK 암호화
+      // 3. 복구 키 생성 및 DEK 암호화 (복구용)
       const recoveryKey = generateRecoveryKey();
       const recoveryEncryptedDEK = await encryptDEKWithRecoveryKey(
         dek,
@@ -83,55 +108,125 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       );
       const recoveryKeyHash = await hashRecoveryKey(recoveryKey);
 
-      // 5. 서버에 저장
-      const { error } = await encryptionApi.setup({
+      // 4. 서버에 저장 (encryptedDEK는 null - 서버가 serverKey 생성)
+      // 서버가 serverKey를 응답으로 반환
+      const { data, error } = await encryptionApi.setup({
         salt: uint8ArrayToBase64(salt),
-        encryptedDEK,
+        encryptedDEK: null, // serverKey 반환 후 updateEncryption으로 업데이트
         recoveryEncryptedDEK,
         recoveryKeyHash,
       });
 
-      if (error) {
-        throw new Error(error.message);
+      if (error || !data) {
+        throw new Error(error?.message ?? '암호화 설정 실패');
       }
 
-      // 6. DEK를 메모리에 저장
-      set({ isUnlocked: true, dek });
+      // 5. Server Key와 Client KEK를 결합하여 Combined KEK 생성
+      const combinedKEK = await deriveCombinedKEK(
+        clientKEK,
+        data.serverKey,
+        salt
+      );
 
-      // 7. 포맷팅된 복구 키 반환
-      return formatRecoveryKey(recoveryKey);
+      // 6. Combined KEK로 DEK 암호화
+      const encryptedDEK = await encryptDEK(dek, combinedKEK);
+
+      // 7. 암호화된 DEK를 서버에 업데이트
+      const { error: updateError } = await encryptionApi.updateEncryption({
+        salt: uint8ArrayToBase64(salt),
+        encryptedDEK,
+      });
+
+      if (updateError) {
+        throw new Error(updateError.message);
+      }
+
+      // 8. DEK를 메모리에 저장 및 캐시
+      const formattedRecoveryKey = formatRecoveryKey(recoveryKey);
+      set({ isUnlocked: true, dek, pendingRecoveryKey: formattedRecoveryKey });
+      await cacheDEK(dek);
+
+      // 9. 포맷팅된 복구 키 반환
+      return formattedRecoveryKey;
     },
 
-    unlockWithPassword: async (password: string) => {
+    unlockWithPIN: async (pin: string) => {
       const { data, error } = await encryptionApi.getSettings();
       if (error || !data) {
         throw new Error(error?.message ?? '암호화 설정을 찾을 수 없습니다');
       }
 
-      // Salt에서 KEK 파생
-      const saltBytes = Uint8Array.from(atob(data.salt), (c) => c.charCodeAt(0));
-      const kek = await deriveKEK(password, saltBytes);
+      // Salt에서 Client KEK 파생
+      const salt = base64ToUint8Array(data.salt);
+      const clientKEK = await deriveClientKEK(pin, salt);
 
-      // KEK로 DEK 복호화
-      const dek = await decryptDEK(data.encryptedDEK, kek);
+      // Server Key와 Client KEK를 결합하여 Combined KEK 생성
+      const combinedKEK = await deriveCombinedKEK(
+        clientKEK,
+        data.serverKey,
+        salt
+      );
 
+      // Combined KEK로 DEK 복호화
+      const dek = await decryptDEK(data.encryptedDEK, combinedKEK);
+
+      // DEK를 메모리에 저장 및 캐시
       set({ isUnlocked: true, dek });
+      await cacheDEK(dek);
     },
 
-    changePassword: async (newPassword: string) => {
+    restoreFromCache: async () => {
+      const { isUnlocked } = get();
+      if (isUnlocked) return true;
+
+      set({ isRestoring: true });
+      try {
+        const cachedDEK = await loadCachedDEK();
+        if (cachedDEK) {
+          set({ isUnlocked: true, dek: cachedDEK, isRestoring: false });
+          return true;
+        }
+        set({ isRestoring: false });
+        return false;
+      } catch {
+        set({ isRestoring: false });
+        return false;
+      }
+    },
+
+    hasCachedSession: () => {
+      return hasCachedDEK();
+    },
+
+    changePIN: async (newPIN: string) => {
       const { dek } = get();
       if (!dek) {
         throw new Error('암호화가 해제되지 않았습니다');
       }
 
-      // 새 Salt 및 KEK 생성
+      // 새 Salt 생성 및 Client KEK 파생
       const newSalt = generateSalt();
-      const newKEK = await deriveKEK(newPassword, newSalt);
+      const newClientKEK = await deriveClientKEK(newPIN, newSalt);
 
-      // 기존 DEK를 새 KEK로 재암호화
-      const newEncryptedDEK = await encryptDEK(dek, newKEK);
+      // 기존 설정 조회 (현재 Server Key 필요)
+      const { data: currentSettings, error: getError } =
+        await encryptionApi.getSettings();
+      if (getError || !currentSettings) {
+        throw new Error(getError?.message ?? '현재 설정 조회 실패');
+      }
 
-      const { error } = await encryptionApi.updateEncryption({
+      // 새 Combined KEK 생성 (기존 Server Key 사용)
+      const newCombinedKEK = await deriveCombinedKEK(
+        newClientKEK,
+        currentSettings.serverKey,
+        newSalt
+      );
+
+      // 기존 DEK를 새 Combined KEK로 재암호화
+      const newEncryptedDEK = await encryptDEK(dek, newCombinedKEK);
+
+      // 서버에 업데이트 요청
+      const { data, error } = await encryptionApi.updateEncryption({
         salt: uint8ArrayToBase64(newSalt),
         encryptedDEK: newEncryptedDEK,
       });
@@ -173,7 +268,18 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
     },
 
     lock: () => {
-      set({ isUnlocked: false, dek: null });
+      set({
+        isUnlocked: false,
+        dek: null,
+        isRestoring: false,
+        pendingRecoveryKey: null,
+      });
+      // 캐시 삭제 (비동기지만 결과 대기 불필요)
+      clearDEKCache();
+    },
+
+    clearPendingRecoveryKey: () => {
+      set({ pendingRecoveryKey: null });
     },
   })
 );

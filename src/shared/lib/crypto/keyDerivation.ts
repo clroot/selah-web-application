@@ -1,9 +1,14 @@
 /**
  * PBKDF2 키 파생 함수
  *
- * 로그인 비밀번호로부터 KEK(Key Encryption Key)를 파생합니다.
+ * PIN 또는 비밀번호로부터 KEK(Key Encryption Key)를 파생합니다.
  * KEK는 DEK(Data Encryption Key)를 암호화/복호화하는 데 사용됩니다.
  * Web Crypto API의 PBKDF2 구현을 사용합니다.
+ *
+ * PIN 기반 암호화:
+ * - Client KEK = PBKDF2(PIN, Salt)
+ * - Server Key = 서버에서 생성 (256-bit)
+ * - Combined KEK = HKDF(Client KEK || Server Key)
  */
 
 const PBKDF2_ITERATIONS = 100000; // 최소 100,000 권장
@@ -29,7 +34,10 @@ export function generateSalt(): Uint8Array {
  * @param salt - Salt (Uint8Array, 32 bytes 권장)
  * @returns CryptoKey (AES-GCM, 256-bit, wrapKey/unwrapKey 권한)
  */
-export async function deriveKEK(password: string, salt: Uint8Array): Promise<CryptoKey> {
+export async function deriveKEK(
+  password: string,
+  salt: Uint8Array
+): Promise<CryptoKey> {
   const encoder = new TextEncoder();
 
   // 비밀번호를 key material로 import
@@ -53,6 +61,45 @@ export async function deriveKEK(password: string, salt: Uint8Array): Promise<Cry
     { name: 'AES-GCM', length: KEY_LENGTH },
     false, // extractable: false (보안상 키 추출 불가)
     ['wrapKey', 'unwrapKey']
+  );
+}
+
+/**
+ * 6자리 PIN에서 Client KEK 파생 (PBKDF2)
+ *
+ * Server Key와 결합하여 Combined KEK를 생성하기 위해 extractable하게 생성합니다.
+ *
+ * @param pin - 6자리 숫자 PIN
+ * @param salt - Salt (Uint8Array, 32 bytes)
+ * @returns CryptoKey (AES-GCM, 256-bit, extractable)
+ */
+export async function deriveClientKEK(
+  pin: string,
+  salt: Uint8Array
+): Promise<CryptoKey> {
+  const encoder = new TextEncoder();
+
+  // PIN을 key material로 import
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(pin),
+    'PBKDF2',
+    false,
+    ['deriveKey']
+  );
+
+  // PBKDF2로 Client KEK 파생 (extractable: true - HKDF 결합용)
+  return crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt: salt.buffer as ArrayBuffer,
+      iterations: PBKDF2_ITERATIONS,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    { name: 'AES-GCM', length: KEY_LENGTH },
+    true, // extractable: true (Server Key와 HKDF 결합을 위해)
+    ['encrypt', 'decrypt'] // 임시 권한, HKDF 후 wrapKey/unwrapKey 사용
   );
 }
 

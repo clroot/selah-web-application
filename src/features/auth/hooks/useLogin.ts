@@ -4,19 +4,22 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { authApi } from '@/features/auth/api/auth.api';
 import { useAuthStore } from '@/features/auth/stores/authStore';
-import { useEncryptionStore } from '@/features/encryption/stores/encryptionStore';
 import { memberApi } from '@/features/member/api/member.api';
 
 import type { LoginFormData } from '@/features/auth/utils/schemas';
 
+/**
+ * 로그인 훅
+ *
+ * 로그인과 암호화 해제가 분리됨:
+ * - 로그인: 이메일 + 비밀번호 (인증)
+ * - 암호화 해제: 6자리 PIN (별도 입력 필요, IndexedDB 캐시 있으면 생략)
+ */
 export function useLogin() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const setUser = useAuthStore((state) => state.setUser);
   const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
-  const unlockWithPassword = useEncryptionStore(
-    (state) => state.unlockWithPassword
-  );
 
   return useMutation({
     mutationFn: async (data: LoginFormData) => {
@@ -29,20 +32,11 @@ export function useLogin() {
         throw new Error(error.message);
       }
 
-      return { result: result!, password: data.password };
+      return result!;
     },
-    onSuccess: async ({ password }) => {
+    onSuccess: async () => {
       // 인증 상태 설정 (프로필 조회 전)
       setAuthenticated(true);
-
-      // 암호화 해제 (로그인 비밀번호로 DEK 복호화)
-      try {
-        await unlockWithPassword(password);
-      } catch (e) {
-        // 암호화 해제 실패해도 로그인은 성공으로 처리
-        // (신규 사용자이거나 암호화 설정이 없는 경우)
-        console.warn('암호화 해제 실패:', e);
-      }
 
       // 프로필 조회
       const { data: profile } = await memberApi.getMyProfile();
@@ -54,6 +48,7 @@ export function useLogin() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
 
       // 홈으로 이동
+      // TODO: 암호화 설정 여부 확인 후 PIN 입력 화면으로 이동할 수 있음
       router.push('/');
     },
   });

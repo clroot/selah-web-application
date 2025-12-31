@@ -68,7 +68,7 @@ export function RecoveryKeyDisplay({
           복구 키를 저장하세요
         </h1>
         <p className="mt-2 text-soft-brown">
-          비밀번호를 잊어버렸을 때 이 키로 계정을 복구할 수 있습니다.
+          PIN을 잊어버렸을 때 이 키로 암호화된 데이터를 복구할 수 있습니다.
         </p>
       </div>
 
