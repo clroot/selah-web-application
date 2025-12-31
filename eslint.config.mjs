@@ -111,6 +111,12 @@ const eslintConfig = [
           capture: ['featureName'],
           mode: 'full',
         },
+        // shared/providers - 앱 프로바이더 (feature 접근 허용)
+        {
+          type: 'shared-providers',
+          pattern: 'src/shared/providers/**',
+          mode: 'full',
+        },
         // shared - 공통 코드
         {
           type: 'shared',
@@ -151,7 +157,7 @@ const eslintConfig = [
             // app: 모든 곳에서 import 가능
             {
               from: ['app'],
-              allow: ['app', 'feature', 'shared', 'ui', 'common'],
+              allow: ['app', 'feature', 'shared', 'shared-providers', 'ui', 'common'],
             },
             // feature: 다른 feature 허용 (순환은 별도 도구로 검출)
             {
@@ -163,7 +169,12 @@ const eslintConfig = [
               from: ['common'],
               allow: ['shared', 'ui', 'common'],
             },
-            // shared: ui 허용
+            // shared-providers: feature 접근 허용 (앱 레벨 프로바이더)
+            {
+              from: ['shared-providers'],
+              allow: ['shared-providers', 'shared', 'ui', 'feature'],
+            },
+            // shared: ui만 허용
             {
               from: ['shared'],
               allow: ['shared', 'ui'],
