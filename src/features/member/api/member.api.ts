@@ -5,6 +5,9 @@ import type {
   CreateApiKeyRequest,
   CreateApiKeyResponse,
   MemberProfile,
+  OAuthConnection,
+  OAuthConnectionsResponse,
+  OAuthProvider,
   UpdateProfileRequest,
 } from '@/features/member/types/member.types';
 
@@ -13,16 +16,14 @@ import type {
  */
 export const memberApi = {
   /** 내 프로필 조회 */
-  getMyProfile: () =>
-    apiClient.get<MemberProfile>('/api/v1/members/me'),
+  getMyProfile: () => apiClient.get<MemberProfile>('/api/v1/members/me'),
 
   /** 프로필 수정 */
   updateMyProfile: (data: UpdateProfileRequest) =>
     apiClient.patch<MemberProfile>('/api/v1/members/me', data),
 
   /** API Key 목록 조회 */
-  listApiKeys: () =>
-    apiClient.get<ApiKey[]>('/api/v1/members/me/api-keys'),
+  listApiKeys: () => apiClient.get<ApiKey[]>('/api/v1/members/me/api-keys'),
 
   /** API Key 생성 */
   createApiKey: (data: CreateApiKeyRequest) =>
@@ -31,6 +32,28 @@ export const memberApi = {
   /** API Key 삭제 */
   deleteApiKey: (apiKeyId: string) =>
     apiClient.delete<void>(`/api/v1/members/me/api-keys/${apiKeyId}`),
+};
+
+/**
+ * OAuth 연결 관리 API
+ */
+export const oauthConnectionApi = {
+  /** OAuth 연결 목록 조회 */
+  getConnections: () =>
+    apiClient.get<OAuthConnectionsResponse>(
+      '/api/v1/members/me/oauth-connections'
+    ),
+
+  /** OAuth 연결 추가 */
+  connect: (data: { provider: OAuthProvider; accessToken: string }) =>
+    apiClient.post<OAuthConnection>(
+      '/api/v1/members/me/oauth-connections',
+      data
+    ),
+
+  /** OAuth 연결 해제 */
+  disconnect: (provider: OAuthProvider) =>
+    apiClient.delete<void>(`/api/v1/members/me/oauth-connections/${provider}`),
 };
 
 /**

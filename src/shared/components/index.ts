@@ -1,5 +1,7 @@
 export { BottomNavigation } from './BottomNavigation';
+export { Button } from './Button';
 export { FloatingActionButton } from './FloatingActionButton';
+export { Input } from './Input';
 export { LoadingSpinner, FullPageSpinner } from './LoadingSpinner';
 export { NavItem } from './NavItem';
 export { PageHeader } from './PageHeader';

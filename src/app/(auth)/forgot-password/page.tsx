@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 
 import { ArrowLeft } from 'lucide-react';
 
-import { SignupForm } from '@/features/auth/components';
+import { ForgotPasswordForm } from '@/features/auth/components';
 
-export default function SignupPage() {
+export default function ForgotPasswordPage() {
   const router = useRouter();
 
   return (
@@ -25,24 +25,21 @@ export default function SignupPage() {
         <div className="mx-auto w-full max-w-sm space-y-8">
           <div className="text-center">
             <h1 className="font-serif text-2xl font-bold text-deep-brown">
-              함께 기도해요
+              비밀번호 재설정
             </h1>
             <p className="mt-2 text-soft-brown">
-              새로운 기도의 여정을 시작하세요
+              가입하신 이메일로 재설정 링크를 보내드릴게요
             </p>
           </div>
 
-          <SignupForm />
+          <ForgotPasswordForm />
 
-          <p className="text-center text-sm text-soft-brown">
-            이미 계정이 있으신가요?{' '}
-            <Link
-              href="/login"
-              className="font-medium text-gold hover:underline"
-            >
-              로그인
-            </Link>
-          </p>
+          <Link
+            href="/login"
+            className="block text-center text-sm text-soft-brown hover:text-deep-brown"
+          >
+            로그인으로 돌아가기
+          </Link>
         </div>
       </div>
     </div>

@@ -8,6 +8,17 @@
 
 const PBKDF2_ITERATIONS = 100000; // 최소 100,000 권장
 const KEY_LENGTH = 256; // AES-256
+const SALT_LENGTH = 32; // 32 bytes (256-bit)
+
+/**
+ * Salt 생성
+ *
+ * 키 파생에 사용할 랜덤 Salt를 생성합니다.
+ * @returns Uint8Array (32 bytes)
+ */
+export function generateSalt(): Uint8Array {
+  return crypto.getRandomValues(new Uint8Array(SALT_LENGTH));
+}
 
 /**
  * 비밀번호에서 KEK 파생 (PBKDF2)

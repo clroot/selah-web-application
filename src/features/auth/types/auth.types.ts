@@ -2,8 +2,10 @@
  * Auth 도메인 타입 정의
  */
 
-/** OAuth 제공자 */
-export type OAuthProvider = 'GOOGLE' | 'APPLE' | 'KAKAO' | 'NAVER';
+import type { OAuthProvider } from '@/features/member/types/member.types';
+
+// Re-export OAuthProvider for backward compatibility
+export type { OAuthProvider };
 
 /** 회원가입 요청 */
 export interface RegisterRequest {
@@ -12,7 +14,7 @@ export interface RegisterRequest {
   password: string;
 }
 
-/** 회원가입 응답 */
+/** 회원가입 응답 (Backend RegisterResponse와 일치) */
 export interface RegisterResponse {
   memberId: string;
   nickname: string;
@@ -24,7 +26,7 @@ export interface LoginRequest {
   password: string;
 }
 
-/** OAuth 로그인 요청 */
+/** OAuth 로그인 요청 (Backend LoginWithOAuthRequest와 일치) */
 export interface OAuthLoginRequest {
   email: string;
   nickname: string;
@@ -33,16 +35,10 @@ export interface OAuthLoginRequest {
   profileImageUrl?: string;
 }
 
-/** 로그인 응답 */
+/** 로그인 응답 (Backend LoginResponse와 일치) */
 export interface LoginResponse {
-  member: {
-    id: string;
-    email: string;
-    nickname: string;
-    profileImageUrl: string | null;
-    emailVerified: boolean;
-  };
-  session: {
-    expiresAt: string;
-  };
+  memberId: string;
+  nickname: string;
+  isNewMember: boolean;
+  expiresAt: string;
 }

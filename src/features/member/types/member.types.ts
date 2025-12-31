@@ -2,17 +2,31 @@
  * Member 도메인 타입 정의
  */
 
-import type { OAuthProvider } from '@/features/auth/types/auth.types';
+/** OAuth 제공자 */
+export type OAuthProvider = 'GOOGLE' | 'KAKAO' | 'NAVER';
 
-/** 회원 프로필 */
+/** 회원 프로필 (Backend MemberProfileResponse와 일치) */
 export interface MemberProfile {
   id: string;
   email: string;
   nickname: string;
   profileImageUrl: string | null;
   emailVerified: boolean;
-  oauthProviders: OAuthProvider[];
+  hasPassword: boolean;
+  connectedProviders: OAuthProvider[];
   createdAt: string;
+}
+
+/** OAuth 연결 정보 */
+export interface OAuthConnection {
+  provider: OAuthProvider;
+  connectedAt: string;
+}
+
+/** OAuth 연결 목록 응답 */
+export interface OAuthConnectionsResponse {
+  connections: OAuthConnection[];
+  availableProviders: OAuthProvider[];
 }
 
 /** 프로필 수정 요청 */
