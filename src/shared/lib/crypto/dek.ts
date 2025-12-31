@@ -91,9 +91,13 @@ export async function importDEK(
   dekBytes: Uint8Array,
   extractable: boolean = false
 ): Promise<CryptoKey> {
+  // Uint8Array의 데이터를 새로운 ArrayBuffer에 복사하여 BufferSource 호환성 확보
+  const buffer = new ArrayBuffer(dekBytes.byteLength);
+  new Uint8Array(buffer).set(dekBytes);
+
   return crypto.subtle.importKey(
     'raw',
-    dekBytes,
+    buffer,
     { name: 'AES-GCM', length: DEK_LENGTH },
     extractable,
     ['encrypt', 'decrypt']

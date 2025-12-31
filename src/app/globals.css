@@ -1,26 +1,93 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand Colors */
+  --cream: #faf7f2;
+  --sand: #e8dcd0;
+  --warm-beige: #d4c4b0;
+  --deep-brown: #4a3728;
+  --soft-brown: #8b7355;
+  --gold: #c4a574;
+
+  /* Semantic Colors */
+  --background: var(--cream);
+  --foreground: var(--deep-brown);
+
+  /* Font Families */
+  --font-serif: var(--font-nanum-myeongjo), 'Nanum Myeongjo', serif;
+  --font-sans: var(--font-noto-sans-kr), 'Noto Sans KR', sans-serif;
 }
 
 @theme inline {
+  /* Colors */
+  --color-cream: var(--cream);
+  --color-sand: var(--sand);
+  --color-warm-beige: var(--warm-beige);
+  --color-deep-brown: var(--deep-brown);
+  --color-soft-brown: var(--soft-brown);
+  --color-gold: var(--gold);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Typography */
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* App Container - Mobile First */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--cream);
+}
+
+/* Utility Classes */
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Staggered Animation Delays */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* Safe Area for Bottom Navigation */
+.pb-safe {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
 }
