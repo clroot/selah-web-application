@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 
 import { PrayerCalendar, PrayerList } from "@/features/prayer/components";
 import { usePrayers } from "@/features/prayer/hooks";
@@ -35,6 +35,7 @@ export default function PrayersPage() {
   );
 
   const formattedDate = format(selectedDate, "M월 d일");
+  const isToday = isSameDay(selectedDate, new Date());
 
   return (
     <div className="flex min-h-screen flex-col bg-cream">
@@ -61,6 +62,7 @@ export default function PrayersPage() {
           isError={isError}
           error={error}
           emptyMessage="이 날 작성된 기도문이 없어요"
+          showWriteButton={isToday}
         />
       </div>
     </div>
