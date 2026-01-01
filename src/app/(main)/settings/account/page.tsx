@@ -9,7 +9,7 @@ import { ArrowLeft, Key, Trash2 } from "lucide-react";
 import { SettingsMenuItem } from "@/app/(main)/settings/_components";
 import { oauthConnectionApi } from "@/features/member/api/member.api";
 import { useCurrentUser } from "@/features/member/hooks/useCurrentUser";
-import { getAuthorizationUrl } from "@/features/member/lib/oauth";
+import { getLinkAuthorizationUrl } from "@/features/member/lib/oauth";
 
 import { SocialConnectionItem } from "./_components/SocialConnectionItem";
 
@@ -33,7 +33,7 @@ export default function AccountPage() {
   const connectedProviders = user.connectedProviders ?? [];
 
   const handleConnect = (provider: OAuthProvider) => {
-    window.location.href = getAuthorizationUrl(provider);
+    window.location.href = getLinkAuthorizationUrl(provider);
   };
 
   const handleDisconnect = async (provider: OAuthProvider) => {
