@@ -117,3 +117,45 @@ export function groupByStatus(topics: PrayerTopic[]): {
     answered: topics.filter((t) => t.status === "ANSWERED"),
   };
 }
+
+export function getDaysPrayed(createdAt: string, answeredAt: string): number {
+  const start = new Date(createdAt);
+  const end = new Date(answeredAt);
+  const diffMs = end.getTime() - start.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  return Math.max(1, diffDays);
+}
+
+export function formatDaysPrayed(days: number): string {
+  if (days < 7) return `${days}일간 기도`;
+  if (days < 30) {
+    const weeks = Math.floor(days / 7);
+    return `약 ${weeks}주간 기도`;
+  }
+  if (days < 365) {
+    const months = Math.floor(days / 30);
+    return `약 ${months}개월간 기도`;
+  }
+  const years = Math.floor(days / 365);
+  return `약 ${years}년간 기도`;
+}
+
+export function formatYearMonth(dateString: string): string {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
+}
+
+export function groupByYearMonth(
+  topics: PrayerTopic[],
+): Map<string, PrayerTopic[]> {
+  const groups = new Map<string, PrayerTopic[]>();
+
+  topics.forEach((topic) => {
+    if (!topic.answeredAt) return;
+    const key = formatYearMonth(topic.answeredAt);
+    const existing = groups.get(key) ?? [];
+    groups.set(key, [...existing, topic]);
+  });
+
+  return groups;
+}

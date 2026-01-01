@@ -3,6 +3,7 @@
 import { LoadingSpinner } from "@/shared/components";
 import { cn } from "@/shared/lib/utils";
 
+import { AnsweredPrayerTimeline } from "./AnsweredPrayerTimeline";
 import { EmptyState } from "./EmptyState";
 import { PrayerTopicCard } from "./PrayerTopicCard";
 import type { FilterStatus } from "./StatusFilter";
@@ -61,7 +62,12 @@ export function PrayerTopicList({
     return <EmptyState filterStatus={filterStatus} />;
   }
 
-  // 목록 렌더링
+  // 응답된 기도제목은 타임라인 뷰로 표시
+  if (filterStatus === "ANSWERED") {
+    return <AnsweredPrayerTimeline topics={topics} className={className} />;
+  }
+
+  // 일반 목록 렌더링
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       {topics.map((topic) => (
