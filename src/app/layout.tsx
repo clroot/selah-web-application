@@ -3,7 +3,7 @@ import { Nanum_Myeongjo, Noto_Sans_KR } from 'next/font/google';
 
 import { Toaster } from 'sonner';
 
-import { Providers } from '@/shared/providers/Providers';
+import { Providers } from '@/app/_providers/Providers';
 
 import './globals.css';
 
