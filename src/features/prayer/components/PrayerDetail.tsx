@@ -36,11 +36,11 @@ export function PrayerDetail({
         {prayer.content}
       </div>
 
-      {/* 연결된 기도제목 */}
+      {/* 기도한 제목 */}
       {prayer.prayerTopicIds.length > 0 && prayerTopicTitles && (
         <div className="border-t border-sand pt-6">
           <div className="mb-3 text-xs font-medium text-soft-brown/60">
-            연결된 기도제목
+            기도한 제목
           </div>
           <div className="flex flex-wrap gap-2">
             {prayer.prayerTopicIds.map((topicId) => {

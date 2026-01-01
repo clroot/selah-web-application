@@ -53,7 +53,7 @@ export function PrayerTopicSelector({
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <label className="text-xs font-medium text-soft-brown">
-        연결된 기도제목
+        기도할 제목
       </label>
 
       {/* 선택된 항목들 */}

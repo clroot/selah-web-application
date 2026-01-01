@@ -41,7 +41,7 @@ export function PrayerCard({
         {getPreviewText(prayer.content)}
       </p>
 
-      {/* 연결된 기도제목 태그 */}
+      {/* 기도한 제목 태그 */}
       {prayer.prayerTopicIds.length > 0 && prayerTopicTitles && (
         <div className="flex flex-wrap gap-1.5">
           {prayer.prayerTopicIds.map((topicId) => {

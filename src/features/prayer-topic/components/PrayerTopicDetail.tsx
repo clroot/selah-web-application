@@ -134,7 +134,7 @@ export function PrayerTopicDetail({
           {topic.title}
         </h2>
         <div className="mt-2 flex items-center gap-3 text-sm text-soft-brown">
-          <span>작성일: {formatDate(topic.createdAt)}</span>
+          <span>시작일: {formatDate(topic.createdAt)}</span>
           {topic.prayerCount > 0 && (
             <span className="flex items-center gap-1">
               🙏 {topic.prayerCount}번 기도
@@ -168,14 +168,14 @@ export function PrayerTopicDetail({
             onClick={handleCancelAnswer}
             isLoading={isCanceling}
           >
-            응답 취소
+            다시 기도하기
           </Button>
         ) : (
           <Button
             onClick={() => setIsAnswerSheetOpen(true)}
             isLoading={isMarking}
           >
-            응답됨으로 체크하기
+            응답받았어요
           </Button>
         )}
       </div>
