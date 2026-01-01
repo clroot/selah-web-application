@@ -44,11 +44,16 @@ function TimelineItem({ topic, isLast }: TimelineItemProps) {
         )}
       >
         <div className="mb-2 flex items-center justify-between">
-          {daysPrayed && (
-            <span className="rounded-full bg-warm-beige px-2.5 py-0.5 text-xs font-medium text-soft-brown">
-              {formatDaysPrayed(daysPrayed)}
+          <div className="flex items-center gap-2">
+            {daysPrayed && (
+              <span className="rounded-full bg-warm-beige px-2.5 py-0.5 text-xs font-medium text-soft-brown">
+                {formatDaysPrayed(daysPrayed)}
+              </span>
+            )}
+            <span className="text-xs text-soft-brown/60">
+              🙏 {topic.prayerCount}
             </span>
-          )}
+          </div>
           <span className="text-xs text-soft-brown/60">
             {topic.answeredAt && formatDate(topic.answeredAt)}
           </span>
