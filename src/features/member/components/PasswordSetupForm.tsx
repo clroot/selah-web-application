@@ -24,14 +24,14 @@ export function PasswordSetupForm({
   const {
     register,
     handleSubmit,
-    watch,
+    watch: useWatch,
     formState: { errors },
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordFormSchema),
     mode: 'onChange',
   });
 
-  const password = watch('password', '');
+  const password = useWatch('password', '');
 
   const handleFormSubmit = (data: ResetPasswordFormData) => {
     onSubmit(data.password);

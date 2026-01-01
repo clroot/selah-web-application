@@ -39,7 +39,7 @@ export function PrayerTopicForm({
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    watch,
+    watch: useWatch,
   } = useForm<PrayerTopicFormData>({
     resolver: zodResolver(prayerTopicFormSchema),
     defaultValues: initialData ?? { title: '' },
@@ -52,7 +52,7 @@ export function PrayerTopicForm({
     }
   }, [initialData, reset]);
 
-  const title = watch('title');
+  const title = useWatch('title');
   const characterCount = title?.length ?? 0;
   const isDisabled = isSubmitting || isLoading;
 

@@ -17,14 +17,14 @@ export function SignupForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    watch: useWatch,
     formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupFormSchema),
   });
 
   const { mutate: signup, isPending, error } = useSignup();
-  const password = watch('password', '');
+  const password = useWatch('password', '');
 
   const onSubmit = (data: SignupFormData) => {
     signup(data);

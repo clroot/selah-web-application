@@ -951,6 +951,26 @@ export default function NotFound() {
 | 하드코딩된 IV/Salt 사용 | 매번 랜덤 생성 필수 |
 | 별도 암호화 비밀번호 요구 | 로그인 비밀번호에서 KEK 파생 |
 
+### React Hook Form + React Compiler 호환성
+
+React Hook Form의 `watch()` 함수는 React Compiler와 호환성 문제가 있습니다.
+`watch`를 그대로 사용하면 컴파일러가 최적화를 건너뛰는 경고가 발생합니다.
+
+**해결책**: `watch`를 `useWatch`로 rename하여 사용
+
+```typescript
+// ❌ Bad - React Compiler 경고 발생
+const { watch } = useForm();
+const password = watch('password');
+
+// ✅ Good - React Compiler가 hook으로 인식
+const { watch: useWatch } = useForm();
+const password = useWatch('password');
+```
+
+> **TODO**: react-hook-form 8.x 버전이 릴리즈되면 공식 호환성 지원 여부를 확인하고,
+> 지원되면 `useWatch` rename을 제거하고 원래의 `watch`로 복원할 것.
+
 ## 코드 생성 시 체크리스트
 
 ### 기본 체크리스트

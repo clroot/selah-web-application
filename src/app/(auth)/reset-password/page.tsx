@@ -29,13 +29,13 @@ function ResetPasswordContent() {
   const {
     register,
     handleSubmit,
-    watch,
+    watch: useWatch,
     formState: { errors },
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordFormSchema),
   });
 
-  const password = watch('password', '');
+  const password = useWatch('password', '');
 
   useEffect(() => {
     if (!token) {
