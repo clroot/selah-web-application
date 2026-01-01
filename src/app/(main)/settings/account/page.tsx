@@ -1,11 +1,15 @@
 "use client";
 
+import { useState } from "react";
+
 import Link from "next/link";
 
 import { ArrowLeft, Key, Trash2 } from "lucide-react";
 
 import { SettingsMenuItem } from "@/app/(main)/settings/_components";
+import { oauthConnectionApi } from "@/features/member/api/member.api";
 import { useCurrentUser } from "@/features/member/hooks/useCurrentUser";
+import { getAuthorizationUrl } from "@/features/member/lib/oauth";
 
 import { SocialConnectionItem } from "./_components/SocialConnectionItem";
 
@@ -18,7 +22,9 @@ const ALL_PROVIDERS: OAuthProvider[] = ["GOOGLE", "NAVER"];
  * 계정 관리 페이지
  */
 export default function AccountPage() {
-  const { data: user } = useCurrentUser();
+  const { data: user, refetch } = useCurrentUser();
+  const [disconnectingProvider, setDisconnectingProvider] =
+    useState<OAuthProvider | null>(null);
 
   if (!user) {
     return null;
@@ -27,13 +33,22 @@ export default function AccountPage() {
   const connectedProviders = user.connectedProviders ?? [];
 
   const handleConnect = (provider: OAuthProvider) => {
-    // TODO: OAuth 연결 구현 (P1)
-    console.log("Connect:", provider);
+    window.location.href = getAuthorizationUrl(provider);
   };
 
-  const handleDisconnect = (provider: OAuthProvider) => {
-    // TODO: OAuth 연결 해제 구현 (P1)
-    console.log("Disconnect:", provider);
+  const handleDisconnect = async (provider: OAuthProvider) => {
+    if (disconnectingProvider) return;
+
+    setDisconnectingProvider(provider);
+    try {
+      const { error } = await oauthConnectionApi.disconnect(provider);
+      if (error) throw error;
+      await refetch();
+    } catch (err) {
+      console.error("OAuth 연결 해제 실패:", err);
+    } finally {
+      setDisconnectingProvider(null);
+    }
   };
 
   return (
@@ -60,6 +75,7 @@ export default function AccountPage() {
               key={provider}
               provider={provider}
               isConnected={connectedProviders.includes(provider)}
+              isLoading={disconnectingProvider === provider}
               onConnect={() => handleConnect(provider)}
               onDisconnect={() => handleDisconnect(provider)}
             />
