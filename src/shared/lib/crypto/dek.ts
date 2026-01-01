@@ -54,11 +54,13 @@ export async function encryptDEK(
  *
  * @param encryptedDEK - Base64 인코딩된 암호화된 DEK
  * @param kek - KEK (CryptoKey with unwrapKey permission)
- * @returns DEK (CryptoKey, non-extractable)
+ * @param extractable - 추출 가능 여부 (캐싱을 위해 기본값 true)
+ * @returns DEK (CryptoKey)
  */
 export async function decryptDEK(
   encryptedDEK: string,
   kek: CryptoKey,
+  extractable: boolean = true,
 ): Promise<CryptoKey> {
   const combined = base64ToUint8Array(encryptedDEK);
   const iv = combined.slice(0, IV_LENGTH);
@@ -70,7 +72,7 @@ export async function decryptDEK(
     kek,
     { name: "AES-GCM", iv },
     { name: "AES-GCM", length: DEK_LENGTH },
-    false, // extractable: false (메모리에서만 사용)
+    extractable,
     ["encrypt", "decrypt"],
   );
 }

@@ -74,22 +74,16 @@ async function loadWrapKeyFromSession(): Promise<CryptoKey | null> {
   }
 }
 
-/**
- * DEK 캐시 저장
- */
 export async function cacheDEK(dek: CryptoKey): Promise<void> {
   try {
-    // 1. 새 wrap key 생성
     const wrapKey = await generateWrapKey();
 
-    // 2. DEK를 wrap key로 암호화
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const wrappedKey = await crypto.subtle.wrapKey("raw", dek, wrapKey, {
       name: "AES-GCM",
       iv,
     });
 
-    // 3. IV + wrappedKey를 IndexedDB에 저장
     const combined = new Uint8Array(iv.length + wrappedKey.byteLength);
     combined.set(iv);
     combined.set(new Uint8Array(wrappedKey), iv.length);
@@ -104,23 +98,15 @@ export async function cacheDEK(dek: CryptoKey): Promise<void> {
     });
     db.close();
 
-    // 4. Wrap key를 sessionStorage에 저장
     await saveWrapKeyToSession(wrapKey);
-  } catch (error) {
-    console.warn("DEK 캐시 저장 실패:", error);
-  }
+  } catch {}
 }
 
-/**
- * 캐시된 DEK 로드
- */
 export async function loadCachedDEK(): Promise<CryptoKey | null> {
   try {
-    // 1. sessionStorage에서 wrap key 로드
     const wrapKey = await loadWrapKeyFromSession();
     if (!wrapKey) return null;
 
-    // 2. IndexedDB에서 wrapped DEK 로드
     const db = await openDB();
     const combined = await new Promise<Uint8Array | null>((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, "readonly");
@@ -133,18 +119,16 @@ export async function loadCachedDEK(): Promise<CryptoKey | null> {
 
     if (!combined) return null;
 
-    // 3. IV와 wrappedKey 분리
     const iv = combined.slice(0, 12);
     const wrappedKey = combined.slice(12);
 
-    // 4. DEK 복호화
     return crypto.subtle.unwrapKey(
       "raw",
       wrappedKey,
       wrapKey,
       { name: "AES-GCM", iv },
       { name: "AES-GCM", length: 256 },
-      false, // extractable: false (메모리에서만 사용)
+      true,
       ["encrypt", "decrypt"],
     );
   } catch {
@@ -179,5 +163,6 @@ export async function clearDEKCache(): Promise<void> {
  * 캐시 유효성 확인 (빠른 체크)
  */
 export function hasCachedDEK(): boolean {
+  if (typeof window === "undefined") return false;
   return sessionStorage.getItem(SESSION_KEY) !== null;
 }

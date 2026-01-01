@@ -21,13 +21,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
   // 앱 시작 시 캐시에서 DEK 복원 시도
   useEffect(() => {
     const checkEncryption = async () => {
-      // 이미 해제된 상태
       if (isUnlocked) {
         setIsChecking(false);
         return;
       }
 
-      // 캐시에서 복원 시도
       if (hasCachedSession()) {
         const restored = await restoreFromCache();
         if (restored) {
@@ -36,7 +34,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
         }
       }
 
-      // 복원 실패 - PIN 입력 페이지로 이동
       setIsChecking(false);
       router.replace("/unlock-encryption");
     };
