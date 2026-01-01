@@ -35,7 +35,9 @@ export function PasswordChangeForm({
       />
     );
   }
-  return <SetPasswordFormContent onSubmit={onSubmitSet} isLoading={isLoading} />;
+  return (
+    <SetPasswordFormContent onSubmit={onSubmitSet} isLoading={isLoading} />
+  );
 }
 
 interface ChangePasswordFormContentProps {

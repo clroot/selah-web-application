@@ -18,7 +18,9 @@ export function LookbackSection() {
   return (
     <section className="px-6">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-base font-medium text-deep-brown">오늘의 돌아보기</h2>
+        <h2 className="text-base font-medium text-deep-brown">
+          오늘의 돌아보기
+        </h2>
         {lookback && (
           <button
             type="button"

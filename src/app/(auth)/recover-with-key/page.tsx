@@ -99,7 +99,8 @@ export default function RecoverWithKeyPage() {
             복구 키로 복원
           </h1>
           <p className="mt-2 text-soft-brown">
-            {step === "recovery-key" && "회원가입 시 저장한 복구 키를 입력하세요"}
+            {step === "recovery-key" &&
+              "회원가입 시 저장한 복구 키를 입력하세요"}
             {step === "new-pin" && "새로운 6자리 PIN을 설정하세요"}
             {step === "confirm-pin" && "PIN을 다시 한번 입력하세요"}
           </p>

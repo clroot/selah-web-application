@@ -243,7 +243,9 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       const { data: recoverySettings, error: recoveryError } =
         await encryptionApi.getRecoverySettings();
       if (recoveryError || !recoverySettings) {
-        throw new Error(recoveryError?.message ?? "복구 설정을 찾을 수 없습니다");
+        throw new Error(
+          recoveryError?.message ?? "복구 설정을 찾을 수 없습니다",
+        );
       }
 
       // 2. 복구 키로 DEK 복호화 (decryptDEKWithRecoveryKey는 포맷된 문자열도 처리)

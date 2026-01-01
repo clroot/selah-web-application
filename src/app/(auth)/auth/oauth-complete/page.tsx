@@ -98,7 +98,14 @@ function OAuthCompleteContent() {
         router.replace("/");
       }
     }
-  }, [isInitializing, isAuthenticated, success, isNewMember, isLinkMode, router]);
+  }, [
+    isInitializing,
+    isAuthenticated,
+    success,
+    isNewMember,
+    isLinkMode,
+    router,
+  ]);
 
   if (error) {
     return (

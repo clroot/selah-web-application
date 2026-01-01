@@ -15,7 +15,11 @@ import { Button } from "@/shared/components";
 import { cn } from "@/shared/lib/utils";
 import { useEncryptionStore } from "@/shared/stores/encryptionStore";
 
-type ActiveModal = "change-pin" | "regenerate-recovery" | "show-recovery" | null;
+type ActiveModal =
+  | "change-pin"
+  | "regenerate-recovery"
+  | "show-recovery"
+  | null;
 
 export default function EncryptionSettingsPage() {
   const { changePIN, regenerateRecoveryKey, isUnlocked } = useEncryptionStore();
@@ -123,7 +127,10 @@ export default function EncryptionSettingsPage() {
                 기도 내용은 클라이언트에서 암호화되어 서버에서도 열람할 수
                 없습니다.
               </p>
-              <p>PIN과 복구 키를 분실하면 데이터를 복구할 수 없으니 안전하게 보관해주세요.</p>
+              <p>
+                PIN과 복구 키를 분실하면 데이터를 복구할 수 없으니 안전하게
+                보관해주세요.
+              </p>
             </div>
           </div>
         </div>

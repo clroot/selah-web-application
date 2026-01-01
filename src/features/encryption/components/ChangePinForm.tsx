@@ -102,9 +102,7 @@ export function ChangePinForm({
         )}
       </div>
 
-      {isLoading && (
-        <p className="text-sm text-soft-brown">PIN 변경 중...</p>
-      )}
+      {isLoading && <p className="text-sm text-soft-brown">PIN 변경 중...</p>}
     </div>
   );
 }

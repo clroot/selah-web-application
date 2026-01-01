@@ -9,7 +9,5 @@ export const lookbackApi = {
     ),
 
   refresh: () =>
-    apiClient.post<LookbackResponse>(
-      "/api/v1/prayer-topics/lookback/refresh",
-    ),
+    apiClient.post<LookbackResponse>("/api/v1/prayer-topics/lookback/refresh"),
 };
