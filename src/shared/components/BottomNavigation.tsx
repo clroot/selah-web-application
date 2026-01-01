@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
 import { usePathname } from 'next/navigation';
 
 import { Home, BookOpen, Check, Settings } from 'lucide-react';
 
+import { CreateActionSheet } from './CreateActionSheet';
 import { FloatingActionButton } from './FloatingActionButton';
 import { NavItem } from './NavItem';
 
@@ -19,6 +22,7 @@ const rightNavItems = [
 
 export function BottomNavigation() {
   const pathname = usePathname();
+  const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -27,22 +31,34 @@ export function BottomNavigation() {
     return pathname.startsWith(href.split('?')[0]);
   };
 
+  const handleFabClick = () => {
+    setIsActionSheetOpen(true);
+  };
+
+  const handleActionSheetClose = () => {
+    setIsActionSheetOpen(false);
+  };
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-sand bg-white">
-      <div className="relative mx-auto flex h-16 max-w-[480px] items-center justify-around">
-        {leftNavItems.map((item) => (
-          <NavItem key={item.href} {...item} isActive={isActive(item.href)} />
-        ))}
+    <>
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-sand bg-white">
+        <div className="relative mx-auto flex h-16 max-w-[480px] items-center justify-around">
+          {leftNavItems.map((item) => (
+            <NavItem key={item.href} {...item} isActive={isActive(item.href)} />
+          ))}
 
-        <FloatingActionButton />
+          <FloatingActionButton onClick={handleFabClick} />
 
-        {rightNavItems.map((item) => (
-          <NavItem key={item.href} {...item} isActive={isActive(item.href)} />
-        ))}
-      </div>
+          {rightNavItems.map((item) => (
+            <NavItem key={item.href} {...item} isActive={isActive(item.href)} />
+          ))}
+        </div>
 
-      {/* Safe area padding for iOS */}
-      <div className="h-[env(safe-area-inset-bottom,0px)] bg-white" />
-    </nav>
+        {/* Safe area padding for iOS */}
+        <div className="h-[env(safe-area-inset-bottom,0px)] bg-white" />
+      </nav>
+
+      <CreateActionSheet isOpen={isActionSheetOpen} onClose={handleActionSheetClose} />
+    </>
   );
 }
