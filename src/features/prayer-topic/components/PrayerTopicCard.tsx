@@ -48,11 +48,9 @@ export function PrayerTopicCard({ topic, className }: PrayerTopicCardProps) {
             >
               {getStatusLabel(topic.status)}
             </span>
-            {topic.prayerCount > 0 && (
-              <span className="text-xs text-soft-brown/60">
-                🙏 {topic.prayerCount}
-              </span>
-            )}
+            <span className="text-xs text-soft-brown/60">
+              🙏 {topic.prayerCount}
+            </span>
           </div>
           {isAnswered && topic.answeredAt && (
             <span className="text-xs text-soft-brown">
