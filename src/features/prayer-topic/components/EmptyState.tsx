@@ -54,17 +54,17 @@ function getEmptyMessage(filterStatus: FilterStatus): {
   switch (filterStatus) {
     case "PRAYING":
       return {
-        title: "기도 중인 제목이 없습니다",
+        title: "기도 중인 제목이 없어요",
         description: "새로운 기도제목을 추가해보세요.",
       };
     case "ANSWERED":
       return {
-        title: "응답된 기도가 없습니다",
+        title: "응답받은 기도가 없어요",
         description: "기도 응답을 기대하며 계속 기도해보세요.",
       };
     default:
       return {
-        title: "아직 기도제목이 없습니다",
+        title: "아직 기도제목이 없어요",
         description: "첫 번째 기도제목을 추가해보세요.",
       };
   }

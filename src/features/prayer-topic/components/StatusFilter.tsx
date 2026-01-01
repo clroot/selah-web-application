@@ -14,13 +14,13 @@ interface StatusFilterProps {
 const filters: { value: FilterStatus; label: string }[] = [
   { value: "ALL", label: "전체" },
   { value: "PRAYING", label: "기도 중" },
-  { value: "ANSWERED", label: "응답됨" },
+  { value: "ANSWERED", label: "응답받음" },
 ];
 
 /**
  * 기도제목 상태 필터 컴포넌트
  *
- * 전체/기도 중/응답됨 상태를 선택할 수 있는 탭 필터입니다.
+ * 전체/기도 중/응답받음 상태를 선택할 수 있는 탭 필터입니다.
  */
 export function StatusFilter({
   value,

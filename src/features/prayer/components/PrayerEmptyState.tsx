@@ -16,7 +16,7 @@ interface PrayerEmptyStateProps {
  * 기도문 빈 상태 컴포넌트
  */
 export function PrayerEmptyState({
-  message = "이 날 작성된 기도문이 없어요",
+  message = "이 날 기도한 기록이 없어요",
   showWriteButton = true,
   className,
 }: PrayerEmptyStateProps) {

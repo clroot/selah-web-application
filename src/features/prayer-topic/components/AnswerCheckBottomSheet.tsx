@@ -77,13 +77,13 @@ export function AnswerCheckBottomSheet({
               htmlFor="reflection-input"
               className="mb-2 block text-sm text-soft-brown"
             >
-              응답 소감을 남겨주세요 (선택)
+              감사한 마음을 남겨보세요 (선택)
             </label>
             <textarea
               id="reflection-input"
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
-              placeholder="소감을 입력하세요..."
+              placeholder="어떤 응답을 받으셨나요?"
               rows={3}
               className={cn(
                 "w-full resize-none rounded-xl border-2 border-sand p-4",
@@ -113,7 +113,7 @@ export function AnswerCheckBottomSheet({
             isLoading={isLoading}
             className="flex-1"
           >
-            응답 체크
+            완료
           </Button>
         </DrawerFooter>
 

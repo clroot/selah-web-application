@@ -95,7 +95,7 @@ export function RelatedPrayersSection({
         </h3>
         <div className="rounded-2xl bg-warm-beige/30 p-6 text-center">
           <p className="text-sm text-soft-brown">
-            아직 이 기도제목으로 작성된 기도문이 없습니다.
+            아직 이 기도제목으로 기도한 기도문이 없습니다.
           </p>
           <Link
             href={`/prayers/new?prayerTopicId=${prayerTopicId}`}

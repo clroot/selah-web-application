@@ -150,10 +150,9 @@ export function PrayerTopicDetail({
             응답일: {topic.answeredAt ? formatDate(topic.answeredAt) : "-"}
           </p>
           {topic.reflection && (
-            <div className="mt-3">
-              <p className="mb-1 text-xs text-soft-brown">응답 소감</p>
-              <p className="font-serif text-base leading-relaxed text-deep-brown">
-                {topic.reflection}
+            <div className="mt-4 border-l-4 border-sand pl-4">
+              <p className="font-serif text-base italic leading-relaxed text-soft-brown">
+                &ldquo;{topic.reflection}&rdquo;
               </p>
             </div>
           )}
