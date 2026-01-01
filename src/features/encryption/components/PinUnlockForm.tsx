@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
+import type { PinInputHandle } from './PinInput';
 import { PinInput } from './PinInput';
 
 interface PinUnlockFormProps {
@@ -14,6 +15,7 @@ interface PinUnlockFormProps {
  */
 export function PinUnlockForm({ onSubmit, isLoading = false }: PinUnlockFormProps) {
   const [error, setError] = useState<string>();
+  const pinInputRef = useRef<PinInputHandle>(null);
 
   const handlePinComplete = useCallback(
     async (pin: string) => {
@@ -23,6 +25,8 @@ export function PinUnlockForm({ onSubmit, isLoading = false }: PinUnlockFormProp
         await onSubmit(pin);
       } catch (e) {
         setError(e instanceof Error ? e.message : 'PIN이 올바르지 않습니다');
+        // 에러 시 입력 초기화
+        pinInputRef.current?.clear();
       }
     },
     [onSubmit]
@@ -40,9 +44,11 @@ export function PinUnlockForm({ onSubmit, isLoading = false }: PinUnlockFormProp
       </div>
 
       <PinInput
+        ref={pinInputRef}
         onComplete={handlePinComplete}
         disabled={isLoading}
         error={error}
+        autoFocus
       />
 
       {isLoading && (

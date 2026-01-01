@@ -1,10 +1,12 @@
 'use client';
 
 import {
+  forwardRef,
   useCallback,
   useRef,
   useState,
   useEffect,
+  useImperativeHandle,
   KeyboardEvent,
   ClipboardEvent,
 } from 'react';
@@ -19,6 +21,12 @@ interface PinInputProps {
   disabled?: boolean;
   error?: string;
   className?: string;
+  autoFocus?: boolean;
+}
+
+export interface PinInputHandle {
+  clear: () => void;
+  focus: () => void;
 }
 
 /**
@@ -27,12 +35,11 @@ interface PinInputProps {
  * 각 자리를 개별 입력 필드로 표시하며, 자동으로 다음 필드로 이동합니다.
  * 보안을 위해 이전에 입력한 숫자는 마스킹됩니다.
  */
-export function PinInput({
-  onComplete,
-  disabled = false,
-  error,
-  className,
-}: PinInputProps) {
+export const PinInput = forwardRef<PinInputHandle, PinInputProps>(
+  function PinInput(
+    { onComplete, disabled = false, error, className, autoFocus = false },
+    ref
+  ) {
   const [values, setValues] = useState<string[]>(Array(PIN_LENGTH).fill(''));
   const [visibleIndex, setVisibleIndex] = useState<number | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -46,6 +53,29 @@ export function PinInput({
       }
     };
   }, []);
+
+  // autoFocus 시 첫 번째 입력에 포커스
+  useEffect(() => {
+    if (autoFocus && !disabled) {
+      // 약간의 딜레이를 주어 렌더링 완료 후 포커스
+      const timer = setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [autoFocus, disabled]);
+
+  // 부모 컴포넌트에서 호출할 수 있는 메서드 노출
+  useImperativeHandle(ref, () => ({
+    clear: () => {
+      setValues(Array(PIN_LENGTH).fill(''));
+      setVisibleIndex(null);
+      inputRefs.current[0]?.focus();
+    },
+    focus: () => {
+      inputRefs.current[0]?.focus();
+    },
+  }));
 
   const focusInput = useCallback((index: number) => {
     if (index >= 0 && index < PIN_LENGTH) {
@@ -205,4 +235,5 @@ export function PinInput({
       )}
     </div>
   );
-}
+  }
+);

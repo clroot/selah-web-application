@@ -1,3 +1,8 @@
+export {
+  useCancelAnswer,
+  useMarkAsAnswered,
+  useUpdateReflection,
+} from './useAnswerCheck';
 export { usePrayerTopicDetail } from './usePrayerTopicDetail';
 export type { DecryptedPrayerTopicDetail } from './usePrayerTopicDetail';
 export {
