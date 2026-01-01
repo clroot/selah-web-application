@@ -18,7 +18,7 @@ export function NavItem({ href, icon: Icon, label, isActive }: NavItemProps) {
     <Link
       href={href}
       className={cn(
-        "flex flex-col items-center justify-center gap-1 px-4 py-2",
+        "flex flex-col items-center justify-center gap-1 py-2",
         "transition-colors duration-200",
         isActive ? "text-gold" : "text-soft-brown hover:text-deep-brown",
       )}
