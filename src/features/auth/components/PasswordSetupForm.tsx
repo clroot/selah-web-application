@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Lock, ShieldCheck } from 'lucide-react';
-import { useForm } from 'react-hook-form';
 
 import { PasswordStrengthMeter } from '@/features/auth/components/PasswordStrengthMeter';
 import {

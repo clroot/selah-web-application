@@ -11,7 +11,7 @@ import type {
   UpdateRecoveryKeyResponse,
   VerifyRecoveryKeyRequest,
   VerifyRecoveryKeyResponse,
-} from '@/features/encryption/types/encryption.types';
+} from '@/shared/types/encryption.types';
 
 /**
  * Encryption API

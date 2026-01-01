@@ -2,8 +2,8 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useCrypto } from '@/features/encryption/hooks';
 import { prayerTopicApi } from '@/features/prayer-topic/api/prayerTopic.api';
+import { useCrypto } from '@/shared/hooks/useCrypto';
 
 /**
  * 기도제목 응답 체크 훅

@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import { PinUnlockForm } from '@/features/encryption/components';
-import { useEncryptionStore } from '@/features/encryption/stores/encryptionStore';
 import { FullPageSpinner } from '@/shared/components';
+import { useEncryptionStore } from '@/shared/stores/encryptionStore';
 
 export default function UnlockEncryptionPage() {
   const router = useRouter();

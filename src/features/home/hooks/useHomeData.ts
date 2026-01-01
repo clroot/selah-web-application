@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useCrypto } from '@/features/encryption/hooks/useCrypto';
 import { prayerApi } from '@/features/prayer/api/prayer.api';
 import { prayerTopicApi } from '@/features/prayer-topic/api/prayerTopic.api';
 import { PrayerTopicStatus } from '@/features/prayer-topic/types/prayerTopic.types';
+import { useCrypto } from '@/shared/hooks/useCrypto';
 
 import type { Prayer } from '@/features/prayer/types/prayer.types';
 import type { PrayerTopic } from '@/features/prayer-topic/types/prayerTopic.types';

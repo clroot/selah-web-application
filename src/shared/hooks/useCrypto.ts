@@ -2,8 +2,8 @@
 
 import { useCallback } from 'react';
 
-import { useEncryptionStore } from '@/features/encryption/stores/encryptionStore';
 import { encrypt, decrypt } from '@/shared/lib/crypto';
+import { useEncryptionStore } from '@/shared/stores/encryptionStore';
 
 /**
  * 암호화/복호화를 위한 훅

@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { authApi } from '@/features/auth/api/auth.api';
 import { useAuthStore } from '@/features/auth/stores/authStore';
-import { useEncryptionStore } from '@/features/encryption/stores/encryptionStore';
+import { useEncryptionStore } from '@/shared/stores/encryptionStore';
 
 interface UseLogoutOptions {
   logoutAll?: boolean;

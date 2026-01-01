@@ -1,12 +1,12 @@
 'use client';
 
-import { cn } from '@/shared/lib/utils';
 import { LoadingSpinner } from '@/shared/components';
+import { cn } from '@/shared/lib/utils';
 
-import { PrayerTopicCard } from './PrayerTopicCard';
 import { EmptyState } from './EmptyState';
-
+import { PrayerTopicCard } from './PrayerTopicCard';
 import type { FilterStatus } from './StatusFilter';
+
 import type { PrayerTopic } from '@/features/prayer-topic/types/prayerTopic.types';
 
 interface PrayerTopicListProps {

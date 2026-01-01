@@ -1,12 +1,6 @@
 import { create } from 'zustand';
 
-import { encryptionApi } from '@/features/encryption/api/encryption.api';
-import {
-  cacheDEK,
-  loadCachedDEK,
-  clearDEKCache,
-  hasCachedDEK,
-} from '@/features/encryption/lib/dekCache';
+import { encryptionApi } from '@/shared/api/encryption.api';
 import {
   uint8ArrayToBase64,
   base64ToUint8Array,
@@ -21,6 +15,12 @@ import {
   hashRecoveryKey,
   encryptDEKWithRecoveryKey,
 } from '@/shared/lib/crypto';
+import {
+  cacheDEK,
+  loadCachedDEK,
+  clearDEKCache,
+  hasCachedDEK,
+} from '@/shared/lib/dekCache';
 
 interface EncryptionState {
   isUnlocked: boolean;

@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useEncryptionStore } from '@/features/encryption/stores/encryptionStore';
+import { useEncryptionStore } from '@/shared/stores/encryptionStore';
 
 /**
  * PIN 설정 및 복구 키 관리를 위한 훅

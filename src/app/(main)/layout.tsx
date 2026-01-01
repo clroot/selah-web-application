@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-
 import type { ReactNode } from 'react';
 
-import { useEncryptionStore } from '@/features/encryption/stores/encryptionStore';
+import { useRouter } from 'next/navigation';
+
+
 import { BottomNavigation, FullPageSpinner } from '@/shared/components';
+import { useEncryptionStore } from '@/shared/stores/encryptionStore';
 
 interface MainLayoutProps {
   children: ReactNode;
