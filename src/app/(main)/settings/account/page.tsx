@@ -11,7 +11,8 @@ import { SocialConnectionItem } from "./_components/SocialConnectionItem";
 
 import type { OAuthProvider } from "@/features/member/types/member.types";
 
-const ALL_PROVIDERS: OAuthProvider[] = ["GOOGLE", "KAKAO", "NAVER"];
+// TODO: KAKAO 추가 예정 (OAuth 설정 완료 후)
+const ALL_PROVIDERS: OAuthProvider[] = ["GOOGLE", "NAVER"];
 
 /**
  * 계정 관리 페이지

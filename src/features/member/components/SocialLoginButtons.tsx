@@ -67,7 +67,8 @@ const PROVIDER_CONFIGS: Record<OAuthProvider, ProviderConfig> = {
   },
 };
 
-const DEFAULT_PROVIDERS: OAuthProvider[] = ["GOOGLE", "KAKAO", "NAVER"];
+// TODO: KAKAO 추가 예정 (OAuth 설정 완료 후)
+const DEFAULT_PROVIDERS: OAuthProvider[] = ["GOOGLE", "NAVER"];
 
 export function SocialLoginButtons({
   className,
