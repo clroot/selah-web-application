@@ -1,5 +1,7 @@
 "use client";
 
+import { LookbackSection } from "@/features/lookback/components";
+
 import {
   EmptyHomeState,
   HomeHeader,
@@ -22,6 +24,7 @@ export default function HomePage() {
 
       <div className="space-y-8">
         <StatsGrid />
+        <LookbackSection />
 
         {isLoading ? (
           <>

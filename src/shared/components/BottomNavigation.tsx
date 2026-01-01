@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { BookOpen, Check, Home, Settings } from "lucide-react";
 
@@ -20,8 +20,15 @@ const rightNavItems = [
   { href: "/settings", icon: Settings, label: "설정" },
 ];
 
+function getDirectNavigationPath(pathname: string): string | null {
+  if (pathname.startsWith("/prayers")) return "/prayers/new";
+  if (pathname.startsWith("/prayer-topics")) return "/prayer-topics/new";
+  return null;
+}
+
 export function BottomNavigation() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
 
   const isActive = (href: string) => {
@@ -32,7 +39,12 @@ export function BottomNavigation() {
   };
 
   const handleFabClick = () => {
-    setIsActionSheetOpen(true);
+    const directPath = getDirectNavigationPath(pathname);
+    if (directPath) {
+      router.push(directPath);
+    } else {
+      setIsActionSheetOpen(true);
+    }
   };
 
   const handleActionSheetClose = () => {

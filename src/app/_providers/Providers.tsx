@@ -2,6 +2,8 @@
 
 import type { ReactNode } from "react";
 
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 import { AuthProvider } from "@/features/member/providers/AuthProvider";
 import { QueryProvider } from "@/shared/providers/QueryProvider";
 
@@ -11,8 +13,10 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <QueryProvider>
-      <AuthProvider>{children}</AuthProvider>
-    </QueryProvider>
+    <NuqsAdapter>
+      <QueryProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </QueryProvider>
+    </NuqsAdapter>
   );
 }
