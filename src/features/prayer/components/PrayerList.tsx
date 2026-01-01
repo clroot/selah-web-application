@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { LoadingSpinner } from '@/shared/components';
-import { cn } from '@/shared/lib/utils';
+import { LoadingSpinner } from "@/shared/components";
+import { cn } from "@/shared/lib/utils";
 
-import { PrayerCard } from './PrayerCard';
-import { PrayerEmptyState } from './PrayerEmptyState';
+import { PrayerCard } from "./PrayerCard";
+import { PrayerEmptyState } from "./PrayerEmptyState";
 
-import type { Prayer } from '@/features/prayer/types/prayer.types';
+import type { Prayer } from "@/features/prayer/types/prayer.types";
 
 interface PrayerListProps {
   prayers: Prayer[];
@@ -44,7 +44,7 @@ export function PrayerList({
     return (
       <div className="py-16 text-center">
         <p className="text-soft-brown">
-          {error?.message ?? '기도문을 불러오는 중 오류가 발생했습니다.'}
+          {error?.message ?? "기도문을 불러오는 중 오류가 발생했습니다."}
         </p>
       </div>
     );
@@ -60,7 +60,7 @@ export function PrayerList({
   }
 
   return (
-    <div className={cn('flex flex-col gap-3', className)}>
+    <div className={cn("flex flex-col gap-3", className)}>
       {prayers.map((prayer) => (
         <PrayerCard
           key={prayer.id}

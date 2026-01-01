@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { LoadingSpinner } from '@/shared/components';
-import { cn } from '@/shared/lib/utils';
+import { LoadingSpinner } from "@/shared/components";
+import { cn } from "@/shared/lib/utils";
 
-import { EmptyState } from './EmptyState';
-import { PrayerTopicCard } from './PrayerTopicCard';
-import type { FilterStatus } from './StatusFilter';
+import { EmptyState } from "./EmptyState";
+import { PrayerTopicCard } from "./PrayerTopicCard";
+import type { FilterStatus } from "./StatusFilter";
 
-import type { PrayerTopic } from '@/features/prayer-topic/types/prayerTopic.types';
+import type { PrayerTopic } from "@/features/prayer-topic/types/prayerTopic.types";
 
 interface PrayerTopicListProps {
   topics: PrayerTopic[];
@@ -29,7 +29,7 @@ export function PrayerTopicList({
   isLoading = false,
   isError = false,
   error,
-  filterStatus = 'ALL',
+  filterStatus = "ALL",
   className,
 }: PrayerTopicListProps) {
   // 로딩 상태
@@ -50,7 +50,7 @@ export function PrayerTopicList({
           기도제목을 불러올 수 없습니다
         </h3>
         <p className="text-sm text-soft-brown">
-          {error?.message ?? '잠시 후 다시 시도해주세요.'}
+          {error?.message ?? "잠시 후 다시 시도해주세요."}
         </p>
       </div>
     );
@@ -63,7 +63,7 @@ export function PrayerTopicList({
 
   // 목록 렌더링
   return (
-    <div className={cn('flex flex-col gap-3', className)}>
+    <div className={cn("flex flex-col gap-3", className)}>
       {topics.map((topic) => (
         <PrayerTopicCard key={topic.id} topic={topic} />
       ))}

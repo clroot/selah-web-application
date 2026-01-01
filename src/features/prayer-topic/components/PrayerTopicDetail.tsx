@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { MoreVertical, Edit, Trash2 } from 'lucide-react';
+import { Edit, MoreVertical, Trash2 } from "lucide-react";
 
 import {
-  useMarkAsAnswered,
   useCancelAnswer,
   useDeletePrayerTopic,
-} from '@/features/prayer-topic/hooks';
+  useMarkAsAnswered,
+} from "@/features/prayer-topic/hooks";
 import {
   formatDate,
-  getStatusLabel,
   getStatusColorClass,
-} from '@/features/prayer-topic/utils/prayerTopic.utils';
-import { Button } from '@/shared/components';
-import { cn } from '@/shared/lib/utils';
+  getStatusLabel,
+} from "@/features/prayer-topic/utils/prayerTopic.utils";
+import { Button } from "@/shared/components";
+import { cn } from "@/shared/lib/utils";
 
-import { AnswerCheckBottomSheet } from './AnswerCheckBottomSheet';
+import { AnswerCheckBottomSheet } from "./AnswerCheckBottomSheet";
 
-import type { PrayerTopic } from '@/features/prayer-topic/types/prayerTopic.types';
+import type { PrayerTopic } from "@/features/prayer-topic/types/prayerTopic.types";
 
 interface PrayerTopicDetailProps {
   topic: PrayerTopic;
@@ -49,7 +49,7 @@ export function PrayerTopicDetail({
   const { mutateAsync: deleteTopic, isPending: isDeleting } =
     useDeletePrayerTopic();
 
-  const isAnswered = topic.status === 'ANSWERED';
+  const isAnswered = topic.status === "ANSWERED";
 
   const handleEdit = useCallback(() => {
     setIsMenuOpen(false);
@@ -58,7 +58,7 @@ export function PrayerTopicDetail({
 
   const handleDelete = useCallback(async () => {
     await deleteTopic(topic.id);
-    router.push('/prayer-topics');
+    router.push("/prayer-topics");
   }, [deleteTopic, topic.id, router]);
 
   const handleAnswerCheck = useCallback(
@@ -66,7 +66,7 @@ export function PrayerTopicDetail({
       await markAsAnswered({ id: topic.id, reflection });
       setIsAnswerSheetOpen(false);
     },
-    [markAsAnswered, topic.id]
+    [markAsAnswered, topic.id],
   );
 
   const handleCancelAnswer = useCallback(async () => {
@@ -74,13 +74,13 @@ export function PrayerTopicDetail({
   }, [cancelAnswer, topic.id]);
 
   return (
-    <div className={cn('flex flex-col gap-6', className)}>
+    <div className={cn("flex flex-col gap-6", className)}>
       {/* 상태 배지 */}
       <div className="flex items-center justify-between">
         <span
           className={cn(
-            'inline-flex items-center rounded-full px-3 py-1 text-sm font-medium',
-            getStatusColorClass(topic.status)
+            "inline-flex items-center rounded-full px-3 py-1 text-sm font-medium",
+            getStatusColorClass(topic.status),
           )}
         >
           {getStatusLabel(topic.status)}
@@ -143,7 +143,7 @@ export function PrayerTopicDetail({
       {isAnswered && (
         <div className="rounded-2xl bg-warm-beige/50 p-4">
           <p className="mb-1 text-sm font-medium text-deep-brown">
-            응답일: {topic.answeredAt ? formatDate(topic.answeredAt) : '-'}
+            응답일: {topic.answeredAt ? formatDate(topic.answeredAt) : "-"}
           </p>
           {topic.reflection && (
             <div className="mt-3">

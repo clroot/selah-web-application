@@ -49,9 +49,9 @@ export interface PageParams {
 /** API 에러 타입 가드 */
 export function isApiError(response: unknown): response is ApiErrorResponse {
   return (
-    typeof response === 'object' &&
+    typeof response === "object" &&
     response !== null &&
-    'error' in response &&
-    typeof (response as ApiErrorResponse).error === 'object'
+    "error" in response &&
+    typeof (response as ApiErrorResponse).error === "object"
   );
 }

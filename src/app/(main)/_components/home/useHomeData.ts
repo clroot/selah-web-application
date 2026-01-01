@@ -1,12 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { prayerApi } from '@/features/prayer/api/prayer.api';
-import { prayerTopicApi } from '@/features/prayer-topic/api/prayerTopic.api';
-import { PrayerTopicStatus } from '@/features/prayer-topic/types/prayerTopic.types';
-import { useCrypto } from '@/shared/hooks/useCrypto';
+import { prayerApi } from "@/features/prayer/api/prayer.api";
+import { prayerTopicApi } from "@/features/prayer-topic/api/prayerTopic.api";
+import { PrayerTopicStatus } from "@/features/prayer-topic/types/prayerTopic.types";
+import { useCrypto } from "@/shared/hooks/useCrypto";
 
-import type { Prayer } from '@/features/prayer/types/prayer.types';
-import type { PrayerTopic } from '@/features/prayer-topic/types/prayerTopic.types';
+import type { Prayer } from "@/features/prayer/types/prayer.types";
+import type { PrayerTopic } from "@/features/prayer-topic/types/prayerTopic.types";
 
 interface HomeData {
   prayerTopics: PrayerTopic[];
@@ -20,7 +20,7 @@ export function useHomeData() {
   const { decryptData, isUnlocked } = useCrypto();
 
   return useQuery({
-    queryKey: ['home', 'preview'],
+    queryKey: ["home", "preview"],
     queryFn: async (): Promise<HomeData> => {
       const [topicsResult, prayersResult] = await Promise.all([
         prayerTopicApi.list({ status: PrayerTopicStatus.PRAYING, size: 5 }),
@@ -39,13 +39,13 @@ export function useHomeData() {
             reflection: topic.reflection
               ? await decryptData(topic.reflection)
               : null,
-          }))
+          })),
         ),
         Promise.all(
           prayers.map(async (prayer) => ({
             ...prayer,
             content: await decryptData(prayer.content),
-          }))
+          })),
         ),
       ]);
 

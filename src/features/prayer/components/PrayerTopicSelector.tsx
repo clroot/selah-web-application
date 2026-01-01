@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { Check, ChevronDown, X } from 'lucide-react';
+import { Check, ChevronDown, X } from "lucide-react";
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from "@/shared/lib/utils";
 
 interface PrayerTopic {
   id: string;
@@ -47,11 +47,11 @@ export function PrayerTopicSelector({
   };
 
   const selectedTopics = prayerTopics.filter((topic) =>
-    selectedIds.includes(topic.id)
+    selectedIds.includes(topic.id),
   );
 
   return (
-    <div className={cn('flex flex-col gap-3', className)}>
+    <div className={cn("flex flex-col gap-3", className)}>
       <label className="text-xs font-medium text-soft-brown">
         연결된 기도제목
       </label>
@@ -84,24 +84,21 @@ export function PrayerTopicSelector({
         onClick={() => setIsOpen(!isOpen)}
         disabled={isLoading}
         className={cn(
-          'flex items-center justify-between rounded-xl border border-sand bg-cream px-4 py-3',
-          'text-sm text-soft-brown',
-          'transition-colors hover:border-sand-dark',
-          'disabled:cursor-not-allowed disabled:opacity-50'
+          "flex items-center justify-between rounded-xl border border-sand bg-cream px-4 py-3",
+          "text-sm text-soft-brown",
+          "transition-colors hover:border-sand-dark",
+          "disabled:cursor-not-allowed disabled:opacity-50",
         )}
       >
         <span>
           {isLoading
-            ? '불러오는 중...'
+            ? "불러오는 중..."
             : selectedIds.length > 0
               ? `${selectedIds.length}개 선택됨`
-              : '기도제목 선택 (선택사항)'}
+              : "기도제목 선택 (선택사항)"}
         </span>
         <ChevronDown
-          className={cn(
-            'h-4 w-4 transition-transform',
-            isOpen && 'rotate-180'
-          )}
+          className={cn("h-4 w-4 transition-transform", isOpen && "rotate-180")}
         />
       </button>
 
@@ -122,17 +119,17 @@ export function PrayerTopicSelector({
                       type="button"
                       onClick={() => handleToggle(topic.id)}
                       className={cn(
-                        'flex w-full items-center gap-3 px-4 py-2.5 text-left',
-                        'transition-colors hover:bg-cream-dark',
-                        isSelected && 'bg-gold-soft'
+                        "flex w-full items-center gap-3 px-4 py-2.5 text-left",
+                        "transition-colors hover:bg-cream-dark",
+                        isSelected && "bg-gold-soft",
                       )}
                     >
                       <div
                         className={cn(
-                          'flex h-5 w-5 items-center justify-center rounded border',
+                          "flex h-5 w-5 items-center justify-center rounded border",
                           isSelected
-                            ? 'border-deep-brown bg-deep-brown'
-                            : 'border-sand bg-white'
+                            ? "border-deep-brown bg-deep-brown"
+                            : "border-sand bg-white",
                         )}
                       >
                         {isSelected && (

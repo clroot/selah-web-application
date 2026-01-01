@@ -1,26 +1,26 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import { encryptionApi } from '@/shared/api/encryption.api';
+import { encryptionApi } from "@/shared/api/encryption.api";
 import {
-  uint8ArrayToBase64,
   base64ToUint8Array,
-  generateSalt,
+  decryptDEK,
   deriveClientKEK,
   deriveCombinedKEK,
-  generateDEK,
   encryptDEK,
-  decryptDEK,
-  generateRecoveryKey,
-  formatRecoveryKey,
-  hashRecoveryKey,
   encryptDEKWithRecoveryKey,
-} from '@/shared/lib/crypto';
+  formatRecoveryKey,
+  generateDEK,
+  generateRecoveryKey,
+  generateSalt,
+  hashRecoveryKey,
+  uint8ArrayToBase64,
+} from "@/shared/lib/crypto";
 import {
   cacheDEK,
-  loadCachedDEK,
   clearDEKCache,
   hasCachedDEK,
-} from '@/shared/lib/dekCache';
+  loadCachedDEK,
+} from "@/shared/lib/dekCache";
 
 interface EncryptionState {
   isUnlocked: boolean;
@@ -104,7 +104,7 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       const recoveryKey = generateRecoveryKey();
       const recoveryEncryptedDEK = await encryptDEKWithRecoveryKey(
         dek,
-        recoveryKey
+        recoveryKey,
       );
       const recoveryKeyHash = await hashRecoveryKey(recoveryKey);
 
@@ -118,14 +118,14 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       });
 
       if (error || !data) {
-        throw new Error(error?.message ?? '암호화 설정 실패');
+        throw new Error(error?.message ?? "암호화 설정 실패");
       }
 
       // 5. Server Key와 Client KEK를 결합하여 Combined KEK 생성
       const combinedKEK = await deriveCombinedKEK(
         clientKEK,
         data.serverKey,
-        salt
+        salt,
       );
 
       // 6. Combined KEK로 DEK 암호화
@@ -153,7 +153,7 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
     unlockWithPIN: async (pin: string) => {
       const { data, error } = await encryptionApi.getSettings();
       if (error || !data) {
-        throw new Error(error?.message ?? '암호화 설정을 찾을 수 없습니다');
+        throw new Error(error?.message ?? "암호화 설정을 찾을 수 없습니다");
       }
 
       // Salt에서 Client KEK 파생
@@ -164,7 +164,7 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       const combinedKEK = await deriveCombinedKEK(
         clientKEK,
         data.serverKey,
-        salt
+        salt,
       );
 
       // Combined KEK로 DEK 복호화
@@ -201,7 +201,7 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
     changePIN: async (newPIN: string) => {
       const { dek } = get();
       if (!dek) {
-        throw new Error('암호화가 해제되지 않았습니다');
+        throw new Error("암호화가 해제되지 않았습니다");
       }
 
       // 새 Salt 생성 및 Client KEK 파생
@@ -212,14 +212,14 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       const { data: currentSettings, error: getError } =
         await encryptionApi.getSettings();
       if (getError || !currentSettings) {
-        throw new Error(getError?.message ?? '현재 설정 조회 실패');
+        throw new Error(getError?.message ?? "현재 설정 조회 실패");
       }
 
       // 새 Combined KEK 생성 (기존 Server Key 사용)
       const newCombinedKEK = await deriveCombinedKEK(
         newClientKEK,
         currentSettings.serverKey,
-        newSalt
+        newSalt,
       );
 
       // 기존 DEK를 새 Combined KEK로 재암호화
@@ -238,20 +238,20 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
 
     recoverWithKey: async () => {
       // TODO: 복구 키로 DEK 복구 구현
-      throw new Error('Not implemented');
+      throw new Error("Not implemented");
     },
 
     regenerateRecoveryKey: async () => {
       const { dek } = get();
       if (!dek) {
-        throw new Error('암호화가 해제되지 않았습니다');
+        throw new Error("암호화가 해제되지 않았습니다");
       }
 
       // 새 복구 키 생성
       const newRecoveryKey = generateRecoveryKey();
       const recoveryEncryptedDEK = await encryptDEKWithRecoveryKey(
         dek,
-        newRecoveryKey
+        newRecoveryKey,
       );
       const recoveryKeyHash = await hashRecoveryKey(newRecoveryKey);
 
@@ -281,5 +281,5 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
     clearPendingRecoveryKey: () => {
       set({ pendingRecoveryKey: null });
     },
-  })
+  }),
 );

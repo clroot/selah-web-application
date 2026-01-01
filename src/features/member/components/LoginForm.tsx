@@ -1,12 +1,15 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useLogin } from '@/features/member/hooks/useLogin';
-import { loginFormSchema, type LoginFormData } from '@/features/member/utils/schemas';
-import { Button, Input } from '@/shared/components';
+import { useLogin } from "@/features/member/hooks/useLogin";
+import {
+  type LoginFormData,
+  loginFormSchema,
+} from "@/features/member/utils/schemas";
+import { Button, Input } from "@/shared/components";
 
 export function LoginForm() {
   const {
@@ -29,7 +32,7 @@ export function LoginForm() {
         label="이메일"
         type="email"
         placeholder="hello@selah.com"
-        {...register('email')}
+        {...register("email")}
         error={errors.email?.message}
       />
 
@@ -38,13 +41,13 @@ export function LoginForm() {
         type="password"
         placeholder="••••••••"
         showPasswordToggle
-        {...register('password')}
+        {...register("password")}
         error={errors.password?.message}
       />
 
       {error && (
         <p className="text-center text-sm text-red-500">
-          {error.message || '로그인에 실패했습니다'}
+          {error.message || "로그인에 실패했습니다"}
         </p>
       )}
 

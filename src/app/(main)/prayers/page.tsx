@@ -1,17 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from "react";
 
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
-import {
-  PrayerCalendar,
-  PrayerList,
-} from '@/features/prayer/components';
-import { usePrayers } from '@/features/prayer/hooks';
-import { filterPrayersByDate, getPrayerDates } from '@/features/prayer/utils';
-import { usePrayerTopics } from '@/features/prayer-topic/hooks';
-import { PageHeader } from '@/shared/components';
+import { PrayerCalendar, PrayerList } from "@/features/prayer/components";
+import { usePrayers } from "@/features/prayer/hooks";
+import { filterPrayersByDate, getPrayerDates } from "@/features/prayer/utils";
+import { usePrayerTopics } from "@/features/prayer-topic/hooks";
+import { PageHeader } from "@/shared/components";
 
 export default function PrayersPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -34,10 +31,10 @@ export default function PrayersPage() {
   // 선택된 날짜의 기도문
   const filteredPrayers = useMemo(
     () => filterPrayersByDate(prayers, selectedDate),
-    [prayers, selectedDate]
+    [prayers, selectedDate],
   );
 
-  const formattedDate = format(selectedDate, 'M월 d일');
+  const formattedDate = format(selectedDate, "M월 d일");
 
   return (
     <div className="flex min-h-screen flex-col bg-cream">

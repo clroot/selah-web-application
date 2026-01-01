@@ -1,8 +1,8 @@
-import type { ApiResult, ApiError } from '@/shared/types/api.types';
+import type { ApiError, ApiResult } from "@/shared/types/api.types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
-interface RequestOptions extends Omit<RequestInit, 'body'> {
+interface RequestOptions extends Omit<RequestInit, "body"> {
   body?: unknown;
 }
 
@@ -15,39 +15,60 @@ interface RequestOptions extends Omit<RequestInit, 'body'> {
  * - 쿠키 기반 인증 (credentials: 'include')
  */
 export const apiClient = {
-  async get<T>(endpoint: string, options?: RequestOptions): Promise<ApiResult<T>> {
-    return request<T>(endpoint, { ...options, method: 'GET' });
+  async get<T>(
+    endpoint: string,
+    options?: RequestOptions,
+  ): Promise<ApiResult<T>> {
+    return request<T>(endpoint, { ...options, method: "GET" });
   },
 
-  async post<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<ApiResult<T>> {
-    return request<T>(endpoint, { ...options, method: 'POST', body });
+  async post<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions,
+  ): Promise<ApiResult<T>> {
+    return request<T>(endpoint, { ...options, method: "POST", body });
   },
 
-  async patch<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<ApiResult<T>> {
-    return request<T>(endpoint, { ...options, method: 'PATCH', body });
+  async patch<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions,
+  ): Promise<ApiResult<T>> {
+    return request<T>(endpoint, { ...options, method: "PATCH", body });
   },
 
-  async put<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<ApiResult<T>> {
-    return request<T>(endpoint, { ...options, method: 'PUT', body });
+  async put<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions,
+  ): Promise<ApiResult<T>> {
+    return request<T>(endpoint, { ...options, method: "PUT", body });
   },
 
-  async delete<T>(endpoint: string, options?: RequestOptions): Promise<ApiResult<T>> {
-    return request<T>(endpoint, { ...options, method: 'DELETE' });
+  async delete<T>(
+    endpoint: string,
+    options?: RequestOptions,
+  ): Promise<ApiResult<T>> {
+    return request<T>(endpoint, { ...options, method: "DELETE" });
   },
 };
 
-async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<ApiResult<T>> {
+async function request<T>(
+  endpoint: string,
+  options: RequestOptions = {},
+): Promise<ApiResult<T>> {
   const { body, headers: customHeaders, ...restOptions } = options;
 
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     ...customHeaders,
   };
 
   const config: RequestInit = {
     ...restOptions,
     headers,
-    credentials: 'include', // 쿠키 포함 (세션 인증)
+    credentials: "include", // 쿠키 포함 (세션 인증)
   };
 
   if (body !== undefined) {
@@ -63,13 +84,16 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
     }
 
     const json = await response.json();
-    console.log('[API Client] Response:', endpoint, { status: response.status, json });
+    console.log("[API Client] Response:", endpoint, {
+      status: response.status,
+      json,
+    });
 
     // 에러 응답 처리
     if (!response.ok || isApiErrorResponse(json)) {
       const error: ApiError = {
-        code: json.error?.code ?? 'UNKNOWN_ERROR',
-        message: json.error?.message ?? '알 수 없는 오류가 발생했습니다',
+        code: json.error?.code ?? "UNKNOWN_ERROR",
+        message: json.error?.message ?? "알 수 없는 오류가 발생했습니다",
         status: response.status,
       };
       return { data: null, error };
@@ -80,8 +104,9 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   } catch (err) {
     // 네트워크 에러 등
     const error: ApiError = {
-      code: 'NETWORK_ERROR',
-      message: err instanceof Error ? err.message : '네트워크 오류가 발생했습니다',
+      code: "NETWORK_ERROR",
+      message:
+        err instanceof Error ? err.message : "네트워크 오류가 발생했습니다",
     };
     return { data: null, error };
   }
@@ -89,10 +114,10 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 
 function isApiErrorResponse(json: unknown): boolean {
   return (
-    typeof json === 'object' &&
+    typeof json === "object" &&
     json !== null &&
-    'error' in json &&
+    "error" in json &&
     (json as { error: unknown }).error !== null &&
-    typeof (json as { error: unknown }).error === 'object'
+    typeof (json as { error: unknown }).error === "object"
   );
 }

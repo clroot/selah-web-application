@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from "lucide-react";
 
 interface SectionHeaderProps {
   title: string;
@@ -14,7 +14,7 @@ interface SectionHeaderProps {
 export function SectionHeader({
   title,
   href,
-  linkText = '전체보기',
+  linkText = "전체보기",
 }: SectionHeaderProps) {
   return (
     <div className="mb-4 flex items-center justify-between">

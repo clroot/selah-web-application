@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { prayerApi } from '@/features/prayer/api/prayer.api';
-import { useCrypto } from '@/shared/hooks/useCrypto';
+import { prayerApi } from "@/features/prayer/api/prayer.api";
+import { useCrypto } from "@/shared/hooks/useCrypto";
 
-import type { Prayer } from '@/features/prayer/types/prayer.types';
+import type { Prayer } from "@/features/prayer/types/prayer.types";
 
 interface UsePrayerDetailResult {
   prayer: Prayer | null;
@@ -23,7 +23,7 @@ export function usePrayerDetail(id: string | null): UsePrayerDetailResult {
   const { decryptData, isUnlocked } = useCrypto();
 
   const query = useQuery({
-    queryKey: ['prayer', id],
+    queryKey: ["prayer", id],
     queryFn: async () => {
       if (!id) return null;
 

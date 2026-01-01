@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-import { AuthProvider } from '@/features/member/providers/AuthProvider';
-import { QueryProvider } from '@/shared/providers/QueryProvider';
+import { AuthProvider } from "@/features/member/providers/AuthProvider";
+import { QueryProvider } from "@/shared/providers/QueryProvider";
 
 interface ProvidersProps {
   children: ReactNode;

@@ -16,45 +16,45 @@
 export async function deriveCombinedKEK(
   clientKEK: CryptoKey,
   serverKeyBase64: string,
-  salt: Uint8Array
+  salt: Uint8Array,
 ): Promise<CryptoKey> {
   // Client KEK를 raw bytes로 export
   const clientKEKBytes = new Uint8Array(
-    await crypto.subtle.exportKey('raw', clientKEK)
+    await crypto.subtle.exportKey("raw", clientKEK),
   );
 
   // Server Key를 bytes로 변환
   const serverKeyBytes = Uint8Array.from(atob(serverKeyBase64), (c) =>
-    c.charCodeAt(0)
+    c.charCodeAt(0),
   );
 
   // Client KEK || Server Key 결합
   const combined = new Uint8Array(
-    clientKEKBytes.length + serverKeyBytes.length
+    clientKEKBytes.length + serverKeyBytes.length,
   );
   combined.set(clientKEKBytes);
   combined.set(serverKeyBytes, clientKEKBytes.length);
 
   // HKDF용 key material로 import
   const keyMaterial = await crypto.subtle.importKey(
-    'raw',
+    "raw",
     combined,
-    'HKDF',
+    "HKDF",
     false,
-    ['deriveKey']
+    ["deriveKey"],
   );
 
   // HKDF로 Combined KEK 파생
   return crypto.subtle.deriveKey(
     {
-      name: 'HKDF',
-      hash: 'SHA-256',
+      name: "HKDF",
+      hash: "SHA-256",
       salt: salt.buffer as ArrayBuffer,
-      info: new TextEncoder().encode('selah-combined-kek'),
+      info: new TextEncoder().encode("selah-combined-kek"),
     },
     keyMaterial,
-    { name: 'AES-GCM', length: 256 },
+    { name: "AES-GCM", length: 256 },
     false, // extractable: false (보안상 키 추출 불가)
-    ['wrapKey', 'unwrapKey']
+    ["wrapKey", "unwrapKey"],
   );
 }

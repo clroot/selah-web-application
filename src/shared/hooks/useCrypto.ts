@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import { encrypt, decrypt } from '@/shared/lib/crypto';
-import { useEncryptionStore } from '@/shared/stores/encryptionStore';
+import { decrypt, encrypt } from "@/shared/lib/crypto";
+import { useEncryptionStore } from "@/shared/stores/encryptionStore";
 
 /**
  * 암호화/복호화를 위한 훅
@@ -24,11 +24,11 @@ export function useCrypto() {
   const encryptData = useCallback(
     async (plaintext: string): Promise<string> => {
       if (!dek) {
-        throw new Error('암호화가 해제되지 않았습니다');
+        throw new Error("암호화가 해제되지 않았습니다");
       }
       return encrypt(plaintext, dek);
     },
-    [dek]
+    [dek],
   );
 
   /**
@@ -42,11 +42,11 @@ export function useCrypto() {
   const decryptData = useCallback(
     async (ciphertext: string): Promise<string> => {
       if (!dek) {
-        throw new Error('암호화가 해제되지 않았습니다');
+        throw new Error("암호화가 해제되지 않았습니다");
       }
       return decrypt(ciphertext, dek);
     },
-    [dek]
+    [dek],
   );
 
   return {

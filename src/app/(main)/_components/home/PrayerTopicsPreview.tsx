@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
+import { SectionHeader } from "./SectionHeader";
+import { TopicCard } from "./TopicCard";
 
-import { SectionHeader } from './SectionHeader';
-import { TopicCard } from './TopicCard';
-
-import type { PrayerTopic } from '@/features/prayer-topic/types/prayerTopic.types';
+import type { PrayerTopic } from "@/features/prayer-topic/types/prayerTopic.types";
 
 interface PrayerTopicsPreviewProps {
   topics: PrayerTopic[];

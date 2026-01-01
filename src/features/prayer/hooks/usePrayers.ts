@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { prayerApi } from '@/features/prayer/api/prayer.api';
-import { useCrypto } from '@/shared/hooks/useCrypto';
+import { prayerApi } from "@/features/prayer/api/prayer.api";
+import { useCrypto } from "@/shared/hooks/useCrypto";
 
 import type {
   Prayer,
   PrayerListParams,
-} from '@/features/prayer/types/prayer.types';
+} from "@/features/prayer/types/prayer.types";
 
 /** 복호화된 기도문 */
 export type DecryptedPrayer = Prayer;
@@ -40,7 +40,7 @@ export function usePrayers(params?: PrayerListParams): UsePrayersResult {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ['prayers', params],
+    queryKey: ["prayers", params],
     queryFn: async () => {
       const { data, error } = await prayerApi.list(params);
 
@@ -57,7 +57,7 @@ export function usePrayers(params?: PrayerListParams): UsePrayersResult {
         data.content.map(async (prayer) => ({
           ...prayer,
           content: await decryptData(prayer.content),
-        }))
+        })),
       );
 
       return {
@@ -80,7 +80,7 @@ export function usePrayers(params?: PrayerListParams): UsePrayersResult {
     isError: query.isError,
     error: query.error,
     refetch: () => {
-      queryClient.invalidateQueries({ queryKey: ['prayers'] });
+      queryClient.invalidateQueries({ queryKey: ["prayers"] });
     },
   };
 }

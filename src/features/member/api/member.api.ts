@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api/client';
+import { apiClient } from "@/shared/api/client";
 
 import type {
   ApiKey,
@@ -9,25 +9,25 @@ import type {
   OAuthConnectionsResponse,
   OAuthProvider,
   UpdateProfileRequest,
-} from '@/features/member/types/member.types';
+} from "@/features/member/types/member.types";
 
 /**
  * Member API
  */
 export const memberApi = {
   /** 내 프로필 조회 */
-  getMyProfile: () => apiClient.get<MemberProfile>('/api/v1/members/me'),
+  getMyProfile: () => apiClient.get<MemberProfile>("/api/v1/members/me"),
 
   /** 프로필 수정 */
   updateMyProfile: (data: UpdateProfileRequest) =>
-    apiClient.patch<MemberProfile>('/api/v1/members/me', data),
+    apiClient.patch<MemberProfile>("/api/v1/members/me", data),
 
   /** API Key 목록 조회 */
-  listApiKeys: () => apiClient.get<ApiKey[]>('/api/v1/members/me/api-keys'),
+  listApiKeys: () => apiClient.get<ApiKey[]>("/api/v1/members/me/api-keys"),
 
   /** API Key 생성 */
   createApiKey: (data: CreateApiKeyRequest) =>
-    apiClient.post<CreateApiKeyResponse>('/api/v1/members/me/api-keys', data),
+    apiClient.post<CreateApiKeyResponse>("/api/v1/members/me/api-keys", data),
 
   /** API Key 삭제 */
   deleteApiKey: (apiKeyId: string) =>
@@ -41,14 +41,14 @@ export const oauthConnectionApi = {
   /** OAuth 연결 목록 조회 */
   getConnections: () =>
     apiClient.get<OAuthConnectionsResponse>(
-      '/api/v1/members/me/oauth-connections'
+      "/api/v1/members/me/oauth-connections",
     ),
 
   /** OAuth 연결 추가 */
   connect: (data: { provider: OAuthProvider; accessToken: string }) =>
     apiClient.post<OAuthConnection>(
-      '/api/v1/members/me/oauth-connections',
-      data
+      "/api/v1/members/me/oauth-connections",
+      data,
     ),
 
   /** OAuth 연결 해제 */
@@ -62,13 +62,13 @@ export const oauthConnectionApi = {
 export const emailVerificationApi = {
   /** 인증 메일 발송 (재발송) */
   sendVerificationEmail: () =>
-    apiClient.post<void>('/api/v1/auth/email/send-verification'),
+    apiClient.post<void>("/api/v1/auth/email/send-verification"),
 
   /** 이메일 인증 */
   verify: (token: string) =>
     apiClient.post<{ memberId: string; email: string; emailVerified: boolean }>(
-      '/api/v1/auth/email/verify',
-      { token }
+      "/api/v1/auth/email/verify",
+      { token },
     ),
 };
 
@@ -78,15 +78,15 @@ export const emailVerificationApi = {
 export const passwordResetApi = {
   /** 비밀번호 찾기 (재설정 요청) */
   forgotPassword: (email: string) =>
-    apiClient.post<void>('/api/v1/auth/password/forgot', { email }),
+    apiClient.post<void>("/api/v1/auth/password/forgot", { email }),
 
   /** 토큰 검증 */
   validateToken: (token: string) =>
     apiClient.get<{ valid: boolean; email: string | null }>(
-      `/api/v1/auth/password/reset/validate?token=${encodeURIComponent(token)}`
+      `/api/v1/auth/password/reset/validate?token=${encodeURIComponent(token)}`,
     ),
 
   /** 비밀번호 재설정 */
   resetPassword: (token: string, newPassword: string) =>
-    apiClient.post<void>('/api/v1/auth/password/reset', { token, newPassword }),
+    apiClient.post<void>("/api/v1/auth/password/reset", { token, newPassword }),
 };

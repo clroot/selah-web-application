@@ -1,12 +1,12 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 
-import { authApi } from '@/features/member/api/auth.api';
-import { memberApi } from '@/features/member/api/member.api';
-import { useAuthStore } from '@/features/member/stores/authStore';
+import { authApi } from "@/features/member/api/auth.api";
+import { memberApi } from "@/features/member/api/member.api";
+import { useAuthStore } from "@/features/member/stores/authStore";
 
-import type { SignupFormData } from '@/features/member/utils/schemas';
+import type { SignupFormData } from "@/features/member/utils/schemas";
 
 export function useSignup() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export function useSignup() {
       }
 
       // PIN 설정 페이지로 이동 (암호화는 PIN으로 설정)
-      router.push('/setup-encryption');
+      router.push("/setup-encryption");
     },
   });
 

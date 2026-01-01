@@ -15,14 +15,17 @@ const SALT_LENGTH = 32; // Salt 길이 (256 bits)
  * @param key - CryptoKey (AES-GCM, 256-bit)
  * @returns Base64 인코딩된 암호문 (IV + ciphertext)
  */
-export async function encrypt(plaintext: string, key: CryptoKey): Promise<string> {
+export async function encrypt(
+  plaintext: string,
+  key: CryptoKey,
+): Promise<string> {
   const encoder = new TextEncoder();
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
 
   const ciphertext = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
+    { name: "AES-GCM", iv },
     key,
-    encoder.encode(plaintext)
+    encoder.encode(plaintext),
   );
 
   // IV + ciphertext 결합
@@ -41,15 +44,18 @@ export async function encrypt(plaintext: string, key: CryptoKey): Promise<string
  * @returns 복호화된 평문
  * @throws 복호화 실패 시 에러
  */
-export async function decrypt(encrypted: string, key: CryptoKey): Promise<string> {
+export async function decrypt(
+  encrypted: string,
+  key: CryptoKey,
+): Promise<string> {
   const combined = base64ToUint8Array(encrypted);
   const iv = combined.slice(0, IV_LENGTH);
   const ciphertext = combined.slice(IV_LENGTH);
 
   const plaintext = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
+    { name: "AES-GCM", iv },
     key,
-    ciphertext
+    ciphertext,
   );
 
   return new TextDecoder().decode(plaintext);
@@ -68,7 +74,7 @@ export function generateSalt(): Uint8Array {
  * Uint8Array → Base64 변환
  */
 export function uint8ArrayToBase64(bytes: Uint8Array): string {
-  let binary = '';
+  let binary = "";
   for (let i = 0; i < bytes.length; i++) {
     binary += String.fromCharCode(bytes[i]);
   }

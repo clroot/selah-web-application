@@ -9,11 +9,11 @@
  * 3. 양쪽 모두 존재할 때만 DEK 복원 가능
  */
 
-const DB_NAME = 'selah-encryption';
+const DB_NAME = "selah-encryption";
 const DB_VERSION = 1;
-const STORE_NAME = 'dek-cache';
-const CACHE_KEY = 'wrapped-dek';
-const SESSION_KEY = 'selah-wrap-key';
+const STORE_NAME = "dek-cache";
+const CACHE_KEY = "wrapped-dek";
+const SESSION_KEY = "selah-wrap-key";
 
 /**
  * IndexedDB 연결
@@ -38,18 +38,17 @@ function openDB(): Promise<IDBDatabase> {
  * Wrap key 생성 (DEK 암호화용)
  */
 async function generateWrapKey(): Promise<CryptoKey> {
-  return crypto.subtle.generateKey(
-    { name: 'AES-GCM', length: 256 },
-    true,
-    ['wrapKey', 'unwrapKey']
-  );
+  return crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, [
+    "wrapKey",
+    "unwrapKey",
+  ]);
 }
 
 /**
  * Wrap key를 sessionStorage에 저장
  */
 async function saveWrapKeyToSession(wrapKey: CryptoKey): Promise<void> {
-  const exported = await crypto.subtle.exportKey('raw', wrapKey);
+  const exported = await crypto.subtle.exportKey("raw", wrapKey);
   const base64 = btoa(String.fromCharCode(...new Uint8Array(exported)));
   sessionStorage.setItem(SESSION_KEY, base64);
 }
@@ -64,11 +63,11 @@ async function loadWrapKeyFromSession(): Promise<CryptoKey | null> {
   try {
     const keyBytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
     return crypto.subtle.importKey(
-      'raw',
+      "raw",
       keyBytes,
-      { name: 'AES-GCM', length: 256 },
+      { name: "AES-GCM", length: 256 },
       true,
-      ['wrapKey', 'unwrapKey']
+      ["wrapKey", "unwrapKey"],
     );
   } catch {
     return null;
@@ -85,8 +84,8 @@ export async function cacheDEK(dek: CryptoKey): Promise<void> {
 
     // 2. DEK를 wrap key로 암호화
     const iv = crypto.getRandomValues(new Uint8Array(12));
-    const wrappedKey = await crypto.subtle.wrapKey('raw', dek, wrapKey, {
-      name: 'AES-GCM',
+    const wrappedKey = await crypto.subtle.wrapKey("raw", dek, wrapKey, {
+      name: "AES-GCM",
       iv,
     });
 
@@ -97,7 +96,7 @@ export async function cacheDEK(dek: CryptoKey): Promise<void> {
 
     const db = await openDB();
     await new Promise<void>((resolve, reject) => {
-      const transaction = db.transaction(STORE_NAME, 'readwrite');
+      const transaction = db.transaction(STORE_NAME, "readwrite");
       const store = transaction.objectStore(STORE_NAME);
       const request = store.put(combined, CACHE_KEY);
       request.onerror = () => reject(request.error);
@@ -108,7 +107,7 @@ export async function cacheDEK(dek: CryptoKey): Promise<void> {
     // 4. Wrap key를 sessionStorage에 저장
     await saveWrapKeyToSession(wrapKey);
   } catch (error) {
-    console.warn('DEK 캐시 저장 실패:', error);
+    console.warn("DEK 캐시 저장 실패:", error);
   }
 }
 
@@ -124,7 +123,7 @@ export async function loadCachedDEK(): Promise<CryptoKey | null> {
     // 2. IndexedDB에서 wrapped DEK 로드
     const db = await openDB();
     const combined = await new Promise<Uint8Array | null>((resolve, reject) => {
-      const transaction = db.transaction(STORE_NAME, 'readonly');
+      const transaction = db.transaction(STORE_NAME, "readonly");
       const store = transaction.objectStore(STORE_NAME);
       const request = store.get(CACHE_KEY);
       request.onerror = () => reject(request.error);
@@ -140,13 +139,13 @@ export async function loadCachedDEK(): Promise<CryptoKey | null> {
 
     // 4. DEK 복호화
     return crypto.subtle.unwrapKey(
-      'raw',
+      "raw",
       wrappedKey,
       wrapKey,
-      { name: 'AES-GCM', iv },
-      { name: 'AES-GCM', length: 256 },
+      { name: "AES-GCM", iv },
+      { name: "AES-GCM", length: 256 },
       false, // extractable: false (메모리에서만 사용)
-      ['encrypt', 'decrypt']
+      ["encrypt", "decrypt"],
     );
   } catch {
     return null;
@@ -164,7 +163,7 @@ export async function clearDEKCache(): Promise<void> {
     // IndexedDB에서 wrapped DEK 삭제
     const db = await openDB();
     await new Promise<void>((resolve, reject) => {
-      const transaction = db.transaction(STORE_NAME, 'readwrite');
+      const transaction = db.transaction(STORE_NAME, "readwrite");
       const store = transaction.objectStore(STORE_NAME);
       const request = store.delete(CACHE_KEY);
       request.onerror = () => reject(request.error);
@@ -172,7 +171,7 @@ export async function clearDEKCache(): Promise<void> {
     });
     db.close();
   } catch (error) {
-    console.warn('DEK 캐시 삭제 실패:', error);
+    console.warn("DEK 캐시 삭제 실패:", error);
   }
 }
 

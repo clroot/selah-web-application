@@ -1,4 +1,4 @@
-import { BookOpen } from 'lucide-react';
+import { BookOpen } from "lucide-react";
 
 /**
  * 홈 화면 빈 상태 UI

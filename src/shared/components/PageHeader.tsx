@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "lucide-react";
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from "@/shared/lib/utils";
 
 interface PageHeaderProps {
   title?: string;
@@ -36,8 +36,8 @@ export function PageHeader({
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 flex h-14 items-center justify-between border-b border-sand bg-cream px-4',
-        className
+        "sticky top-0 z-40 flex h-14 items-center justify-between border-b border-sand bg-cream px-4",
+        className,
       )}
     >
       <div className="flex w-20 items-center">
@@ -54,7 +54,9 @@ export function PageHeader({
       </div>
 
       {title && (
-        <h1 className="font-serif text-lg font-medium text-deep-brown">{title}</h1>
+        <h1 className="font-serif text-lg font-medium text-deep-brown">
+          {title}
+        </h1>
       )}
 
       <div className="flex w-20 items-center justify-end">{rightAction}</div>

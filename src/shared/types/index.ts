@@ -6,6 +6,6 @@ export type {
   ApiResult,
   ApiError,
   PageParams,
-} from './api.types';
+} from "./api.types";
 
-export { isApiError } from './api.types';
+export { isApiError } from "./api.types";

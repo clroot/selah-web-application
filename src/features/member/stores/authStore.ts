@@ -1,6 +1,6 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import type { MemberProfile } from '@/features/member/types/member.types';
+import type { MemberProfile } from "@/features/member/types/member.types";
 
 interface AuthState {
   user: MemberProfile | null;

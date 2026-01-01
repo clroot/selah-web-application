@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from "react";
 
 import {
-  format,
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
   addDays,
   addMonths,
-  subMonths,
-  isSameMonth,
+  endOfMonth,
+  endOfWeek,
+  format,
   isSameDay,
+  isSameMonth,
   isToday,
-} from 'date-fns';
-import { ko } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+  startOfMonth,
+  startOfWeek,
+  subMonths,
+} from "date-fns";
+import { ko } from "date-fns/locale";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from "@/shared/lib/utils";
 
 interface PrayerCalendarProps {
   selectedDate: Date;
@@ -27,7 +27,7 @@ interface PrayerCalendarProps {
   className?: string;
 }
 
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
+const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
 /**
  * 기도문 캘린더 컴포넌트
@@ -38,9 +38,7 @@ export function PrayerCalendar({
   prayerDates,
   className,
 }: PrayerCalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(
-    startOfMonth(selectedDate)
-  );
+  const [currentMonth, setCurrentMonth] = useState(startOfMonth(selectedDate));
 
   const days = useMemo(() => {
     const monthStart = startOfMonth(currentMonth);
@@ -66,12 +64,12 @@ export function PrayerCalendar({
   };
 
   const hasPrayer = (date: Date) => {
-    const dateKey = format(date, 'yyyy-MM-dd');
+    const dateKey = format(date, "yyyy-MM-dd");
     return prayerDates.has(dateKey);
   };
 
   return (
-    <div className={cn('px-6', className)}>
+    <div className={cn("px-6", className)}>
       {/* Month Navigation */}
       <div className="flex items-center justify-center gap-6 py-2 pb-5">
         <button
@@ -83,7 +81,7 @@ export function PrayerCalendar({
           <ChevronLeft className="h-5 w-5 text-soft-brown" />
         </button>
         <span className="min-w-[120px] text-center text-base font-medium text-deep-brown">
-          {format(currentMonth, 'yyyy년 M월', { locale: ko })}
+          {format(currentMonth, "yyyy년 M월", { locale: ko })}
         </span>
         <button
           type="button"
@@ -103,8 +101,8 @@ export function PrayerCalendar({
             <div
               key={weekday}
               className={cn(
-                'py-2 text-center text-xs font-medium',
-                index === 0 ? 'text-red-400' : 'text-soft-brown/60'
+                "py-2 text-center text-xs font-medium",
+                index === 0 ? "text-red-400" : "text-soft-brown/60",
               )}
             >
               {weekday}
@@ -127,31 +125,31 @@ export function PrayerCalendar({
                 type="button"
                 onClick={() => onDateSelect(day)}
                 className={cn(
-                  'relative flex aspect-square flex-col items-center justify-center rounded-xl transition-all',
-                  !isCurrentMonth && 'opacity-30',
-                  isTodayDate && !isSelected && 'bg-sand',
-                  isSelected && 'bg-deep-brown',
-                  !isSelected && 'hover:bg-cream-dark'
+                  "relative flex aspect-square flex-col items-center justify-center rounded-xl transition-all",
+                  !isCurrentMonth && "opacity-30",
+                  isTodayDate && !isSelected && "bg-sand",
+                  isSelected && "bg-deep-brown",
+                  !isSelected && "hover:bg-cream-dark",
                 )}
               >
                 <span
                   className={cn(
-                    'text-sm',
-                    isSelected && 'text-cream',
-                    !isSelected && dayOfWeek === 0 && 'text-red-400',
-                    !isSelected && dayOfWeek !== 0 && 'text-deep-brown'
+                    "text-sm",
+                    isSelected && "text-cream",
+                    !isSelected && dayOfWeek === 0 && "text-red-400",
+                    !isSelected && dayOfWeek !== 0 && "text-deep-brown",
                   )}
                 >
-                  {format(day, 'd')}
+                  {format(day, "d")}
                 </span>
                 <span
                   className={cn(
-                    'mt-1 h-1 w-1 rounded-full',
+                    "mt-1 h-1 w-1 rounded-full",
                     hasPrayerOnDay
                       ? isSelected
-                        ? 'bg-cream'
-                        : 'bg-gold'
-                      : 'opacity-0'
+                        ? "bg-cream"
+                        : "bg-gold"
+                      : "opacity-0",
                   )}
                 />
               </button>

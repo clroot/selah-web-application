@@ -4,11 +4,12 @@
 
 /** 기도제목 상태 */
 export const PrayerTopicStatus = {
-  PRAYING: 'PRAYING',
-  ANSWERED: 'ANSWERED',
+  PRAYING: "PRAYING",
+  ANSWERED: "ANSWERED",
 } as const;
 
-export type PrayerTopicStatus = (typeof PrayerTopicStatus)[keyof typeof PrayerTopicStatus];
+export type PrayerTopicStatus =
+  (typeof PrayerTopicStatus)[keyof typeof PrayerTopicStatus];
 
 /** 기도제목 */
 export interface PrayerTopic {

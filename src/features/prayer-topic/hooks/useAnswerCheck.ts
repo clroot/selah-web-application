@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { prayerTopicApi } from '@/features/prayer-topic/api/prayerTopic.api';
-import { useCrypto } from '@/shared/hooks/useCrypto';
+import { prayerTopicApi } from "@/features/prayer-topic/api/prayerTopic.api";
+import { useCrypto } from "@/shared/hooks/useCrypto";
 
 /**
  * 기도제목 응답 체크 훅
@@ -37,9 +37,9 @@ export function useMarkAsAnswered() {
       return data;
     },
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: ['prayerTopics'] });
-      queryClient.invalidateQueries({ queryKey: ['prayerTopics', id] });
-      queryClient.invalidateQueries({ queryKey: ['home'] });
+      queryClient.invalidateQueries({ queryKey: ["prayerTopics"] });
+      queryClient.invalidateQueries({ queryKey: ["prayerTopics", id] });
+      queryClient.invalidateQueries({ queryKey: ["home"] });
     },
   });
 }
@@ -63,9 +63,9 @@ export function useCancelAnswer() {
       return data;
     },
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: ['prayerTopics'] });
-      queryClient.invalidateQueries({ queryKey: ['prayerTopics', id] });
-      queryClient.invalidateQueries({ queryKey: ['home'] });
+      queryClient.invalidateQueries({ queryKey: ["prayerTopics"] });
+      queryClient.invalidateQueries({ queryKey: ["prayerTopics", id] });
+      queryClient.invalidateQueries({ queryKey: ["home"] });
     },
   });
 }
@@ -100,8 +100,8 @@ export function useUpdateReflection() {
       return data;
     },
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: ['prayerTopics'] });
-      queryClient.invalidateQueries({ queryKey: ['prayerTopics', id] });
+      queryClient.invalidateQueries({ queryKey: ["prayerTopics"] });
+      queryClient.invalidateQueries({ queryKey: ["prayerTopics", id] });
     },
   });
 }

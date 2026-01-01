@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import {
   Drawer,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerFooter,
 } from "@/components/ui/drawer";
 import { Button } from "@/shared/components";
 import { cn } from "@/shared/lib/utils";
@@ -39,7 +39,7 @@ export function AnswerCheckBottomSheet({
         onClose();
       }
     },
-    [onClose]
+    [onClose],
   );
 
   // 열릴 때 입력값 초기화
@@ -89,7 +89,7 @@ export function AnswerCheckBottomSheet({
                 "w-full resize-none rounded-xl border-2 border-sand p-4",
                 "font-serif text-base text-deep-brown",
                 "placeholder:text-soft-brown/50",
-                "focus:border-deep-brown focus:outline-none focus:ring-2 focus:ring-deep-brown focus:ring-offset-2"
+                "focus:border-deep-brown focus:outline-none focus:ring-2 focus:ring-deep-brown focus:ring-offset-2",
               )}
               maxLength={1000}
             />

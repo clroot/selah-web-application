@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Lock, ShieldCheck } from 'lucide-react';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Lock, ShieldCheck } from "lucide-react";
 
-import { PasswordStrengthMeter } from '@/features/member/components/PasswordStrengthMeter';
+import { PasswordStrengthMeter } from "@/features/member/components/PasswordStrengthMeter";
 import {
-  resetPasswordFormSchema,
   type ResetPasswordFormData,
-} from '@/features/member/utils/schemas';
-import { Button, Input } from '@/shared/components';
+  resetPasswordFormSchema,
+} from "@/features/member/utils/schemas";
+import { Button, Input } from "@/shared/components";
 
 interface PasswordSetupFormProps {
   onSubmit: (password: string) => void;
@@ -28,10 +28,10 @@ export function PasswordSetupForm({
     formState: { errors },
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordFormSchema),
-    mode: 'onChange',
+    mode: "onChange",
   });
 
-  const password = useWatch('password', '');
+  const password = useWatch("password", "");
 
   const handleFormSubmit = (data: ResetPasswordFormData) => {
     onSubmit(data.password);
@@ -58,9 +58,7 @@ export function PasswordSetupForm({
         <div className="flex items-start gap-3">
           <Lock className="mt-0.5 h-5 w-5 shrink-0 text-soft-brown" />
           <div className="space-y-1 text-sm text-soft-brown">
-            <p>
-              설정한 비밀번호로 기도 내용이 암호화됩니다.
-            </p>
+            <p>설정한 비밀번호로 기도 내용이 암호화됩니다.</p>
             <p>
               이 비밀번호는 소셜 로그인과 별도로 사용되며, 기도 데이터 보호에
               사용됩니다.
@@ -75,7 +73,7 @@ export function PasswordSetupForm({
           <Input
             type="password"
             placeholder="비밀번호 (영문, 숫자 포함 8자 이상)"
-            {...register('password')}
+            {...register("password")}
             error={errors.password?.message}
             showPasswordToggle
           />
@@ -86,7 +84,7 @@ export function PasswordSetupForm({
         <Input
           type="password"
           placeholder="비밀번호 확인"
-          {...register('passwordConfirm')}
+          {...register("passwordConfirm")}
           error={errors.passwordConfirm?.message}
           showPasswordToggle
         />

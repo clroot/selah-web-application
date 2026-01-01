@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 import {
   PrayerTopicList,
   StatusFilter,
-} from '@/features/prayer-topic/components';
-import { usePrayerTopics } from '@/features/prayer-topic/hooks';
-import { PrayerTopicStatus } from '@/features/prayer-topic/types/prayerTopic.types';
-import { PageHeader } from '@/shared/components';
+} from "@/features/prayer-topic/components";
+import { usePrayerTopics } from "@/features/prayer-topic/hooks";
+import { PrayerTopicStatus } from "@/features/prayer-topic/types/prayerTopic.types";
+import { PageHeader } from "@/shared/components";
 
-import type { FilterStatus } from '@/features/prayer-topic/components';
+import type { FilterStatus } from "@/features/prayer-topic/components";
 
 export default function PrayerTopicsPage() {
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>('ALL');
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>("ALL");
 
   // 필터 상태를 API 파라미터로 변환
   const statusParam =
-    filterStatus === 'ALL'
+    filterStatus === "ALL"
       ? undefined
-      : filterStatus === 'PRAYING'
+      : filterStatus === "PRAYING"
         ? PrayerTopicStatus.PRAYING
         : PrayerTopicStatus.ANSWERED;
 

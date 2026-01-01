@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
 interface StatCardProps {
   value: number;
@@ -18,21 +18,20 @@ export function StatCard({
   isHighlight = false,
   onClick,
 }: StatCardProps) {
-  const baseClasses =
-    'rounded-2xl border p-5 transition-colors cursor-pointer';
-  const normalClasses = 'border-sand bg-cream hover:border-warm-beige';
-  const highlightClasses = 'border-gold bg-gold/10 hover:border-gold';
+  const baseClasses = "rounded-2xl border p-5 transition-colors cursor-pointer";
+  const normalClasses = "border-sand bg-cream hover:border-warm-beige";
+  const highlightClasses = "border-gold bg-gold/10 hover:border-gold";
 
   return (
     <div
       className={`${baseClasses} ${isHighlight ? highlightClasses : normalClasses}`}
       onClick={onClick}
-      role={onClick ? 'button' : undefined}
+      role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={
         onClick
           ? (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 onClick();
               }

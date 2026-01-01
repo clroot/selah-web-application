@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useState, useEffect, Suspense } from 'react';
-import { useForm } from 'react-hook-form';
+import { Suspense, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { passwordResetApi } from '@/features/member/api/member.api';
-import { PasswordStrengthMeter } from '@/features/member/components/PasswordStrengthMeter';
+import { passwordResetApi } from "@/features/member/api/member.api";
+import { PasswordStrengthMeter } from "@/features/member/components/PasswordStrengthMeter";
 import {
-  resetPasswordFormSchema,
   type ResetPasswordFormData,
-} from '@/features/member/utils/schemas';
-import { Button, Input, FullPageSpinner } from '@/shared/components';
+  resetPasswordFormSchema,
+} from "@/features/member/utils/schemas";
+import { Button, FullPageSpinner, Input } from "@/shared/components";
 
 function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+  const token = searchParams.get("token");
 
   const [isValidating, setIsValidating] = useState(true);
   const [isValid, setIsValid] = useState(false);
@@ -35,11 +35,11 @@ function ResetPasswordContent() {
     resolver: zodResolver(resetPasswordFormSchema),
   });
 
-  const password = useWatch('password', '');
+  const password = useWatch("password", "");
 
   useEffect(() => {
     if (!token) {
-      router.replace('/login');
+      router.replace("/login");
       return;
     }
 
@@ -68,7 +68,7 @@ function ResetPasswordContent() {
 
     const { error: apiError } = await passwordResetApi.resetPassword(
       token,
-      data.password
+      data.password,
     );
 
     setIsLoading(false);
@@ -79,7 +79,7 @@ function ResetPasswordContent() {
     }
 
     // 성공 시 로그인 페이지로 이동
-    router.push('/login');
+    router.push("/login");
   };
 
   if (isValidating) {
@@ -96,7 +96,7 @@ function ResetPasswordContent() {
           <p className="text-soft-brown">
             이 비밀번호 재설정 링크는 만료되었거나 이미 사용되었습니다.
           </p>
-          <Button onClick={() => router.push('/forgot-password')}>
+          <Button onClick={() => router.push("/forgot-password")}>
             다시 요청하기
           </Button>
         </div>
@@ -125,7 +125,7 @@ function ResetPasswordContent() {
               type="password"
               placeholder="8자 이상 입력해주세요"
               showPasswordToggle
-              {...register('password')}
+              {...register("password")}
               error={errors.password?.message}
             />
             <PasswordStrengthMeter password={password} />
@@ -136,13 +136,11 @@ function ResetPasswordContent() {
             type="password"
             placeholder="비밀번호를 다시 입력해주세요"
             showPasswordToggle
-            {...register('passwordConfirm')}
+            {...register("passwordConfirm")}
             error={errors.passwordConfirm?.message}
           />
 
-          {error && (
-            <p className="text-center text-sm text-red-500">{error}</p>
-          )}
+          {error && <p className="text-center text-sm text-red-500">{error}</p>}
 
           <Button type="submit" isLoading={isLoading}>
             비밀번호 변경

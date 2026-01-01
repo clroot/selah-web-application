@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { Shield } from 'lucide-react';
+import { Shield } from "lucide-react";
 
-import { PinSetupForm } from '@/features/encryption/components';
-import { useEncryptionSetup } from '@/features/encryption/hooks';
-import { useAuthStore } from '@/features/member/stores/authStore';
-import { FullPageSpinner } from '@/shared/components';
+import { PinSetupForm } from "@/features/encryption/components";
+import { useEncryptionSetup } from "@/features/encryption/hooks";
+import { useAuthStore } from "@/features/member/stores/authStore";
+import { FullPageSpinner } from "@/shared/components";
 
 export default function SetupEncryptionPage() {
   const router = useRouter();
@@ -21,14 +21,14 @@ export default function SetupEncryptionPage() {
   // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
   useEffect(() => {
     if (!isInitializing && !isAuthenticated) {
-      router.replace('/login');
+      router.replace("/login");
     }
   }, [isInitializing, isAuthenticated, router]);
 
   // 이미 암호화 설정이 완료된 사용자는 홈으로 리다이렉트
   useEffect(() => {
     if (isUnlocked) {
-      router.replace('/');
+      router.replace("/");
     }
   }, [isUnlocked, router]);
 

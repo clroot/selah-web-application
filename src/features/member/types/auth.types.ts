@@ -2,7 +2,7 @@
  * Auth 도메인 타입 정의
  */
 
-import type { OAuthProvider } from '@/features/member/types/member.types';
+import type { OAuthProvider } from "@/features/member/types/member.types";
 
 // Re-export OAuthProvider for backward compatibility
 export type { OAuthProvider };

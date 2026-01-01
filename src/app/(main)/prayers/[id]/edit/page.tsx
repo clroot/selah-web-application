@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from "next/navigation";
 
-import { PrayerEditor } from '@/features/prayer/components';
-import { usePrayerDetail, useUpdatePrayer } from '@/features/prayer/hooks';
-import { formatPrayerDateDetail } from '@/features/prayer/utils';
-import { usePrayerTopics } from '@/features/prayer-topic/hooks';
-import { PrayerTopicStatus } from '@/features/prayer-topic/types/prayerTopic.types';
-import { FullPageSpinner, PageHeader } from '@/shared/components';
+import { PrayerEditor } from "@/features/prayer/components";
+import { usePrayerDetail, useUpdatePrayer } from "@/features/prayer/hooks";
+import { formatPrayerDateDetail } from "@/features/prayer/utils";
+import { usePrayerTopics } from "@/features/prayer-topic/hooks";
+import { PrayerTopicStatus } from "@/features/prayer-topic/types/prayerTopic.types";
+import { FullPageSpinner, PageHeader } from "@/shared/components";
 
-import type { PrayerFormData } from '@/features/prayer/utils/schemas';
+import type { PrayerFormData } from "@/features/prayer/utils/schemas";
 
 export default function EditPrayerPage() {
   const params = useParams();
@@ -27,7 +27,7 @@ export default function EditPrayerPage() {
   // PrayerEditor에 전달할 형태로 변환
   const topicsForSelector = useMemo(
     () => prayerTopics.map((t) => ({ id: t.id, title: t.title })),
-    [prayerTopics]
+    [prayerTopics],
   );
 
   const initialData = useMemo((): PrayerFormData | undefined => {

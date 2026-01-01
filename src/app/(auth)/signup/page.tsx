@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "lucide-react";
 
-import { SignupForm } from '@/features/member/components';
+import { SignupForm } from "@/features/member/components";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function SignupPage() {
           <SignupForm />
 
           <p className="text-center text-sm text-soft-brown">
-            이미 계정이 있으신가요?{' '}
+            이미 계정이 있으신가요?{" "}
             <Link
               href="/login"
               className="font-medium text-gold hover:underline"

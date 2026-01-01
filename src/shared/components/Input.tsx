@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { forwardRef, useState } from 'react';
+import { forwardRef, useState } from "react";
 
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from "lucide-react";
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from "@/shared/lib/utils";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -15,8 +15,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, showPasswordToggle, type, className, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
-    const isPassword = type === 'password';
-    const inputType = isPassword && showPassword ? 'text' : type;
+    const isPassword = type === "password";
+    const inputType = isPassword && showPassword ? "text" : type;
 
     return (
       <div className="space-y-1">
@@ -28,13 +28,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             type={inputType}
             className={cn(
-              'w-full border-b border-sand bg-transparent py-3 text-deep-brown',
-              'placeholder:text-warm-beige',
-              'focus:border-soft-brown focus:outline-none',
-              'transition-colors duration-200',
-              error && 'border-red-500 focus:border-red-500',
-              isPassword && showPasswordToggle && 'pr-10',
-              className
+              "w-full border-b border-sand bg-transparent py-3 text-deep-brown",
+              "placeholder:text-warm-beige",
+              "focus:border-soft-brown focus:outline-none",
+              "transition-colors duration-200",
+              error && "border-red-500 focus:border-red-500",
+              isPassword && showPasswordToggle && "pr-10",
+              className,
             )}
             {...props}
           />
@@ -56,7 +56,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
     );
-  }
+  },
 );
 
-Input.displayName = 'Input';
+Input.displayName = "Input";

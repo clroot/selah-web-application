@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from "next/navigation";
 
-import { PrayerTopicForm } from '@/features/prayer-topic/components';
+import { PrayerTopicForm } from "@/features/prayer-topic/components";
 import {
   usePrayerTopicDetail,
   useUpdatePrayerTopic,
-} from '@/features/prayer-topic/hooks';
-import { FullPageSpinner, PageHeader } from '@/shared/components';
+} from "@/features/prayer-topic/hooks";
+import { FullPageSpinner, PageHeader } from "@/shared/components";
 
-import type { PrayerTopicFormData } from '@/features/prayer-topic/utils/schemas';
+import type { PrayerTopicFormData } from "@/features/prayer-topic/utils/schemas";
 
 export default function EditPrayerTopicPage() {
   const params = useParams();

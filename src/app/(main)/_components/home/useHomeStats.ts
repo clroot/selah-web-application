@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { prayerTopicApi } from '@/features/prayer-topic/api/prayerTopic.api';
-import { PrayerTopicStatus } from '@/features/prayer-topic/types/prayerTopic.types';
+import { prayerTopicApi } from "@/features/prayer-topic/api/prayerTopic.api";
+import { PrayerTopicStatus } from "@/features/prayer-topic/types/prayerTopic.types";
 
 interface HomeStats {
   prayingCount: number;
@@ -13,7 +13,7 @@ interface HomeStats {
  */
 export function useHomeStats() {
   return useQuery({
-    queryKey: ['home', 'stats'],
+    queryKey: ["home", "stats"],
     queryFn: async (): Promise<HomeStats> => {
       // 기도 중/응답됨 상태별 개수 조회 (size: 1로 최소 데이터만 가져옴)
       const [prayingResult, answeredResult] = await Promise.all([

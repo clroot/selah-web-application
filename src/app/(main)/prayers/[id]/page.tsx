@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react";
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from "next/navigation";
 
-import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 
-import { PrayerDetail } from '@/features/prayer/components';
-import { usePrayerDetail, useDeletePrayer } from '@/features/prayer/hooks';
-import { usePrayerTopics } from '@/features/prayer-topic/hooks';
-import { FullPageSpinner, PageHeader } from '@/shared/components';
-import { cn } from '@/shared/lib/utils';
+import { PrayerDetail } from "@/features/prayer/components";
+import { useDeletePrayer, usePrayerDetail } from "@/features/prayer/hooks";
+import { usePrayerTopics } from "@/features/prayer-topic/hooks";
+import { FullPageSpinner, PageHeader } from "@/shared/components";
+import { cn } from "@/shared/lib/utils";
 
 export default function PrayerDetailPage() {
   const params = useParams();
@@ -43,12 +43,12 @@ export default function PrayerDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('이 기도문을 삭제하시겠습니까?')) return;
+    if (!confirm("이 기도문을 삭제하시겠습니까?")) return;
 
     setIsDeleting(true);
     try {
       await deletePrayer(id);
-      router.push('/prayers');
+      router.push("/prayers");
     } catch {
       setIsDeleting(false);
     }
@@ -70,7 +70,7 @@ export default function PrayerDetailPage() {
             오류가 발생했습니다
           </h2>
           <p className="text-sm text-soft-brown">
-            {error?.message ?? '잠시 후 다시 시도해주세요.'}
+            {error?.message ?? "잠시 후 다시 시도해주세요."}
           </p>
         </div>
       </div>
@@ -132,12 +132,12 @@ export default function PrayerDetailPage() {
                     onClick={handleDelete}
                     disabled={isDeleting}
                     className={cn(
-                      'flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-red-500 transition-colors hover:bg-red-50',
-                      isDeleting && 'cursor-not-allowed opacity-50'
+                      "flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-red-500 transition-colors hover:bg-red-50",
+                      isDeleting && "cursor-not-allowed opacity-50",
                     )}
                   >
                     <Trash2 className="h-4 w-4" />
-                    {isDeleting ? '삭제 중...' : '삭제'}
+                    {isDeleting ? "삭제 중..." : "삭제"}
                   </button>
                 </div>
               </>

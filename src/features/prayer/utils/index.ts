@@ -1,2 +1,2 @@
-export * from './prayer.utils';
-export * from './schemas';
+export * from "./prayer.utils";
+export * from "./schemas";

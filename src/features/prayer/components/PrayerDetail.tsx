@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
-import { formatPrayerDateDetail } from '@/features/prayer/utils';
-import { cn } from '@/shared/lib/utils';
+import { formatPrayerDateDetail } from "@/features/prayer/utils";
+import { cn } from "@/shared/lib/utils";
 
-import type { Prayer } from '@/features/prayer/types/prayer.types';
+import type { Prayer } from "@/features/prayer/types/prayer.types";
 
 interface PrayerDetailProps {
   prayer: Prayer;
@@ -24,7 +24,7 @@ export function PrayerDetail({
   const { main, sub } = formatPrayerDateDetail(prayer.createdAt);
 
   return (
-    <div className={cn('px-6 pb-8', className)}>
+    <div className={cn("px-6 pb-8", className)}>
       {/* 날짜 */}
       <div className="mb-8">
         <h1 className="mb-1 font-serif text-[28px] text-deep-brown">{main}</h1>
@@ -51,9 +51,9 @@ export function PrayerDetail({
                   key={topicId}
                   href={`/prayer-topics/${topicId}`}
                   className={cn(
-                    'inline-flex items-center gap-1.5 rounded-full border border-sand bg-cream-dark px-3.5 py-2.5',
-                    'text-[13px] text-soft-brown',
-                    'transition-colors hover:border-sand-dark'
+                    "inline-flex items-center gap-1.5 rounded-full border border-sand bg-cream-dark px-3.5 py-2.5",
+                    "text-[13px] text-soft-brown",
+                    "transition-colors hover:border-sand-dark",
                   )}
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-gold" />

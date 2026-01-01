@@ -5,9 +5,9 @@
  * 프론트엔드는 백엔드의 OAuth authorize 엔드포인트로 리다이렉트만 합니다.
  */
 
-import type { OAuthProvider } from '@/features/member/types/member.types';
+import type { OAuthProvider } from "@/features/member/types/member.types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 /**
  * OAuth Authorization URL 생성
@@ -21,16 +21,16 @@ export function getAuthorizationUrl(provider: OAuthProvider): string {
  * OAuth Provider 표시 이름
  */
 export const OAUTH_PROVIDER_NAMES: Record<OAuthProvider, string> = {
-  GOOGLE: 'Google',
-  KAKAO: 'Kakao',
-  NAVER: 'Naver',
+  GOOGLE: "Google",
+  KAKAO: "Kakao",
+  NAVER: "Naver",
 };
 
 /**
  * 지원하는 모든 OAuth Provider 목록
  */
 export const SUPPORTED_OAUTH_PROVIDERS: OAuthProvider[] = [
-  'GOOGLE',
-  'KAKAO',
-  'NAVER',
+  "GOOGLE",
+  "KAKAO",
+  "NAVER",
 ];

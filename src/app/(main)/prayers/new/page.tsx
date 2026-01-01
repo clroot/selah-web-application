@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 
-import { PrayerEditor } from '@/features/prayer/components';
-import { useCreatePrayer } from '@/features/prayer/hooks';
-import { usePrayerTopics } from '@/features/prayer-topic/hooks';
-import { PrayerTopicStatus } from '@/features/prayer-topic/types/prayerTopic.types';
-import { PageHeader } from '@/shared/components';
+import { PrayerEditor } from "@/features/prayer/components";
+import { useCreatePrayer } from "@/features/prayer/hooks";
+import { usePrayerTopics } from "@/features/prayer-topic/hooks";
+import { PrayerTopicStatus } from "@/features/prayer-topic/types/prayerTopic.types";
+import { PageHeader } from "@/shared/components";
 
-import type { PrayerFormData } from '@/features/prayer/utils/schemas';
+import type { PrayerFormData } from "@/features/prayer/utils/schemas";
 
 export default function NewPrayerPage() {
   const router = useRouter();
@@ -25,18 +25,18 @@ export default function NewPrayerPage() {
   // PrayerEditor에 전달할 형태로 변환
   const topicsForSelector = useMemo(
     () => prayerTopics.map((t) => ({ id: t.id, title: t.title })),
-    [prayerTopics]
+    [prayerTopics],
   );
 
   const today = new Date();
-  const formattedDate = format(today, 'yyyy년 M월 d일 EEEE', { locale: ko });
+  const formattedDate = format(today, "yyyy년 M월 d일 EEEE", { locale: ko });
 
   const handleSubmit = async (data: PrayerFormData) => {
     await createPrayer({
       content: data.content,
       prayerTopicIds: data.prayerTopicIds,
     });
-    router.push('/prayers');
+    router.push("/prayers");
   };
 
   const handleCancel = () => {

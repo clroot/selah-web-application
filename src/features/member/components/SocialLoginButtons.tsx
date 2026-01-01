@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import { useMemo } from 'react';
+import type { ReactNode } from "react";
+import { useMemo } from "react";
 
-import { getAuthorizationUrl } from '@/features/member/lib/oauth';
-import { cn } from '@/shared/lib/utils';
+import { getAuthorizationUrl } from "@/features/member/lib/oauth";
+import { cn } from "@/shared/lib/utils";
 
-import type { OAuthProvider } from '@/features/member/types/member.types';
+import type { OAuthProvider } from "@/features/member/types/member.types";
 
 interface SocialLoginButtonsProps {
   className?: string;
@@ -23,7 +23,7 @@ interface ProviderConfig {
 
 const PROVIDER_CONFIGS: Record<OAuthProvider, ProviderConfig> = {
   GOOGLE: {
-    name: 'Google',
+    name: "Google",
     icon: (
       <svg className="h-5 w-5" viewBox="0 0 24 24">
         <path
@@ -46,28 +46,28 @@ const PROVIDER_CONFIGS: Record<OAuthProvider, ProviderConfig> = {
     ),
   },
   KAKAO: {
-    name: 'Kakao',
+    name: "Kakao",
     icon: (
       <svg className="h-5 w-5" viewBox="0 0 24 24" fill="#000000">
         <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 0 1-1.727-.11l-4.408 2.883c-.501.265-.678.236-.472-.413l.892-3.678c-2.88-1.46-4.785-3.99-4.785-6.866C1.5 6.665 6.201 3 12 3z" />
       </svg>
     ),
-    bgColor: 'bg-[#FEE500]',
-    textColor: 'text-[#000000]',
+    bgColor: "bg-[#FEE500]",
+    textColor: "text-[#000000]",
   },
   NAVER: {
-    name: 'Naver',
+    name: "Naver",
     icon: (
       <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
         <path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z" />
       </svg>
     ),
-    bgColor: 'bg-[#03C75A]',
-    textColor: 'text-white',
+    bgColor: "bg-[#03C75A]",
+    textColor: "text-white",
   },
 };
 
-const DEFAULT_PROVIDERS: OAuthProvider[] = ['GOOGLE', 'KAKAO', 'NAVER'];
+const DEFAULT_PROVIDERS: OAuthProvider[] = ["GOOGLE", "KAKAO", "NAVER"];
 
 export function SocialLoginButtons({
   className,
@@ -80,12 +80,12 @@ export function SocialLoginButtons({
         acc[provider] = getAuthorizationUrl(provider);
         return acc;
       },
-      {} as Record<OAuthProvider, string>
+      {} as Record<OAuthProvider, string>,
     );
   }, [providers]);
 
   return (
-    <div className={cn('flex justify-center gap-4', className)}>
+    <div className={cn("flex justify-center gap-4", className)}>
       {providers.map((provider) => {
         const config = PROVIDER_CONFIGS[provider];
         const authUrl = authUrls[provider];
@@ -95,11 +95,11 @@ export function SocialLoginButtons({
             key={provider}
             href={authUrl}
             className={cn(
-              'flex h-14 w-14 items-center justify-center rounded-full',
-              'transition-all duration-200',
-              config.bgColor || 'border border-sand bg-transparent',
-              config.textColor || 'text-deep-brown',
-              !config.bgColor && 'hover:border-soft-brown hover:bg-cream'
+              "flex h-14 w-14 items-center justify-center rounded-full",
+              "transition-all duration-200",
+              config.bgColor || "border border-sand bg-transparent",
+              config.textColor || "text-deep-brown",
+              !config.bgColor && "hover:border-soft-brown hover:bg-cream",
             )}
             aria-label={`${config.name}로 로그인`}
           >

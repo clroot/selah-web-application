@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { Key, Copy, Download, AlertTriangle, Check } from 'lucide-react';
-import { toast } from 'sonner';
+import { AlertTriangle, Check, Copy, Download, Key } from "lucide-react";
+import { toast } from "sonner";
 
-import { Button } from '@/shared/components';
-import { cn } from '@/shared/lib/utils';
+import { Button } from "@/shared/components";
+import { cn } from "@/shared/lib/utils";
 
 interface RecoveryKeyDisplayProps {
   recoveryKey: string;
@@ -27,33 +27,33 @@ export function RecoveryKeyDisplay({
     try {
       await navigator.clipboard.writeText(recoveryKey);
       setIsCopied(true);
-      toast.success('복구 키가 복사되었습니다');
+      toast.success("복구 키가 복사되었습니다");
       setTimeout(() => setIsCopied(false), 2000);
     } catch {
-      toast.error('복사에 실패했습니다');
+      toast.error("복사에 실패했습니다");
     }
   };
 
   const handleDownload = () => {
     const blob = new Blob([`Selah 복구 키\n\n${recoveryKey}\n`], {
-      type: 'text/plain',
+      type: "text/plain",
     });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'selah-recovery-key.txt';
+    a.download = "selah-recovery-key.txt";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    toast.success('복구 키가 저장되었습니다');
+    toast.success("복구 키가 저장되었습니다");
   };
 
   const handleComplete = () => {
     if (onComplete) {
       onComplete();
     } else {
-      router.push('/');
+      router.push("/");
     }
   };
 
@@ -88,10 +88,10 @@ export function RecoveryKeyDisplay({
           type="button"
           onClick={handleCopy}
           className={cn(
-            'flex flex-1 items-center justify-center gap-2 rounded-lg border border-sand py-3',
-            'text-deep-brown transition-all duration-200',
-            'hover:border-soft-brown hover:bg-cream',
-            isCopied && 'border-green-500 text-green-600'
+            "flex flex-1 items-center justify-center gap-2 rounded-lg border border-sand py-3",
+            "text-deep-brown transition-all duration-200",
+            "hover:border-soft-brown hover:bg-cream",
+            isCopied && "border-green-500 text-green-600",
           )}
         >
           {isCopied ? (
@@ -99,15 +99,15 @@ export function RecoveryKeyDisplay({
           ) : (
             <Copy className="h-5 w-5" />
           )}
-          {isCopied ? '복사됨' : '복사'}
+          {isCopied ? "복사됨" : "복사"}
         </button>
         <button
           type="button"
           onClick={handleDownload}
           className={cn(
-            'flex flex-1 items-center justify-center gap-2 rounded-lg border border-sand py-3',
-            'text-deep-brown transition-all duration-200',
-            'hover:border-soft-brown hover:bg-cream'
+            "flex flex-1 items-center justify-center gap-2 rounded-lg border border-sand py-3",
+            "text-deep-brown transition-all duration-200",
+            "hover:border-soft-brown hover:bg-cream",
           )}
         >
           <Download className="h-5 w-5" />
@@ -151,11 +151,11 @@ export function RecoveryKeyDisplay({
         />
         <div
           className={cn(
-            'flex h-6 w-6 shrink-0 items-center justify-center rounded border-2',
-            'transition-all duration-200',
+            "flex h-6 w-6 shrink-0 items-center justify-center rounded border-2",
+            "transition-all duration-200",
             isConfirmed
-              ? 'border-green-500 bg-green-500'
-              : 'border-sand hover:border-soft-brown'
+              ? "border-green-500 bg-green-500"
+              : "border-sand hover:border-soft-brown",
           )}
         >
           {isConfirmed && <Check className="h-4 w-4 text-white" />}

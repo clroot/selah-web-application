@@ -1,13 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-
-import { BottomNavigation, FullPageSpinner } from '@/shared/components';
-import { useEncryptionStore } from '@/shared/stores/encryptionStore';
+import { BottomNavigation, FullPageSpinner } from "@/shared/components";
+import { useEncryptionStore } from "@/shared/stores/encryptionStore";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -16,12 +15,8 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
-  const {
-    isUnlocked,
-    isRestoring,
-    restoreFromCache,
-    hasCachedSession,
-  } = useEncryptionStore();
+  const { isUnlocked, isRestoring, restoreFromCache, hasCachedSession } =
+    useEncryptionStore();
 
   // 앱 시작 시 캐시에서 DEK 복원 시도
   useEffect(() => {
@@ -43,7 +38,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
       // 복원 실패 - PIN 입력 페이지로 이동
       setIsChecking(false);
-      router.replace('/unlock-encryption');
+      router.replace("/unlock-encryption");
     };
 
     checkEncryption();

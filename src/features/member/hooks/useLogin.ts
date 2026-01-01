@@ -1,12 +1,12 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { authApi } from '@/features/member/api/auth.api';
-import { memberApi } from '@/features/member/api/member.api';
-import { useAuthStore } from '@/features/member/stores/authStore';
+import { authApi } from "@/features/member/api/auth.api";
+import { memberApi } from "@/features/member/api/member.api";
+import { useAuthStore } from "@/features/member/stores/authStore";
 
-import type { LoginFormData } from '@/features/member/utils/schemas';
+import type { LoginFormData } from "@/features/member/utils/schemas";
 
 /**
  * 로그인 훅
@@ -45,11 +45,11 @@ export function useLogin() {
       }
 
       // 쿼리 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
 
       // 홈으로 이동
       // TODO: 암호화 설정 여부 확인 후 PIN 입력 화면으로 이동할 수 있음
-      router.push('/');
+      router.push("/");
     },
   });
 }

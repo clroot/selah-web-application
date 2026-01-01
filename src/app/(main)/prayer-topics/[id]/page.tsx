@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from "next/navigation";
 
-import { PrayerTopicDetail } from '@/features/prayer-topic/components';
-import { usePrayerTopicDetail } from '@/features/prayer-topic/hooks';
-import { FullPageSpinner, PageHeader } from '@/shared/components';
+import { PrayerTopicDetail } from "@/features/prayer-topic/components";
+import { usePrayerTopicDetail } from "@/features/prayer-topic/hooks";
+import { FullPageSpinner, PageHeader } from "@/shared/components";
 
 export default function PrayerTopicDetailPage() {
   const params = useParams();
@@ -33,7 +33,7 @@ export default function PrayerTopicDetailPage() {
             오류가 발생했습니다
           </h2>
           <p className="text-sm text-soft-brown">
-            {error?.message ?? '잠시 후 다시 시도해주세요.'}
+            {error?.message ?? "잠시 후 다시 시도해주세요."}
           </p>
         </div>
       </div>

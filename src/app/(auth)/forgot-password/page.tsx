@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "lucide-react";
 
-import { ForgotPasswordForm } from '@/features/member/components';
+import { ForgotPasswordForm } from "@/features/member/components";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();

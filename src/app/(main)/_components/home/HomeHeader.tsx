@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
 
-import { User } from 'lucide-react';
+import { User } from "lucide-react";
 
-import { useAuthStore } from '@/features/member/stores/authStore';
+import { useAuthStore } from "@/features/member/stores/authStore";
 
-import { useGreeting } from './useGreeting';
+import { useGreeting } from "./useGreeting";
 
 /**
  * 홈 화면 헤더 (인사말 + 아바타)
@@ -16,7 +16,7 @@ export function HomeHeader() {
   const user = useAuthStore((state) => state.user);
   const greeting = useGreeting();
 
-  const nickname = user?.nickname ?? '방문자';
+  const nickname = user?.nickname ?? "방문자";
   const profileImageUrl = user?.profileImageUrl;
 
   return (

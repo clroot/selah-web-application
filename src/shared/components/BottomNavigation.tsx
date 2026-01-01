@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
-import { Home, BookOpen, Check, Settings } from 'lucide-react';
+import { BookOpen, Check, Home, Settings } from "lucide-react";
 
-import { CreateActionSheet } from './CreateActionSheet';
-import { FloatingActionButton } from './FloatingActionButton';
-import { NavItem } from './NavItem';
+import { CreateActionSheet } from "./CreateActionSheet";
+import { FloatingActionButton } from "./FloatingActionButton";
+import { NavItem } from "./NavItem";
 
 const leftNavItems = [
-  { href: '/', icon: Home, label: '홈' },
-  { href: '/prayers', icon: BookOpen, label: '기도문' },
+  { href: "/", icon: Home, label: "홈" },
+  { href: "/prayers", icon: BookOpen, label: "기도문" },
 ];
 
 const rightNavItems = [
-  { href: '/prayer-topics?status=ANSWERED', icon: Check, label: '응답' },
-  { href: '/settings', icon: Settings, label: '설정' },
+  { href: "/prayer-topics?status=ANSWERED", icon: Check, label: "응답" },
+  { href: "/settings", icon: Settings, label: "설정" },
 ];
 
 export function BottomNavigation() {
@@ -25,10 +25,10 @@ export function BottomNavigation() {
   const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/';
+    if (href === "/") {
+      return pathname === "/";
     }
-    return pathname.startsWith(href.split('?')[0]);
+    return pathname.startsWith(href.split("?")[0]);
   };
 
   const handleFabClick = () => {
@@ -58,7 +58,10 @@ export function BottomNavigation() {
         <div className="h-[env(safe-area-inset-bottom,0px)] bg-white" />
       </nav>
 
-      <CreateActionSheet isOpen={isActionSheetOpen} onClose={handleActionSheetClose} />
+      <CreateActionSheet
+        isOpen={isActionSheetOpen}
+        onClose={handleActionSheetClose}
+      />
     </>
   );
 }

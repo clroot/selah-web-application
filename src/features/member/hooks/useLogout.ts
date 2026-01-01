@@ -1,10 +1,10 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { authApi } from '@/features/member/api/auth.api';
-import { useAuthStore } from '@/features/member/stores/authStore';
-import { useEncryptionStore } from '@/shared/stores/encryptionStore';
+import { authApi } from "@/features/member/api/auth.api";
+import { useAuthStore } from "@/features/member/stores/authStore";
+import { useEncryptionStore } from "@/shared/stores/encryptionStore";
 
 interface UseLogoutOptions {
   logoutAll?: boolean;
@@ -37,7 +37,7 @@ export function useLogout(options: UseLogoutOptions = {}) {
       queryClient.clear();
 
       // 로그인 페이지로 이동
-      router.push('/login');
+      router.push("/login");
     },
   });
 }

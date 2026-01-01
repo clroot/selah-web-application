@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useSignup } from '@/features/member/hooks/useSignup';
+import { useSignup } from "@/features/member/hooks/useSignup";
 import {
-  signupFormSchema,
   type SignupFormData,
-} from '@/features/member/utils/schemas';
-import { Button, Input } from '@/shared/components';
+  signupFormSchema,
+} from "@/features/member/utils/schemas";
+import { Button, Input } from "@/shared/components";
 
-import { PasswordStrengthMeter } from './PasswordStrengthMeter';
+import { PasswordStrengthMeter } from "./PasswordStrengthMeter";
 
 export function SignupForm() {
   const {
@@ -24,7 +24,7 @@ export function SignupForm() {
   });
 
   const { mutate: signup, isPending, error } = useSignup();
-  const password = useWatch('password', '');
+  const password = useWatch("password", "");
 
   const onSubmit = (data: SignupFormData) => {
     signup(data);
@@ -36,7 +36,7 @@ export function SignupForm() {
         label="이메일"
         type="email"
         placeholder="hello@selah.com"
-        {...register('email')}
+        {...register("email")}
         error={errors.email?.message}
       />
 
@@ -46,7 +46,7 @@ export function SignupForm() {
           type="password"
           placeholder="8자 이상 입력해주세요"
           showPasswordToggle
-          {...register('password')}
+          {...register("password")}
           error={errors.password?.message}
         />
         <PasswordStrengthMeter password={password} />
@@ -57,7 +57,7 @@ export function SignupForm() {
         type="password"
         placeholder="비밀번호를 다시 입력해주세요"
         showPasswordToggle
-        {...register('passwordConfirm')}
+        {...register("passwordConfirm")}
         error={errors.passwordConfirm?.message}
       />
 
@@ -65,13 +65,13 @@ export function SignupForm() {
         label="닉네임"
         type="text"
         placeholder="기도 노트에서 사용할 이름"
-        {...register('nickname')}
+        {...register("nickname")}
         error={errors.nickname?.message}
       />
 
       {error && (
         <p className="text-center text-sm text-red-500">
-          {error.message || '회원가입에 실패했습니다'}
+          {error.message || "회원가입에 실패했습니다"}
         </p>
       )}
 

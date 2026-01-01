@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { prayerTopicApi } from '@/features/prayer-topic/api/prayerTopic.api';
-import { useCrypto } from '@/shared/hooks/useCrypto';
+import { prayerTopicApi } from "@/features/prayer-topic/api/prayerTopic.api";
+import { useCrypto } from "@/shared/hooks/useCrypto";
 
 import type {
   PrayerTopic,
   PrayerTopicListParams,
-} from '@/features/prayer-topic/types/prayerTopic.types';
+} from "@/features/prayer-topic/types/prayerTopic.types";
 
 /** 복호화된 기도제목 */
 export type DecryptedPrayerTopic = PrayerTopic;
@@ -38,13 +38,13 @@ interface UsePrayerTopicsResult {
  * @param params - 목록 조회 파라미터 (page, size, status)
  */
 export function usePrayerTopics(
-  params?: PrayerTopicListParams
+  params?: PrayerTopicListParams,
 ): UsePrayerTopicsResult {
   const { decryptData, isUnlocked } = useCrypto();
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ['prayerTopics', params],
+    queryKey: ["prayerTopics", params],
     queryFn: async () => {
       const { data, error } = await prayerTopicApi.list(params);
 
@@ -64,7 +64,7 @@ export function usePrayerTopics(
           reflection: topic.reflection
             ? await decryptData(topic.reflection)
             : null,
-        }))
+        })),
       );
 
       return {
@@ -87,7 +87,7 @@ export function usePrayerTopics(
     isError: query.isError,
     error: query.error,
     refetch: () => {
-      queryClient.invalidateQueries({ queryKey: ['prayerTopics'] });
+      queryClient.invalidateQueries({ queryKey: ["prayerTopics"] });
     },
   };
 }

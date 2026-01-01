@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from "react";
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
-import { memberApi } from '@/features/member/api/member.api';
-import { useAuthStore } from '@/features/member/stores/authStore';
-import { FullPageSpinner } from '@/shared/components';
+import { memberApi } from "@/features/member/api/member.api";
+import { useAuthStore } from "@/features/member/stores/authStore";
+import { FullPageSpinner } from "@/shared/components";
 
 function OAuthCompleteContent() {
   const router = useRouter();
@@ -16,9 +16,9 @@ function OAuthCompleteContent() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const hasAttempted = useRef(false);
 
-  const success = searchParams.get('success');
-  const error = searchParams.get('error');
-  const isNewMember = searchParams.get('isNewMember') === 'true';
+  const success = searchParams.get("success");
+  const error = searchParams.get("error");
+  const isNewMember = searchParams.get("isNewMember") === "true";
 
   // 에러 처리 또는 성공이 아닌 경우
   useEffect(() => {
@@ -27,14 +27,14 @@ function OAuthCompleteContent() {
       return;
     }
 
-    if (success !== 'true') {
-      router.replace('/login?error=oauth_failed');
+    if (success !== "true") {
+      router.replace("/login?error=oauth_failed");
     }
   }, [error, success, router]);
 
   // OAuth 성공 시 프로필 조회 및 리다이렉트
   useEffect(() => {
-    if (success !== 'true' || hasAttempted.current) return;
+    if (success !== "true" || hasAttempted.current) return;
     hasAttempted.current = true;
 
     const completeLogin = async () => {
@@ -44,8 +44,8 @@ function OAuthCompleteContent() {
           await memberApi.getMyProfile();
 
         if (profileError || !profile) {
-          console.error('프로필 조회 실패:', profileError);
-          router.replace('/login?error=profile_fetch_failed');
+          console.error("프로필 조회 실패:", profileError);
+          router.replace("/login?error=profile_fetch_failed");
           return;
         }
 
@@ -54,13 +54,13 @@ function OAuthCompleteContent() {
 
         // 신규 회원이면 암호화 설정 페이지로, 아니면 홈으로
         if (isNewMember) {
-          router.replace('/setup-encryption');
+          router.replace("/setup-encryption");
         } else {
-          router.replace('/');
+          router.replace("/");
         }
       } catch (e) {
-        console.error('로그인 완료 처리 실패:', e);
-        router.replace('/login?error=login_failed');
+        console.error("로그인 완료 처리 실패:", e);
+        router.replace("/login?error=login_failed");
       }
     };
 
@@ -69,11 +69,11 @@ function OAuthCompleteContent() {
 
   // 이미 인증된 상태면 홈으로 리다이렉트
   useEffect(() => {
-    if (!isInitializing && isAuthenticated && success === 'true') {
+    if (!isInitializing && isAuthenticated && success === "true") {
       if (isNewMember) {
-        router.replace('/setup-encryption');
+        router.replace("/setup-encryption");
       } else {
-        router.replace('/');
+        router.replace("/");
       }
     }
   }, [isInitializing, isAuthenticated, success, isNewMember, router]);
@@ -87,7 +87,7 @@ function OAuthCompleteContent() {
           </h1>
           <p className="text-soft-brown">소셜 로그인 중 오류가 발생했습니다.</p>
           <button
-            onClick={() => router.push('/login')}
+            onClick={() => router.push("/login")}
             className="text-soft-brown hover:text-deep-brown hover:underline"
           >
             로그인 페이지로 돌아가기

@@ -3,7 +3,7 @@
  */
 
 /** OAuth 제공자 */
-export type OAuthProvider = 'GOOGLE' | 'KAKAO' | 'NAVER';
+export type OAuthProvider = "GOOGLE" | "KAKAO" | "NAVER";
 
 /** 회원 프로필 (Backend MemberProfileResponse와 일치) */
 export interface MemberProfile {

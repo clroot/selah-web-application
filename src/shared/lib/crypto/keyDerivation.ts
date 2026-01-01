@@ -36,31 +36,31 @@ export function generateSalt(): Uint8Array {
  */
 export async function deriveKEK(
   password: string,
-  salt: Uint8Array
+  salt: Uint8Array,
 ): Promise<CryptoKey> {
   const encoder = new TextEncoder();
 
   // 비밀번호를 key material로 import
   const keyMaterial = await crypto.subtle.importKey(
-    'raw',
+    "raw",
     encoder.encode(password),
-    'PBKDF2',
+    "PBKDF2",
     false,
-    ['deriveKey']
+    ["deriveKey"],
   );
 
   // PBKDF2로 AES-GCM 키 파생 (wrapKey/unwrapKey 권한으로 DEK 암호화)
   return crypto.subtle.deriveKey(
     {
-      name: 'PBKDF2',
+      name: "PBKDF2",
       salt: salt.buffer as ArrayBuffer,
       iterations: PBKDF2_ITERATIONS,
-      hash: 'SHA-256',
+      hash: "SHA-256",
     },
     keyMaterial,
-    { name: 'AES-GCM', length: KEY_LENGTH },
+    { name: "AES-GCM", length: KEY_LENGTH },
     false, // extractable: false (보안상 키 추출 불가)
-    ['wrapKey', 'unwrapKey']
+    ["wrapKey", "unwrapKey"],
   );
 }
 
@@ -75,31 +75,31 @@ export async function deriveKEK(
  */
 export async function deriveClientKEK(
   pin: string,
-  salt: Uint8Array
+  salt: Uint8Array,
 ): Promise<CryptoKey> {
   const encoder = new TextEncoder();
 
   // PIN을 key material로 import
   const keyMaterial = await crypto.subtle.importKey(
-    'raw',
+    "raw",
     encoder.encode(pin),
-    'PBKDF2',
+    "PBKDF2",
     false,
-    ['deriveKey']
+    ["deriveKey"],
   );
 
   // PBKDF2로 Client KEK 파생 (extractable: true - HKDF 결합용)
   return crypto.subtle.deriveKey(
     {
-      name: 'PBKDF2',
+      name: "PBKDF2",
       salt: salt.buffer as ArrayBuffer,
       iterations: PBKDF2_ITERATIONS,
-      hash: 'SHA-256',
+      hash: "SHA-256",
     },
     keyMaterial,
-    { name: 'AES-GCM', length: KEY_LENGTH },
+    { name: "AES-GCM", length: KEY_LENGTH },
     true, // extractable: true (Server Key와 HKDF 결합을 위해)
-    ['encrypt', 'decrypt'] // 임시 권한, HKDF 후 wrapKey/unwrapKey 사용
+    ["encrypt", "decrypt"], // 임시 권한, HKDF 후 wrapKey/unwrapKey 사용
   );
 }
 
@@ -111,30 +111,33 @@ export async function deriveClientKEK(
  * @param salt - Salt (Uint8Array, 32 bytes 권장)
  * @returns CryptoKey (AES-GCM, 256-bit)
  */
-export async function deriveKey(password: string, salt: Uint8Array): Promise<CryptoKey> {
+export async function deriveKey(
+  password: string,
+  salt: Uint8Array,
+): Promise<CryptoKey> {
   const encoder = new TextEncoder();
 
   // 비밀번호를 key material로 import
   const keyMaterial = await crypto.subtle.importKey(
-    'raw',
+    "raw",
     encoder.encode(password),
-    'PBKDF2',
+    "PBKDF2",
     false,
-    ['deriveKey']
+    ["deriveKey"],
   );
 
   // PBKDF2로 AES-GCM 키 파생
   return crypto.subtle.deriveKey(
     {
-      name: 'PBKDF2',
+      name: "PBKDF2",
       salt: salt.buffer as ArrayBuffer,
       iterations: PBKDF2_ITERATIONS,
-      hash: 'SHA-256',
+      hash: "SHA-256",
     },
     keyMaterial,
-    { name: 'AES-GCM', length: KEY_LENGTH },
+    { name: "AES-GCM", length: KEY_LENGTH },
     false, // extractable: false (보안상 키 추출 불가)
-    ['encrypt', 'decrypt']
+    ["encrypt", "decrypt"],
   );
 }
 
@@ -147,7 +150,7 @@ export async function deriveKey(password: string, salt: Uint8Array): Promise<Cry
  */
 export async function deriveKeyFromBase64Salt(
   password: string,
-  saltBase64: string
+  saltBase64: string,
 ): Promise<CryptoKey> {
   const salt = base64ToUint8Array(saltBase64);
   return deriveKey(password, salt);

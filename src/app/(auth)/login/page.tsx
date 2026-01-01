@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import { LoginForm, SocialLoginButtons } from '@/features/member/components';
+import { LoginForm, SocialLoginButtons } from "@/features/member/components";
 
 export default function LoginPage() {
   return (
@@ -28,11 +28,14 @@ export default function LoginPage() {
           <div className="h-px flex-1 bg-sand" />
         </div>
 
-        <SocialLoginButtons providers={['GOOGLE', 'NAVER']} />
+        <SocialLoginButtons providers={["GOOGLE", "NAVER"]} />
 
         <p className="text-center text-sm text-soft-brown">
-          계정이 없으신가요?{' '}
-          <Link href="/signup" className="font-medium text-gold hover:underline">
+          계정이 없으신가요?{" "}
+          <Link
+            href="/signup"
+            className="font-medium text-gold hover:underline"
+          >
             회원가입
           </Link>
         </p>

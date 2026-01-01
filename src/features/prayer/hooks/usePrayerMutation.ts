@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { prayerApi } from '@/features/prayer/api/prayer.api';
-import { useCrypto } from '@/shared/hooks/useCrypto';
+import { prayerApi } from "@/features/prayer/api/prayer.api";
+import { useCrypto } from "@/shared/hooks/useCrypto";
 
 import type {
   CreatePrayerRequest,
   UpdatePrayerRequest,
-} from '@/features/prayer/types/prayer.types';
+} from "@/features/prayer/types/prayer.types";
 
 /**
  * 기도문 생성 훅
@@ -34,7 +34,7 @@ export function useCreatePrayer() {
       return result;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['prayers'] });
+      queryClient.invalidateQueries({ queryKey: ["prayers"] });
     },
   });
 }
@@ -69,8 +69,8 @@ export function useUpdatePrayer() {
       return result;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['prayers'] });
-      queryClient.invalidateQueries({ queryKey: ['prayer', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["prayers"] });
+      queryClient.invalidateQueries({ queryKey: ["prayer", variables.id] });
     },
   });
 }
@@ -90,7 +90,7 @@ export function useDeletePrayer() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['prayers'] });
+      queryClient.invalidateQueries({ queryKey: ["prayers"] });
     },
   });
 }

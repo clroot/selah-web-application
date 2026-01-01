@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
+import { PrayerCard } from "./PrayerCard";
+import { SectionHeader } from "./SectionHeader";
 
-import { PrayerCard } from './PrayerCard';
-import { SectionHeader } from './SectionHeader';
-
-import type { Prayer } from '@/features/prayer/types/prayer.types';
+import type { Prayer } from "@/features/prayer/types/prayer.types";
 
 interface RecentPrayersPreviewProps {
   prayers: Prayer[];

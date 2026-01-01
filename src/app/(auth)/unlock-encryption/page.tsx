@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { PinUnlockForm } from '@/features/encryption/components';
-import { FullPageSpinner } from '@/shared/components';
-import { useEncryptionStore } from '@/shared/stores/encryptionStore';
+import { PinUnlockForm } from "@/features/encryption/components";
+import { FullPageSpinner } from "@/shared/components";
+import { useEncryptionStore } from "@/shared/stores/encryptionStore";
 
 export default function UnlockEncryptionPage() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function UnlockEncryptionPage() {
       if (hasCachedSession()) {
         const restored = await restoreFromCache();
         if (restored) {
-          router.replace('/');
+          router.replace("/");
         }
       }
     };
@@ -36,7 +36,7 @@ export default function UnlockEncryptionPage() {
   // 이미 해제된 상태면 홈으로
   useEffect(() => {
     if (isUnlocked) {
-      router.replace('/');
+      router.replace("/");
     }
   }, [isUnlocked, router]);
 
@@ -44,18 +44,18 @@ export default function UnlockEncryptionPage() {
     setIsLoading(true);
     try {
       await unlockWithPIN(pin);
-      router.replace('/');
+      router.replace("/");
     } catch (e) {
       setIsLoading(false);
       // 암호화 관련 에러는 사용자 친화적인 메시지로 변환
       if (e instanceof Error) {
         // DOMException은 복호화 실패를 의미
-        if (e.name === 'OperationError' || e.message.includes('decrypt')) {
-          throw new Error('PIN이 올바르지 않습니다');
+        if (e.name === "OperationError" || e.message.includes("decrypt")) {
+          throw new Error("PIN이 올바르지 않습니다");
         }
         throw e;
       }
-      throw new Error('암호화 해제에 실패했습니다');
+      throw new Error("암호화 해제에 실패했습니다");
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +86,7 @@ export default function UnlockEncryptionPage() {
             className="text-sm text-soft-brown hover:text-deep-brown hover:underline"
             onClick={() => {
               // TODO: 복구 키 입력 페이지로 이동
-              alert('복구 키 입력 기능은 준비 중입니다.');
+              alert("복구 키 입력 기능은 준비 중입니다.");
             }}
           >
             PIN을 잊으셨나요?

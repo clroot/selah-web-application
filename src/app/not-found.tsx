@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import { Home, Compass } from 'lucide-react';
+import { Compass, Home } from "lucide-react";
 
 /**
  * 404 페이지
@@ -77,7 +77,9 @@ export default function NotFound() {
 
         {/* Message */}
         <div className="animate-fadeInUp mb-2 opacity-0 delay-200">
-          <h1 className="font-serif text-2xl font-bold text-deep-brown">길을 잃으셨나요?</h1>
+          <h1 className="font-serif text-2xl font-bold text-deep-brown">
+            길을 잃으셨나요?
+          </h1>
         </div>
 
         <div className="animate-fadeInUp mb-10 max-w-[280px] opacity-0 delay-300">
@@ -107,7 +109,9 @@ export default function NotFound() {
 
       {/* Bottom decorative quote */}
       <div className="animate-fadeInUp absolute bottom-8 left-0 right-0 text-center opacity-0 delay-400">
-        <p className="font-serif text-xs tracking-wider text-soft-brown/50">Selah</p>
+        <p className="font-serif text-xs tracking-wider text-soft-brown/50">
+          Selah
+        </p>
       </div>
     </div>
   );

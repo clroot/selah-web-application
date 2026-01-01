@@ -1,8 +1,8 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from "lucide-react";
 
-import { getDaysSince } from './date';
+import { getDaysSince } from "./date";
 
 interface TopicCardProps {
   id: string;

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { Check, ChevronRight } from 'lucide-react';
+import { Check, ChevronRight } from "lucide-react";
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from "@/shared/lib/utils";
 
 interface TermsAgreementProps {
   onAgree: () => void;
@@ -19,20 +19,20 @@ interface TermItem {
 
 const TERMS: TermItem[] = [
   {
-    id: 'service',
-    label: '서비스 이용약관',
+    id: "service",
+    label: "서비스 이용약관",
     required: true,
-    url: '/terms/service',
+    url: "/terms/service",
   },
   {
-    id: 'privacy',
-    label: '개인정보 처리방침',
+    id: "privacy",
+    label: "개인정보 처리방침",
     required: true,
-    url: '/terms/privacy',
+    url: "/terms/privacy",
   },
   {
-    id: 'age',
-    label: '만 14세 이상입니다',
+    id: "age",
+    label: "만 14세 이상입니다",
     required: true,
   },
 ];
@@ -40,7 +40,9 @@ const TERMS: TermItem[] = [
 export function TermsAgreement({ onAgree }: TermsAgreementProps) {
   const [agreed, setAgreed] = useState<Record<string, boolean>>({});
 
-  const allRequired = TERMS.filter((t) => t.required).every((t) => agreed[t.id]);
+  const allRequired = TERMS.filter((t) => t.required).every(
+    (t) => agreed[t.id],
+  );
 
   const handleToggle = (id: string) => {
     setAgreed((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -74,18 +76,18 @@ export function TermsAgreement({ onAgree }: TermsAgreementProps) {
           type="button"
           onClick={handleToggleAll}
           className={cn(
-            'flex w-full items-center gap-3 rounded-lg border-2 p-4 text-left transition-colors',
+            "flex w-full items-center gap-3 rounded-lg border-2 p-4 text-left transition-colors",
             allChecked
-              ? 'border-deep-brown bg-deep-brown/5'
-              : 'border-sand hover:border-soft-brown'
+              ? "border-deep-brown bg-deep-brown/5"
+              : "border-sand hover:border-soft-brown",
           )}
         >
           <div
             className={cn(
-              'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
+              "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
               allChecked
-                ? 'border-deep-brown bg-deep-brown'
-                : 'border-soft-brown'
+                ? "border-deep-brown bg-deep-brown"
+                : "border-soft-brown",
             )}
           >
             {allChecked && <Check className="h-4 w-4 text-white" />}
@@ -107,10 +109,10 @@ export function TermsAgreement({ onAgree }: TermsAgreementProps) {
               >
                 <div
                   className={cn(
-                    'flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors',
+                    "flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors",
                     agreed[term.id]
-                      ? 'border-deep-brown bg-deep-brown'
-                      : 'border-sand'
+                      ? "border-deep-brown bg-deep-brown"
+                      : "border-sand",
                   )}
                 >
                   {agreed[term.id] && <Check className="h-3 w-3 text-white" />}
@@ -142,10 +144,10 @@ export function TermsAgreement({ onAgree }: TermsAgreementProps) {
         onClick={onAgree}
         disabled={!allRequired}
         className={cn(
-          'w-full rounded-lg py-4 font-medium transition-colors',
+          "w-full rounded-lg py-4 font-medium transition-colors",
           allRequired
-            ? 'bg-deep-brown text-white hover:bg-deep-brown/90'
-            : 'bg-sand text-soft-brown cursor-not-allowed'
+            ? "bg-deep-brown text-white hover:bg-deep-brown/90"
+            : "bg-sand text-soft-brown cursor-not-allowed",
         )}
       >
         다음

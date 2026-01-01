@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef } from "react";
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from "next/navigation";
 
-import { memberApi } from '@/features/member/api/member.api';
-import { useAuthStore } from '@/features/member/stores/authStore';
-import { FullPageSpinner } from '@/shared/components';
+import { memberApi } from "@/features/member/api/member.api";
+import { useAuthStore } from "@/features/member/stores/authStore";
+import { FullPageSpinner } from "@/shared/components";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 /** 인증이 필요 없는 공개 경로 */
-const PUBLIC_PATHS = ['/login', '/signup', '/auth/oauth-complete'];
+const PUBLIC_PATHS = ["/login", "/signup", "/auth/oauth-complete"];
 
 /** 경로가 공개 경로인지 확인 */
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`)
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
 }
 
@@ -41,23 +41,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
       try {
         // 백엔드에 세션 쿠키로 프로필 조회 시도
         const result = await memberApi.getMyProfile();
-        console.log('[AuthProvider] getMyProfile result:', result);
+        console.log("[AuthProvider] getMyProfile result:", result);
 
         const { data: profile, error } = result;
 
         if (error || !profile) {
           // 세션이 없거나 만료됨
-          console.log('[AuthProvider] No profile or error:', { error, profile });
+          console.log("[AuthProvider] No profile or error:", {
+            error,
+            profile,
+          });
           setInitialized();
           return;
         }
 
         // 세션이 유효하면 사용자 정보 설정
-        console.log('[AuthProvider] Setting user:', profile);
+        console.log("[AuthProvider] Setting user:", profile);
         setUser(profile);
       } catch (e) {
         // 네트워크 오류 등
-        console.error('[AuthProvider] Exception:', e);
+        console.error("[AuthProvider] Exception:", e);
         setInitialized();
       }
     };
@@ -74,10 +77,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (!isAuthenticated && !isPublic) {
       // 인증되지 않은 상태에서 보호된 페이지 접근 시 로그인으로 리다이렉트
-      router.replace('/login');
-    } else if (isAuthenticated && isPublic && pathname !== '/auth/oauth-complete') {
+      router.replace("/login");
+    } else if (
+      isAuthenticated &&
+      isPublic &&
+      pathname !== "/auth/oauth-complete"
+    ) {
       // 인증된 상태에서 로그인/회원가입 페이지 접근 시 홈으로 리다이렉트
-      router.replace('/');
+      router.replace("/");
     }
   }, [isInitializing, isAuthenticated, pathname, router]);
 

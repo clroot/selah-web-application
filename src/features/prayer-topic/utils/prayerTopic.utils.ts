@@ -1,7 +1,7 @@
 import type {
   PrayerTopic,
   PrayerTopicStatus,
-} from '@/features/prayer-topic/types/prayerTopic.types';
+} from "@/features/prayer-topic/types/prayerTopic.types";
 
 /**
  * 날짜 문자열을 포맷팅된 문자열로 변환
@@ -12,8 +12,8 @@ import type {
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
   return `${year}.${month}.${day}`;
 }
 
@@ -25,10 +25,10 @@ export function formatDate(dateString: string): string {
  */
 export function getStatusLabel(status: PrayerTopicStatus): string {
   switch (status) {
-    case 'PRAYING':
-      return '기도 중';
-    case 'ANSWERED':
-      return '응답됨';
+    case "PRAYING":
+      return "기도 중";
+    case "ANSWERED":
+      return "응답됨";
     default:
       return status;
   }
@@ -42,12 +42,12 @@ export function getStatusLabel(status: PrayerTopicStatus): string {
  */
 export function getStatusColorClass(status: PrayerTopicStatus): string {
   switch (status) {
-    case 'PRAYING':
-      return 'text-soft-brown bg-warm-beige';
-    case 'ANSWERED':
-      return 'text-deep-brown bg-sand';
+    case "PRAYING":
+      return "text-soft-brown bg-warm-beige";
+    case "ANSWERED":
+      return "text-deep-brown bg-sand";
     default:
-      return 'text-gray-600 bg-gray-100';
+      return "text-gray-600 bg-gray-100";
   }
 }
 
@@ -59,7 +59,7 @@ export function getStatusColorClass(status: PrayerTopicStatus): string {
  */
 export function calculateAnsweredRate(topics: PrayerTopic[]): number {
   if (topics.length === 0) return 0;
-  const answered = topics.filter((t) => t.status === 'ANSWERED').length;
+  const answered = topics.filter((t) => t.status === "ANSWERED").length;
   return Math.round((answered / topics.length) * 100);
 }
 
@@ -79,7 +79,7 @@ export function getRelativeTime(dateString: string): string {
   const diffDays = Math.floor(diffHours / 24);
 
   if (diffSeconds < 60) {
-    return '방금 전';
+    return "방금 전";
   }
   if (diffMinutes < 60) {
     return `${diffMinutes}분 전`;
@@ -113,7 +113,7 @@ export function groupByStatus(topics: PrayerTopic[]): {
   answered: PrayerTopic[];
 } {
   return {
-    praying: topics.filter((t) => t.status === 'PRAYING'),
-    answered: topics.filter((t) => t.status === 'ANSWERED'),
+    praying: topics.filter((t) => t.status === "PRAYING"),
+    answered: topics.filter((t) => t.status === "ANSWERED"),
   };
 }

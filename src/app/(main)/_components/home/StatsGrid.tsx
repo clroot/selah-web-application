@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { StatCard } from './StatCard';
-import { useHomeStats } from './useHomeStats';
+import { StatCard } from "./StatCard";
+import { useHomeStats } from "./useHomeStats";
 
 /**
  * 통계 그리드 컴포넌트
@@ -16,11 +16,11 @@ export function StatsGrid() {
   const answeredCount = data?.answeredCount ?? 0;
 
   const handlePrayingClick = () => {
-    router.push('/prayer-topics?status=PRAYING');
+    router.push("/prayer-topics?status=PRAYING");
   };
 
   const handleAnsweredClick = () => {
-    router.push('/prayer-topics?status=ANSWERED');
+    router.push("/prayer-topics?status=ANSWERED");
   };
 
   if (isLoading) {

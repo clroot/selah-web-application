@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from "react";
 
-import type { PinInputHandle } from './PinInput';
-import { PinInput } from './PinInput';
+import type { PinInputHandle } from "./PinInput";
+import { PinInput } from "./PinInput";
 
 interface PinUnlockFormProps {
   onSubmit: (pin: string) => Promise<void>;
@@ -13,7 +13,10 @@ interface PinUnlockFormProps {
 /**
  * PIN 입력 폼 (로그인 시 암호화 해제용)
  */
-export function PinUnlockForm({ onSubmit, isLoading = false }: PinUnlockFormProps) {
+export function PinUnlockForm({
+  onSubmit,
+  isLoading = false,
+}: PinUnlockFormProps) {
   const [error, setError] = useState<string>();
   const pinInputRef = useRef<PinInputHandle>(null);
 
@@ -24,12 +27,12 @@ export function PinUnlockForm({ onSubmit, isLoading = false }: PinUnlockFormProp
       try {
         await onSubmit(pin);
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'PIN이 올바르지 않습니다');
+        setError(e instanceof Error ? e.message : "PIN이 올바르지 않습니다");
         // 에러 시 입력 초기화
         pinInputRef.current?.clear();
       }
     },
-    [onSubmit]
+    [onSubmit],
   );
 
   return (

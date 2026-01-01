@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { prayerTopicApi } from '@/features/prayer-topic/api/prayerTopic.api';
-import { useCrypto } from '@/shared/hooks/useCrypto';
+import { prayerTopicApi } from "@/features/prayer-topic/api/prayerTopic.api";
+import { useCrypto } from "@/shared/hooks/useCrypto";
 
-import type { PrayerTopic } from '@/features/prayer-topic/types/prayerTopic.types';
+import type { PrayerTopic } from "@/features/prayer-topic/types/prayerTopic.types";
 
 /** 복호화된 기도제목 */
 export type DecryptedPrayerTopicDetail = PrayerTopic;
@@ -29,7 +29,7 @@ export function usePrayerTopicDetail(id: string): UsePrayerTopicDetailResult {
   const { decryptData, isUnlocked } = useCrypto();
 
   const query = useQuery({
-    queryKey: ['prayerTopics', id],
+    queryKey: ["prayerTopics", id],
     queryFn: async () => {
       const { data, error } = await prayerTopicApi.getById(id);
 
@@ -45,9 +45,7 @@ export function usePrayerTopicDetail(id: string): UsePrayerTopicDetailResult {
       return {
         ...data,
         title: await decryptData(data.title),
-        reflection: data.reflection
-          ? await decryptData(data.reflection)
-          : null,
+        reflection: data.reflection ? await decryptData(data.reflection) : null,
       };
     },
     enabled: isUnlocked && !!id,

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { RecoveryKeyDisplay } from '@/features/encryption/components';
-import { useEncryptionSetup } from '@/features/encryption/hooks';
-import { FullPageSpinner } from '@/shared/components';
+import { RecoveryKeyDisplay } from "@/features/encryption/components";
+import { useEncryptionSetup } from "@/features/encryption/hooks";
+import { FullPageSpinner } from "@/shared/components";
 
 export default function RecoveryKeyPage() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function RecoveryKeyPage() {
   useEffect(() => {
     // 복구 키가 없으면 홈으로 리다이렉트
     if (!recoveryKey) {
-      router.replace('/');
+      router.replace("/");
     }
   }, [recoveryKey, router]);
 

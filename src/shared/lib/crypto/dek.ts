@@ -5,7 +5,7 @@
  * DEK는 KEK(Key Encryption Key)로 암호화되어 서버에 저장됩니다.
  */
 
-import { uint8ArrayToBase64, base64ToUint8Array } from './crypto';
+import { base64ToUint8Array, uint8ArrayToBase64 } from "./crypto";
 
 const IV_LENGTH = 12; // GCM 권장 IV 길이 (96 bits)
 const DEK_LENGTH = 256; // AES-256
@@ -17,9 +17,9 @@ const DEK_LENGTH = 256; // AES-256
  */
 export async function generateDEK(): Promise<CryptoKey> {
   return crypto.subtle.generateKey(
-    { name: 'AES-GCM', length: DEK_LENGTH },
+    { name: "AES-GCM", length: DEK_LENGTH },
     true, // extractable: true (KEK로 암호화하기 위해)
-    ['encrypt', 'decrypt']
+    ["encrypt", "decrypt"],
   );
 }
 
@@ -30,11 +30,14 @@ export async function generateDEK(): Promise<CryptoKey> {
  * @param kek - KEK (CryptoKey with wrapKey permission)
  * @returns Base64 인코딩된 암호화된 DEK (IV + wrapped key)
  */
-export async function encryptDEK(dek: CryptoKey, kek: CryptoKey): Promise<string> {
+export async function encryptDEK(
+  dek: CryptoKey,
+  kek: CryptoKey,
+): Promise<string> {
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
 
-  const wrappedKey = await crypto.subtle.wrapKey('raw', dek, kek, {
-    name: 'AES-GCM',
+  const wrappedKey = await crypto.subtle.wrapKey("raw", dek, kek, {
+    name: "AES-GCM",
     iv,
   });
 
@@ -53,19 +56,22 @@ export async function encryptDEK(dek: CryptoKey, kek: CryptoKey): Promise<string
  * @param kek - KEK (CryptoKey with unwrapKey permission)
  * @returns DEK (CryptoKey, non-extractable)
  */
-export async function decryptDEK(encryptedDEK: string, kek: CryptoKey): Promise<CryptoKey> {
+export async function decryptDEK(
+  encryptedDEK: string,
+  kek: CryptoKey,
+): Promise<CryptoKey> {
   const combined = base64ToUint8Array(encryptedDEK);
   const iv = combined.slice(0, IV_LENGTH);
   const wrappedKey = combined.slice(IV_LENGTH);
 
   return crypto.subtle.unwrapKey(
-    'raw',
+    "raw",
     wrappedKey,
     kek,
-    { name: 'AES-GCM', iv },
-    { name: 'AES-GCM', length: DEK_LENGTH },
+    { name: "AES-GCM", iv },
+    { name: "AES-GCM", length: DEK_LENGTH },
     false, // extractable: false (메모리에서만 사용)
-    ['encrypt', 'decrypt']
+    ["encrypt", "decrypt"],
   );
 }
 
@@ -76,7 +82,7 @@ export async function decryptDEK(encryptedDEK: string, kek: CryptoKey): Promise<
  * @returns DEK raw bytes (Uint8Array)
  */
 export async function exportDEK(dek: CryptoKey): Promise<Uint8Array> {
-  const exported = await crypto.subtle.exportKey('raw', dek);
+  const exported = await crypto.subtle.exportKey("raw", dek);
   return new Uint8Array(exported);
 }
 
@@ -89,17 +95,17 @@ export async function exportDEK(dek: CryptoKey): Promise<Uint8Array> {
  */
 export async function importDEK(
   dekBytes: Uint8Array,
-  extractable: boolean = false
+  extractable: boolean = false,
 ): Promise<CryptoKey> {
   // Uint8Array의 데이터를 새로운 ArrayBuffer에 복사하여 BufferSource 호환성 확보
   const buffer = new ArrayBuffer(dekBytes.byteLength);
   new Uint8Array(buffer).set(dekBytes);
 
   return crypto.subtle.importKey(
-    'raw',
+    "raw",
     buffer,
-    { name: 'AES-GCM', length: DEK_LENGTH },
+    { name: "AES-GCM", length: DEK_LENGTH },
     extractable,
-    ['encrypt', 'decrypt']
+    ["encrypt", "decrypt"],
   );
 }

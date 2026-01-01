@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   EmptyHomeState,
@@ -7,7 +7,7 @@ import {
   RecentPrayersPreview,
   StatsGrid,
   useHomeData,
-} from './_components/home';
+} from "./_components/home";
 
 export default function HomePage() {
   const { data, isLoading } = useHomeData();

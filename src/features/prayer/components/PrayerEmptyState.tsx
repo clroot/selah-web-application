@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
-import { BookOpen, Plus } from 'lucide-react';
+import { BookOpen, Plus } from "lucide-react";
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from "@/shared/lib/utils";
 
 interface PrayerEmptyStateProps {
   message?: string;
@@ -16,15 +16,15 @@ interface PrayerEmptyStateProps {
  * 기도문 빈 상태 컴포넌트
  */
 export function PrayerEmptyState({
-  message = '이 날 작성된 기도문이 없어요',
+  message = "이 날 작성된 기도문이 없어요",
   showWriteButton = true,
   className,
 }: PrayerEmptyStateProps) {
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center py-12 text-center',
-        className
+        "flex flex-col items-center justify-center py-12 text-center",
+        className,
       )}
     >
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sand">
@@ -35,9 +35,9 @@ export function PrayerEmptyState({
         <Link
           href="/prayers/new"
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-full bg-deep-brown px-5 py-3',
-            'text-[13px] font-medium text-cream',
-            'transition-colors hover:bg-deep-brown/90'
+            "inline-flex items-center gap-1.5 rounded-full bg-deep-brown px-5 py-3",
+            "text-[13px] font-medium text-cream",
+            "transition-colors hover:bg-deep-brown/90",
           )}
         >
           <Plus className="h-4 w-4" />

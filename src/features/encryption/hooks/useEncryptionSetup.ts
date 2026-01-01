@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { useEncryptionStore } from '@/shared/stores/encryptionStore';
+import { useEncryptionStore } from "@/shared/stores/encryptionStore";
 
 /**
  * PIN 설정 및 복구 키 관리를 위한 훅
@@ -13,10 +13,10 @@ export function useEncryptionSetup() {
   const setupEncryption = useEncryptionStore((state) => state.setupEncryption);
   const isUnlocked = useEncryptionStore((state) => state.isUnlocked);
   const pendingRecoveryKey = useEncryptionStore(
-    (state) => state.pendingRecoveryKey
+    (state) => state.pendingRecoveryKey,
   );
   const clearPendingRecoveryKey = useEncryptionStore(
-    (state) => state.clearPendingRecoveryKey
+    (state) => state.clearPendingRecoveryKey,
   );
 
   const [isLoading, setIsLoading] = useState(false);
@@ -36,14 +36,14 @@ export function useEncryptionSetup() {
         await setupEncryption(pin);
 
         // 복구 키 페이지로 이동
-        router.push('/recovery-key');
+        router.push("/recovery-key");
       } catch (e) {
-        setError(e instanceof Error ? e.message : '암호화 설정에 실패했습니다');
+        setError(e instanceof Error ? e.message : "암호화 설정에 실패했습니다");
       } finally {
         setIsLoading(false);
       }
     },
-    [setupEncryption, router]
+    [setupEncryption, router],
   );
 
   /**
@@ -51,7 +51,7 @@ export function useEncryptionSetup() {
    */
   const handleRecoveryKeyConfirm = useCallback(() => {
     clearPendingRecoveryKey();
-    router.push('/');
+    router.push("/");
   }, [clearPendingRecoveryKey, router]);
 
   return {

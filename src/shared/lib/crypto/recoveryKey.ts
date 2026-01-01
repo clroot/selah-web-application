@@ -5,7 +5,7 @@
  * 복구 키 원본은 사용자만 보관하고, 서버에는 해시와 recoveryEncryptedDEK만 저장합니다.
  */
 
-import { uint8ArrayToBase64, base64ToUint8Array } from './crypto';
+import { base64ToUint8Array, uint8ArrayToBase64 } from "./crypto";
 
 const RECOVERY_KEY_LENGTH = 32; // 256 bits
 const IV_LENGTH = 12; // GCM IV 길이
@@ -37,14 +37,19 @@ export function generateRecoveryKeyBase64(): string {
  * @param recoveryKey - 복구 키 (Uint8Array 또는 Base64 문자열)
  * @returns Base64 인코딩된 해시
  */
-export async function hashRecoveryKey(recoveryKey: Uint8Array | string): Promise<string> {
-  const data = typeof recoveryKey === 'string' ? base64ToUint8Array(recoveryKey) : recoveryKey;
+export async function hashRecoveryKey(
+  recoveryKey: Uint8Array | string,
+): Promise<string> {
+  const data =
+    typeof recoveryKey === "string"
+      ? base64ToUint8Array(recoveryKey)
+      : recoveryKey;
 
   // Uint8Array의 데이터를 새로운 ArrayBuffer에 복사
   const buffer = new ArrayBuffer(data.byteLength);
   new Uint8Array(buffer).set(data);
 
-  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
   return uint8ArrayToBase64(new Uint8Array(hashBuffer));
 }
 
@@ -59,7 +64,7 @@ export async function hashRecoveryKey(recoveryKey: Uint8Array | string): Promise
  */
 export async function verifyRecoveryKey(
   recoveryKey: Uint8Array | string,
-  storedHash: string
+  storedHash: string,
 ): Promise<boolean> {
   const computedHash = await hashRecoveryKey(recoveryKey);
   return computedHash === storedHash;
@@ -76,15 +81,15 @@ export async function verifyRecoveryKey(
  */
 export function formatRecoveryKey(recoveryKey: Uint8Array): string {
   const hex = Array.from(recoveryKey)
-    .map((b) => b.toString(16).padStart(2, '0').toUpperCase())
-    .join('');
+    .map((b) => b.toString(16).padStart(2, "0").toUpperCase())
+    .join("");
 
   const groups: string[] = [];
   for (let i = 0; i < hex.length; i += 4) {
     groups.push(hex.slice(i, i + 4));
   }
 
-  return groups.join('-');
+  return groups.join("-");
 }
 
 /**
@@ -94,7 +99,7 @@ export function formatRecoveryKey(recoveryKey: Uint8Array): string {
  * @returns 복구 키 (Uint8Array)
  */
 export function parseFormattedRecoveryKey(formatted: string): Uint8Array {
-  const hex = formatted.replace(/-/g, '');
+  const hex = formatted.replace(/-/g, "");
   const bytes = new Uint8Array(hex.length / 2);
 
   for (let i = 0; i < hex.length; i += 2) {
@@ -113,7 +118,7 @@ export function parseFormattedRecoveryKey(formatted: string): Uint8Array {
  */
 export async function encryptDEKWithRecoveryKey(
   dek: CryptoKey,
-  recoveryKey: Uint8Array
+  recoveryKey: Uint8Array,
 ): Promise<string> {
   // Uint8Array의 데이터를 새로운 ArrayBuffer에 복사
   const keyBuffer = new ArrayBuffer(recoveryKey.byteLength);
@@ -121,17 +126,17 @@ export async function encryptDEKWithRecoveryKey(
 
   // 복구 키를 AES-GCM 키로 import
   const recoveryKEK = await crypto.subtle.importKey(
-    'raw',
+    "raw",
     keyBuffer,
-    { name: 'AES-GCM', length: 256 },
+    { name: "AES-GCM", length: 256 },
     false,
-    ['wrapKey']
+    ["wrapKey"],
   );
 
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
 
-  const wrappedKey = await crypto.subtle.wrapKey('raw', dek, recoveryKEK, {
-    name: 'AES-GCM',
+  const wrappedKey = await crypto.subtle.wrapKey("raw", dek, recoveryKEK, {
+    name: "AES-GCM",
     iv,
   });
 
@@ -152,11 +157,13 @@ export async function encryptDEKWithRecoveryKey(
  */
 export async function decryptDEKWithRecoveryKey(
   encryptedDEK: string,
-  recoveryKey: Uint8Array | string
+  recoveryKey: Uint8Array | string,
 ): Promise<CryptoKey> {
   // 포맷된 문자열이면 파싱
   const keyBytes =
-    typeof recoveryKey === 'string' ? parseFormattedRecoveryKey(recoveryKey) : recoveryKey;
+    typeof recoveryKey === "string"
+      ? parseFormattedRecoveryKey(recoveryKey)
+      : recoveryKey;
 
   // Uint8Array의 데이터를 새로운 ArrayBuffer에 복사
   const keyBuffer = new ArrayBuffer(keyBytes.byteLength);
@@ -164,11 +171,11 @@ export async function decryptDEKWithRecoveryKey(
 
   // 복구 키를 AES-GCM 키로 import
   const recoveryKEK = await crypto.subtle.importKey(
-    'raw',
+    "raw",
     keyBuffer,
-    { name: 'AES-GCM', length: 256 },
+    { name: "AES-GCM", length: 256 },
     false,
-    ['unwrapKey']
+    ["unwrapKey"],
   );
 
   const combined = base64ToUint8Array(encryptedDEK);
@@ -176,12 +183,12 @@ export async function decryptDEKWithRecoveryKey(
   const wrappedKey = combined.slice(IV_LENGTH);
 
   return crypto.subtle.unwrapKey(
-    'raw',
+    "raw",
     wrappedKey,
     recoveryKEK,
-    { name: 'AES-GCM', iv },
-    { name: 'AES-GCM', length: 256 },
+    { name: "AES-GCM", iv },
+    { name: "AES-GCM", length: 256 },
     true, // extractable: true (KEK로 재암호화해야 하므로)
-    ['encrypt', 'decrypt']
+    ["encrypt", "decrypt"],
   );
 }

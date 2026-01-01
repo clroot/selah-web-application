@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Check } from 'lucide-react';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check } from "lucide-react";
 
-import { passwordResetApi } from '@/features/member/api/member.api';
+import { passwordResetApi } from "@/features/member/api/member.api";
 import {
-  forgotPasswordFormSchema,
   type ForgotPasswordFormData,
-} from '@/features/member/utils/schemas';
-import { Button, Input } from '@/shared/components';
+  forgotPasswordFormSchema,
+} from "@/features/member/utils/schemas";
+import { Button, Input } from "@/shared/components";
 
 export function ForgotPasswordForm() {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -31,7 +31,7 @@ export function ForgotPasswordForm() {
     setError(null);
 
     const { error: apiError } = await passwordResetApi.forgotPassword(
-      data.email
+      data.email,
     );
 
     setIsLoading(false);
@@ -70,7 +70,7 @@ export function ForgotPasswordForm() {
         label="이메일"
         type="email"
         placeholder="가입하신 이메일을 입력해주세요"
-        {...register('email')}
+        {...register("email")}
         error={errors.email?.message}
       />
 

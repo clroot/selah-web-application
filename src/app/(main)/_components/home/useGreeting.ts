@@ -1,6 +1,6 @@
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from "react";
 
-import { getGreeting } from './greeting';
+import { getGreeting } from "./greeting";
 
 /** 1분마다 업데이트를 트리거하는 구독 함수 */
 function subscribe(callback: () => void) {

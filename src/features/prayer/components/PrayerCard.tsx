@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
-import { formatPrayerDate, getPreviewText } from '@/features/prayer/utils';
-import { cn } from '@/shared/lib/utils';
+import { formatPrayerDate, getPreviewText } from "@/features/prayer/utils";
+import { cn } from "@/shared/lib/utils";
 
-import type { Prayer } from '@/features/prayer/types/prayer.types';
+import type { Prayer } from "@/features/prayer/types/prayer.types";
 
 interface PrayerCardProps {
   prayer: Prayer;
@@ -25,10 +25,10 @@ export function PrayerCard({
     <Link
       href={`/prayers/${prayer.id}`}
       className={cn(
-        'block rounded-2xl border border-sand bg-cream p-[18px]',
-        'transition-all duration-200',
-        'hover:border-sand-dark hover:bg-cream-dark',
-        className
+        "block rounded-2xl border border-sand bg-cream p-[18px]",
+        "transition-all duration-200",
+        "hover:border-sand-dark hover:bg-cream-dark",
+        className,
       )}
     >
       {/* 날짜 */}
