@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useSignup } from '@/features/auth/hooks/useSignup';
+import { useSignup } from '@/features/member/hooks/useSignup';
 import {
   signupFormSchema,
   type SignupFormData,
-} from '@/features/auth/utils/schemas';
+} from '@/features/member/utils/schemas';
 import { Button, Input } from '@/shared/components';
 
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';

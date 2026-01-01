@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 
-import { getAuthorizationUrl } from '@/features/auth/lib/oauth';
+import { getAuthorizationUrl } from '@/features/member/lib/oauth';
 import { cn } from '@/shared/lib/utils';
 
 import type { OAuthProvider } from '@/features/member/types/member.types';

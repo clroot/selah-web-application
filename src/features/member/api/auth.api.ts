@@ -6,7 +6,7 @@ import type {
   OAuthLoginRequest,
   RegisterRequest,
   RegisterResponse,
-} from '@/features/auth/types/auth.types';
+} from '@/features/member/types/auth.types';
 
 /**
  * Auth API

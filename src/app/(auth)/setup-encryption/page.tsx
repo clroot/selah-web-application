@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 
 import { Shield } from 'lucide-react';
 
-import { useAuthStore } from '@/features/auth/stores/authStore';
 import { PinSetupForm } from '@/features/encryption/components';
 import { useEncryptionSetup } from '@/features/encryption/hooks';
+import { useAuthStore } from '@/features/member/stores/authStore';
 import { FullPageSpinner } from '@/shared/components';
 
 export default function SetupEncryptionPage() {

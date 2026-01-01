@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { User } from 'lucide-react';
 
-import { useAuthStore } from '@/features/auth/stores/authStore';
+import { useAuthStore } from '@/features/member/stores/authStore';
 
 import { useGreeting } from './useGreeting';
 

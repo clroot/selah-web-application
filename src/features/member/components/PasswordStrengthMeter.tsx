@@ -1,6 +1,6 @@
 'use client';
 
-import { calculatePasswordStrength } from '@/features/auth/utils/schemas';
+import { calculatePasswordStrength } from '@/features/member/utils/schemas';
 import { cn } from '@/shared/lib/utils';
 
 interface PasswordStrengthMeterProps {

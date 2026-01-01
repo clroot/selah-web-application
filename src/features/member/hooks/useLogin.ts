@@ -2,11 +2,11 @@ import { useRouter } from 'next/navigation';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { authApi } from '@/features/auth/api/auth.api';
-import { useAuthStore } from '@/features/auth/stores/authStore';
+import { authApi } from '@/features/member/api/auth.api';
 import { memberApi } from '@/features/member/api/member.api';
+import { useAuthStore } from '@/features/member/stores/authStore';
 
-import type { LoginFormData } from '@/features/auth/utils/schemas';
+import type { LoginFormData } from '@/features/member/utils/schemas';
 
 /**
  * 로그인 훅

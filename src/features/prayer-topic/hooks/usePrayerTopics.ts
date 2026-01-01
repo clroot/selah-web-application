@@ -9,7 +9,6 @@ import type {
   PrayerTopic,
   PrayerTopicListParams,
 } from '@/features/prayer-topic/types/prayerTopic.types';
-import type { PageResponse } from '@/shared/types/api.types';
 
 /** 복호화된 기도제목 */
 export type DecryptedPrayerTopic = PrayerTopic;

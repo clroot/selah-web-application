@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock, ShieldCheck } from 'lucide-react';
 
-import { PasswordStrengthMeter } from '@/features/auth/components/PasswordStrengthMeter';
+import { PasswordStrengthMeter } from '@/features/member/components/PasswordStrengthMeter';
 import {
   resetPasswordFormSchema,
   type ResetPasswordFormData,
-} from '@/features/auth/utils/schemas';
+} from '@/features/member/utils/schemas';
 import { Button, Input } from '@/shared/components';
 
 interface PasswordSetupFormProps {

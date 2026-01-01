@@ -4,8 +4,8 @@ import { Suspense, useEffect, useRef } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { useAuthStore } from '@/features/auth/stores/authStore';
 import { memberApi } from '@/features/member/api/member.api';
+import { useAuthStore } from '@/features/member/stores/authStore';
 import { FullPageSpinner } from '@/shared/components';
 
 function OAuthCompleteContent() {

@@ -6,11 +6,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check } from 'lucide-react';
 
+import { passwordResetApi } from '@/features/member/api/member.api';
 import {
   forgotPasswordFormSchema,
   type ForgotPasswordFormData,
-} from '@/features/auth/utils/schemas';
-import { passwordResetApi } from '@/features/member/api/member.api';
+} from '@/features/member/utils/schemas';
 import { Button, Input } from '@/shared/components';
 
 export function ForgotPasswordForm() {

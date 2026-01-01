@@ -226,7 +226,7 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       const newEncryptedDEK = await encryptDEK(dek, newCombinedKEK);
 
       // 서버에 업데이트 요청
-      const { data, error } = await encryptionApi.updateEncryption({
+      const { error } = await encryptionApi.updateEncryption({
         salt: uint8ArrayToBase64(newSalt),
         encryptedDEK: newEncryptedDEK,
       });

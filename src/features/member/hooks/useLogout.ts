@@ -2,8 +2,8 @@ import { useRouter } from 'next/navigation';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { authApi } from '@/features/auth/api/auth.api';
-import { useAuthStore } from '@/features/auth/stores/authStore';
+import { authApi } from '@/features/member/api/auth.api';
+import { useAuthStore } from '@/features/member/stores/authStore';
 import { useEncryptionStore } from '@/shared/stores/encryptionStore';
 
 interface UseLogoutOptions {

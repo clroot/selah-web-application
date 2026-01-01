@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useAuthStore } from '@/features/auth/stores/authStore';
 import { memberApi } from '@/features/member/api/member.api';
+import { useAuthStore } from '@/features/member/stores/authStore';
 
 export function useCurrentUser() {
   const setUser = useAuthStore((state) => state.setUser);

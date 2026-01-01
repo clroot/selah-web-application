@@ -4,8 +4,8 @@ import { useEffect, useRef, type ReactNode } from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
 
-import { useAuthStore } from '@/features/auth/stores/authStore';
 import { memberApi } from '@/features/member/api/member.api';
+import { useAuthStore } from '@/features/member/stores/authStore';
 import { FullPageSpinner } from '@/shared/components';
 
 interface AuthProviderProps {

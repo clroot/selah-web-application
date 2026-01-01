@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { ArrowLeft } from 'lucide-react';
 
-import { SignupForm } from '@/features/auth/components';
+import { SignupForm } from '@/features/member/components';
 
 export default function SignupPage() {
   const router = useRouter();

@@ -7,12 +7,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { PasswordStrengthMeter } from '@/features/auth/components/PasswordStrengthMeter';
+import { passwordResetApi } from '@/features/member/api/member.api';
+import { PasswordStrengthMeter } from '@/features/member/components/PasswordStrengthMeter';
 import {
   resetPasswordFormSchema,
   type ResetPasswordFormData,
-} from '@/features/auth/utils/schemas';
-import { passwordResetApi } from '@/features/member/api/member.api';
+} from '@/features/member/utils/schemas';
 import { Button, Input, FullPageSpinner } from '@/shared/components';
 
 function ResetPasswordContent() {

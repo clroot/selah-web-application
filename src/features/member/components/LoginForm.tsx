@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useLogin } from '@/features/auth/hooks/useLogin';
-import { loginFormSchema, type LoginFormData } from '@/features/auth/utils/schemas';
+import { useLogin } from '@/features/member/hooks/useLogin';
+import { loginFormSchema, type LoginFormData } from '@/features/member/utils/schemas';
 import { Button, Input } from '@/shared/components';
 
 export function LoginForm() {
