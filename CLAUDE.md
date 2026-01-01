@@ -20,10 +20,10 @@
 | Language         | TypeScript             |
 | UI Components    | shadcn/ui              |
 | Styling          | Tailwind CSS           |
-| State Management | TBD (Zustand, Jotai 등) |
+| State Management | Zustand |
 | Package Manager  | pnpm                   |
 | Linting          | ESLint, Prettier       |
-| Crypto           | Web Crypto API (AES-256-GCM, PBKDF2) |
+| Crypto           | Web Crypto API (AES-256-GCM, PBKDF2, HKDF) |
 
 ## 🚨 Critical Rules
 
@@ -163,24 +163,44 @@ export function PrayerTopicCard({topic}: Props) {
 
 ## Feature 구조
 
-### Auth (인증)
+### Member (회원/인증)
+
+> 📂 **구현 위치**: [`src/features/member/`](./src/features/member/)
 
 ```
-features/auth/
+features/member/
 ├── components/
-│   ├── LoginForm.tsx
-│   ├── SignupForm.tsx
-│   └── SocialLoginButtons.tsx
+│   ├── LoginForm.tsx           # 이메일 로그인 폼
+│   ├── SignupForm.tsx          # 회원가입 폼
+│   ├── SocialLoginButtons.tsx  # OAuth 소셜 로그인 버튼
+│   ├── PasswordSetupForm.tsx   # 비밀번호 설정 (OAuth 후)
+│   ├── PasswordStrengthMeter.tsx
+│   ├── TermsAgreement.tsx      # 약관 동의
+│   └── ForgotPasswordForm.tsx
 ├── hooks/
-│   ├── useAuth.ts
-│   └── useLogin.ts
+│   ├── useLogin.ts
+│   ├── useSignup.ts
+│   ├── useLogout.ts
+│   └── useCurrentUser.ts
+├── stores/
+│   └── authStore.ts            # Zustand 인증 상태 store
+├── providers/
+│   └── AuthProvider.tsx        # 인증 초기화 및 라우트 보호
 ├── api/
-│   └── auth.api.ts
-└── types/
-    └── auth.types.ts
+│   ├── auth.api.ts
+│   └── member.api.ts
+├── lib/
+│   └── oauth.ts                # OAuth 헬퍼 함수
+├── types/
+│   ├── auth.types.ts
+│   └── member.types.ts
+└── utils/
+    └── schemas.ts              # Zod 스키마
 ```
 
 ### Prayer Topic (기도제목)
+
+> 📂 **구현 위치**: [`src/features/prayer-topic/`](./src/features/prayer-topic/)
 
 ```
 features/prayer-topic/
@@ -188,16 +208,22 @@ features/prayer-topic/
 │   ├── PrayerTopicList.tsx
 │   ├── PrayerTopicCard.tsx
 │   ├── PrayerTopicForm.tsx
-│   └── AnswerCheckButton.tsx
+│   ├── PrayerTopicDetail.tsx
+│   ├── AnswerCheckBottomSheet.tsx
+│   ├── StatusFilter.tsx
+│   └── EmptyState.tsx
 ├── hooks/
 │   ├── usePrayerTopics.ts
-│   └── usePrayerTopicDetail.ts
+│   ├── usePrayerTopicDetail.ts
+│   ├── usePrayerTopicMutation.ts
+│   └── useAnswerCheck.ts
 ├── api/
 │   └── prayerTopic.api.ts
 ├── types/
 │   └── prayerTopic.types.ts
 └── utils/
-    └── prayerTopic.utils.ts
+    ├── prayerTopic.utils.ts
+    └── schemas.ts
 ```
 
 ### Prayer (기도문)
@@ -236,29 +262,31 @@ features/reflection/
 
 ### Encryption (E2E 암호화)
 
+> 📂 **구현 위치**: [`src/features/encryption/`](./src/features/encryption/) + [`src/shared/lib/crypto/`](./src/shared/lib/crypto/)
+
 ```
 features/encryption/
 ├── components/
-│   ├── RecoveryKeyDisplay.tsx     # 복구 키 표시/복사 (회원가입 완료 후)
-│   ├── RecoveryKeyInput.tsx       # 복구 키 입력 (비밀번호 분실 시)
-│   ├── EncryptionStatus.tsx       # 암호화 상태 표시
-│   └── RegenerateRecoveryKey.tsx  # 복구 키 재생성
-├── hooks/
-│   ├── useCrypto.ts               # 암호화/복호화 훅
-│   └── useEncryptionSetup.ts      # 설정 관련 훅
-├── stores/
-│   └── encryptionStore.ts         # Zustand 암호화 상태 store
-├── api/
-│   └── encryption.api.ts
-├── lib/
-│   ├── crypto.ts                  # 순수 암호화 함수 (Web Crypto API)
-│   ├── keyDerivation.ts           # PBKDF2 키 파생 (KEK)
-│   ├── dek.ts                     # DEK 생성/암호화/복호화
-│   └── recoveryKey.ts             # 복구 키 생성/검증
-├── types/
-│   └── encryption.types.ts
-└── utils/
-    └── encryption.utils.ts
+│   ├── PinInput.tsx              # 6자리 PIN 입력 컴포넌트
+│   ├── PinSetupForm.tsx          # PIN 설정 폼 (회원가입 시)
+│   ├── PinUnlockForm.tsx         # PIN 입력 폼 (잠금 해제)
+│   └── RecoveryKeyDisplay.tsx    # 복구 키 표시/복사
+└── hooks/
+    └── useEncryptionSetup.ts     # 암호화 설정 훅
+
+shared/lib/crypto/                 # 순수 암호화 함수 (프레임워크 독립)
+├── crypto.ts                      # 데이터 암호화/복호화 (AES-256-GCM)
+├── keyDerivation.ts               # Client KEK 파생 (PBKDF2)
+├── hkdf.ts                        # Combined KEK 생성 (HKDF)
+├── dek.ts                         # DEK 생성/암호화/복호화
+├── recoveryKey.ts                 # 복구 키 생성/검증
+└── index.ts
+
+shared/lib/
+└── dekCache.ts                    # DEK 브라우저 캐싱 (IndexedDB)
+
+shared/stores/
+└── encryptionStore.ts             # Zustand 암호화 상태 store
 ```
 
 ---
@@ -267,64 +295,73 @@ features/encryption/
 
 클라이언트에서 모든 암호화/복호화를 수행합니다. **암호화 키는 절대 서버로 전송되지 않습니다.**
 
+> **📌 참고**: 전체 암호화 아키텍처는 [루트 CLAUDE.md](../CLAUDE.md#e2e-암호화-end-to-end-encryption) 참조
+
 ### UX 정책
 
 | 정책 | Frontend 역할 |
 |------|-------------|
 | **E2E 필수 적용** | 암호화 비활성화 UI 제공 안함 (항상 활성화) |
-| **투명한 암호화** | 별도 암호화 비밀번호 없음 (로그인 비밀번호 사용) |
-| **자동 잠금 해제** | 로그인 성공 시 자동으로 DEK 복호화 |
-| **복구 키 1회 표시** | 회원가입 완료 직후 복구 키 표시 화면으로 이동, 이후 재확인 불가 |
-| **복구 키 재생성** | 설정 화면에서 재생성 가능 (기존 키 무효화 경고 필수) |
-| **복구 키 보기 없음** | 설정 화면에 복구 키 조회 기능 없음 |
+| **6자리 PIN 분리** | 로그인 비밀번호와 별도의 암호화 PIN 사용 |
+| **DEK 브라우저 캐시** | IndexedDB에 DEK 저장하여 매번 PIN 입력 불필요 |
+| **새 기기 시 PIN 입력** | 캐시 없으면 PIN 입력 화면 표시 |
+| **복구 키 1회 표시** | 회원가입 완료 직후 복구 키 표시, 이후 재확인 불가 |
 
-> **📌 참고**: 전체 UX 정책은 [루트 CLAUDE.md](../CLAUDE.md#ux-정책) 참조
-
-### DEK/KEK 구조
+### 키 구조 (PIN + Server Key)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  DEK (Data Encryption Key)                                   │
 │  - 랜덤 생성된 256-bit 키 (회원가입 시 1회 생성)                  │
 │  - 실제 데이터(기도제목, 기도문) 암호화에 사용                     │
-│  - 서버에는 암호화된 형태(encryptedDEK)로만 저장                  │
-│  - 클라이언트 메모리에만 평문 존재                                │
+│  - 브라우저(IndexedDB)에 캐시, 서버에는 암호화된 형태로 저장       │
 ├─────────────────────────────────────────────────────────────┤
-│  KEK (Key Encryption Key)                                    │
-│  - 로그인 비밀번호 + Salt로 파생 (PBKDF2)                        │
-│  - DEK를 암호화/복호화하는 데만 사용                              │
-│  - 서버에 전송되지 않음 (메모리에서만 사용 후 폐기)                  │
+│  Client KEK                                                  │
+│  - 6자리 PIN + Salt로 파생 (PBKDF2)                           │
+│  - 서버에 전송되지 않음                                         │
+├─────────────────────────────────────────────────────────────┤
+│  Server Key                                                  │
+│  - 서버에서 랜덤 생성 (256-bit)                                 │
+│  - 별도 보안 저장 (앱 레벨 암호화)                               │
+│  - 오프라인 브루트포스 공격 방지                                 │
+├─────────────────────────────────────────────────────────────┤
+│  Combined KEK = HKDF(Client KEK || Server Key)               │
+│  - Client KEK와 Server Key를 결합하여 생성                      │
+│  - DEK를 암호화/복호화하는 데 사용                               │
 ├─────────────────────────────────────────────────────────────┤
 │  복구 키 (Recovery Key)                                       │
 │  - DEK 복구를 위한 별도 키                                      │
 │  - 회원가입 시 1회만 표시 (이후 조회 불가)                         │
-│  - 비밀번호 분실 시 DEK 복구에 사용                               │
+│  - PIN 분실 시 DEK 복구에 사용                                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ### 회원가입 플로우
 
 ```
-[회원가입 폼 입력]
-  - 이메일, 비밀번호, 닉네임 입력
+[회원가입/OAuth 완료]
      ↓
-[회원가입 API 호출]
+[약관 동의]
+     ↓
+[암호화 PIN 설정] - PinSetupForm 컴포넌트
+  - 6자리 숫자 입력
      ↓
 [클라이언트: 암호화 설정]
   1. DEK 랜덤 생성 (256-bit)
   2. Salt 생성 (32 bytes)
-  3. 로그인 비밀번호 + Salt → KEK 파생 (PBKDF2)
-  4. KEK로 DEK 암호화 → encryptedDEK
-  5. 복구 키 생성 + 복구 키로 DEK 암호화 → recoveryEncryptedDEK
-  6. 서버에 저장: salt, encryptedDEK, recoveryEncryptedDEK, recoveryKeyHash
-  7. DEK를 메모리에 저장 (암호화 해제 상태)
+  3. 6자리 PIN + Salt → Client KEK 파생 (PBKDF2)
+  4. 서버에 Server Key 생성 요청 → Server Key 수신
+  5. Combined KEK = HKDF(Client KEK || Server Key)
+  6. Combined KEK로 DEK 암호화 → encryptedDEK
+  7. 복구 키 생성 + 복구 키로 DEK 암호화 → recoveryEncryptedDEK
+  8. 서버에 저장: salt, encryptedDEK, recoveryEncryptedDEK
+  9. DEK를 브라우저(IndexedDB)에 저장 - dekCache.ts
      ↓
 [RecoveryKeyDisplay 컴포넌트]
   - 복구 키 표시 (예: XXXX-XXXX-XXXX-XXXX-XXXX-XXXX)
-  - 복사/저장 버튼
+  - 복사 버튼 제공
   - 경고: "이 키는 지금만 확인할 수 있습니다"
   - 체크박스: "복구 키를 안전한 곳에 저장했습니다"
-  - 체크 시 "시작하기" 버튼 활성화
      ↓
 [홈 화면 진입]
 ```
@@ -332,26 +369,32 @@ features/encryption/
 ### 로그인 플로우
 
 ```
-[로그인 폼 입력]
-  - 이메일, 비밀번호 입력
+[로그인 (OAuth 또는 이메일+비밀번호)]
      ↓
-[로그인 API 호출]
+[브라우저 DEK 확인] - dekCache.ts
+  - IndexedDB에서 DEK 조회
      ↓
-[클라이언트: 암호화 해제]
-  1. 암호화 설정 조회 (salt, encryptedDEK)
-  2. 로그인 비밀번호 + Salt → KEK 파생 (PBKDF2)
-  3. KEK로 encryptedDEK 복호화 → DEK
-  4. DEK를 메모리에 저장 (암호화 해제 상태)
+┌─────────────────┬─────────────────────────────┐
+│ DEK 있음        │ DEK 없음 (새 기기/캐시 삭제) │
+├─────────────────┼─────────────────────────────┤
+│ 바로 사용 ✅    │ PinUnlockForm 표시           │
+│                 │ 1. 6자리 PIN 입력            │
+│                 │ 2. 서버에서 salt, serverKey  │
+│                 │    encryptedDEK 조회         │
+│                 │ 3. Client KEK 파생           │
+│                 │ 4. Combined KEK 생성         │
+│                 │ 5. DEK 복호화                │
+│                 │ 6. DEK 브라우저 저장         │
+└─────────────────┴─────────────────────────────┘
      ↓
 [홈 화면 진입]
-  - 사용자는 추가 입력 없이 바로 사용 가능
 ```
 
 ### 데이터 암호화/복호화 흐름
 
 ```
 [데이터 암호화]
-1. DEK 확인 (없으면 로그인 필요)
+1. DEK 확인 (없으면 PIN 입력 필요)
 2. 랜덤 IV 생성 (12 bytes for GCM)
 3. AES-256-GCM으로 암호화 (DEK 사용)
 4. IV + 암호문을 Base64 인코딩
@@ -364,369 +407,29 @@ features/encryption/
 4. 평문 반환
 ```
 
-### 핵심 암호화 함수
+### 핵심 암호화 함수 (구현 참조)
 
-#### lib/keyDerivation.ts (KEK 파생)
+모든 암호화 함수는 순수 함수로 프레임워크와 독립적으로 구현되어 있습니다.
 
-```typescript
-// ✅ 순수 함수로 구현 - 프레임워크 독립
-
-// KEK 파생 (PBKDF2) - 로그인 비밀번호에서 KEK 생성
-export async function deriveKEK(
-  password: string,
-  salt: Uint8Array
-): Promise<CryptoKey> {
-  const encoder = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(password),
-    'PBKDF2',
-    false,
-    ['deriveKey']
-  );
-
-  return crypto.subtle.deriveKey(
-    {
-      name: 'PBKDF2',
-      salt,
-      iterations: 100000,  // 최소 100,000 권장
-      hash: 'SHA-256',
-    },
-    keyMaterial,
-    { name: 'AES-GCM', length: 256 },
-    true,  // extractable: DEK 암호화에 사용
-    ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
-  );
-}
-
-// Salt 생성
-export function generateSalt(): Uint8Array {
-  return crypto.getRandomValues(new Uint8Array(32));
-}
-```
-
-#### lib/dek.ts (DEK 관리)
-
-```typescript
-// DEK 랜덤 생성 (회원가입 시 1회)
-export async function generateDEK(): Promise<CryptoKey> {
-  return crypto.subtle.generateKey(
-    { name: 'AES-GCM', length: 256 },
-    true,  // extractable: 암호화하여 저장하기 위해
-    ['encrypt', 'decrypt']
-  );
-}
-
-// KEK로 DEK 암호화 (서버 저장용)
-export async function encryptDEK(
-  dek: CryptoKey,
-  kek: CryptoKey
-): Promise<string> {
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const wrappedKey = await crypto.subtle.wrapKey('raw', dek, kek, {
-    name: 'AES-GCM',
-    iv,
-  });
-
-  // IV + wrappedKey를 결합하여 Base64 인코딩
-  const combined = new Uint8Array(iv.length + wrappedKey.byteLength);
-  combined.set(iv);
-  combined.set(new Uint8Array(wrappedKey), iv.length);
-
-  return btoa(String.fromCharCode(...combined));
-}
-
-// KEK로 DEK 복호화 (로그인 시)
-export async function decryptDEK(
-  encryptedDEK: string,
-  kek: CryptoKey
-): Promise<CryptoKey> {
-  const combined = Uint8Array.from(atob(encryptedDEK), c => c.charCodeAt(0));
-  const iv = combined.slice(0, 12);
-  const wrappedKey = combined.slice(12);
-
-  return crypto.subtle.unwrapKey(
-    'raw',
-    wrappedKey,
-    kek,
-    { name: 'AES-GCM', iv },
-    { name: 'AES-GCM', length: 256 },
-    false,  // extractable: false (메모리에서만 사용)
-    ['encrypt', 'decrypt']
-  );
-}
-```
-
-#### lib/crypto.ts (데이터 암호화)
-
-```typescript
-// 데이터 암호화 (AES-256-GCM, DEK 사용)
-export async function encrypt(
-  plaintext: string,
-  dek: CryptoKey
-): Promise<string> {
-  const encoder = new TextEncoder();
-  const iv = crypto.getRandomValues(new Uint8Array(12));  // 12 bytes IV
-
-  const ciphertext = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
-    dek,
-    encoder.encode(plaintext)
-  );
-
-  // IV + ciphertext를 결합하여 Base64 인코딩
-  const combined = new Uint8Array(iv.length + ciphertext.byteLength);
-  combined.set(iv);
-  combined.set(new Uint8Array(ciphertext), iv.length);
-
-  return btoa(String.fromCharCode(...combined));
-}
-
-// 데이터 복호화 (AES-256-GCM, DEK 사용)
-export async function decrypt(
-  encrypted: string,
-  dek: CryptoKey
-): Promise<string> {
-  const combined = Uint8Array.from(atob(encrypted), c => c.charCodeAt(0));
-  const iv = combined.slice(0, 12);
-  const ciphertext = combined.slice(12);
-
-  const plaintext = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
-    dek,
-    ciphertext
-  );
-
-  return new TextDecoder().decode(plaintext);
-}
-```
-
-#### lib/recoveryKey.ts (복구 키)
-
-```typescript
-// 복구 키 생성 (랜덤 256-bit)
-export function generateRecoveryKey(): Uint8Array {
-  return crypto.getRandomValues(new Uint8Array(32));
-}
-
-// 복구 키 포맷 (XXXX-XXXX-XXXX-XXXX-XXXX-XXXX 형식)
-export function formatRecoveryKey(key: Uint8Array): string {
-  const hex = Array.from(key)
-    .map(b => b.toString(16).padStart(2, '0').toUpperCase())
-    .join('');
-  return hex.match(/.{4}/g)?.join('-') ?? hex;
-}
-
-// 복구 키 해시 (서버 저장용)
-export async function hashRecoveryKey(key: Uint8Array): Promise<string> {
-  const hash = await crypto.subtle.digest('SHA-256', key);
-  return btoa(String.fromCharCode(...new Uint8Array(hash)));
-}
-
-// 복구 키로 DEK 암호화
-export async function encryptDEKWithRecoveryKey(
-  dek: CryptoKey,
-  recoveryKey: Uint8Array
-): Promise<string> {
-  // 복구 키에서 KEK 파생 (Salt 없이, 복구 키 자체가 충분히 랜덤)
-  const recoveryKEK = await crypto.subtle.importKey(
-    'raw',
-    recoveryKey,
-    { name: 'AES-GCM', length: 256 },
-    false,
-    ['wrapKey']
-  );
-
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const wrappedKey = await crypto.subtle.wrapKey('raw', dek, recoveryKEK, {
-    name: 'AES-GCM',
-    iv,
-  });
-
-  const combined = new Uint8Array(iv.length + wrappedKey.byteLength);
-  combined.set(iv);
-  combined.set(new Uint8Array(wrappedKey), iv.length);
-
-  return btoa(String.fromCharCode(...combined));
-}
-```
-
-### Zustand Store (stores/encryptionStore.ts)
-
-```typescript
-import { create } from 'zustand';
-import { deriveKEK, generateSalt } from '../lib/keyDerivation';
-import { generateDEK, encryptDEK, decryptDEK } from '../lib/dek';
-import { generateRecoveryKey, formatRecoveryKey, hashRecoveryKey, encryptDEKWithRecoveryKey } from '../lib/recoveryKey';
-import { encryptionApi } from '../api/encryption.api';
-
-interface EncryptionState {
-  isUnlocked: boolean;
-  dek: CryptoKey | null;
-}
-
-interface EncryptionActions {
-  // 회원가입 시 암호화 설정 (로그인 비밀번호 사용)
-  setupEncryption: (loginPassword: string) => Promise<string>;
-  // 로그인 시 암호화 해제 (로그인 비밀번호 사용)
-  unlockWithPassword: (loginPassword: string) => Promise<void>;
-  // 비밀번호 변경 시 DEK 재암호화
-  changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
-  // 복구 키로 복구
-  recoverWithKey: (recoveryKey: string, newPassword: string) => Promise<void>;
-  // 복구 키 재생성
-  regenerateRecoveryKey: (password: string) => Promise<string>;
-  // 잠금
-  lock: () => void;
-}
-
-export const useEncryptionStore = create<EncryptionState & EncryptionActions>((set, get) => ({
-  isUnlocked: false,
-  dek: null,
-
-  setupEncryption: async (loginPassword: string) => {
-    // 1. DEK 랜덤 생성
-    const dek = await generateDEK();
-
-    // 2. Salt 생성 및 KEK 파생
-    const salt = generateSalt();
-    const kek = await deriveKEK(loginPassword, salt);
-
-    // 3. KEK로 DEK 암호화
-    const encryptedDEK = await encryptDEK(dek, kek);
-
-    // 4. 복구 키 생성 및 DEK 암호화
-    const recoveryKey = generateRecoveryKey();
-    const recoveryEncryptedDEK = await encryptDEKWithRecoveryKey(dek, recoveryKey);
-    const recoveryKeyHash = await hashRecoveryKey(recoveryKey);
-
-    // 5. 서버에 저장
-    await encryptionApi.setup({
-      salt: btoa(String.fromCharCode(...salt)),
-      encryptedDEK,
-      recoveryEncryptedDEK,
-      recoveryKeyHash,
-    });
-
-    // 6. DEK를 메모리에 저장
-    set({ isUnlocked: true, dek });
-
-    // 7. 복구 키 반환 (1회만 표시)
-    return formatRecoveryKey(recoveryKey);
-  },
-
-  unlockWithPassword: async (loginPassword: string) => {
-    const { data } = await encryptionApi.getSettings();
-    if (!data) throw new Error('암호화 설정이 없습니다');
-
-    // KEK 파생 및 DEK 복호화
-    const salt = Uint8Array.from(atob(data.salt), c => c.charCodeAt(0));
-    const kek = await deriveKEK(loginPassword, salt);
-    const dek = await decryptDEK(data.encryptedDEK, kek);
-
-    set({ isUnlocked: true, dek });
-  },
-
-  changePassword: async (oldPassword: string, newPassword: string) => {
-    const { dek } = get();
-    if (!dek) throw new Error('암호화가 해제되지 않았습니다');
-
-    // 새 Salt 및 KEK 생성
-    const newSalt = generateSalt();
-    const newKEK = await deriveKEK(newPassword, newSalt);
-
-    // 기존 DEK를 새 KEK로 재암호화 (DEK 자체는 변경 안됨!)
-    const newEncryptedDEK = await encryptDEK(dek, newKEK);
-
-    await encryptionApi.updateEncryption({
-      salt: btoa(String.fromCharCode(...newSalt)),
-      encryptedDEK: newEncryptedDEK,
-    });
-  },
-
-  lock: () => {
-    set({ isUnlocked: false, dek: null });
-  },
-
-  // ... recoverWithKey, regenerateRecoveryKey 구현
-}));
-```
-
-### 암호화 Hook (hooks/useCrypto.ts)
-
-```typescript
-import { useCallback } from 'react';
-import { useEncryptionStore } from '../stores/encryptionStore';
-import { encrypt, decrypt } from '../lib/crypto';
-
-export function useCrypto() {
-  const { dek, isUnlocked } = useEncryptionStore();
-
-  // 데이터 암호화
-  const encryptData = useCallback(async (plaintext: string) => {
-    if (!dek) throw new Error('암호화가 해제되지 않았습니다');
-    return encrypt(plaintext, dek);
-  }, [dek]);
-
-  // 데이터 복호화
-  const decryptData = useCallback(async (ciphertext: string) => {
-    if (!dek) throw new Error('암호화가 해제되지 않았습니다');
-    return decrypt(ciphertext, dek);
-  }, [dek]);
-
-  return {
-    isUnlocked,
-    encryptData,
-    decryptData,
-  };
-}
-```
-
-### 기도제목 API 연동 예시
-
-```typescript
-// features/prayer-topic/hooks/usePrayerTopics.ts
-export function usePrayerTopics() {
-  const { encryptData, decryptData, isUnlocked } = useCrypto();
-  const [topics, setTopics] = useState<PrayerTopic[]>([]);
-
-  // 조회 시 복호화
-  const fetchTopics = useCallback(async () => {
-    const { data } = await prayerTopicApi.getAll();
-    if (!data) return;
-
-    const decrypted = await Promise.all(
-      data.map(async (topic) => ({
-        ...topic,
-        title: await decryptData(topic.title),
-        reflection: topic.reflection
-          ? await decryptData(topic.reflection)
-          : null,
-      }))
-    );
-    setTopics(decrypted);
-  }, [decryptData]);
-
-  // 저장 시 암호화
-  const createTopic = useCallback(async (title: string) => {
-    const encryptedTitle = await encryptData(title);
-    return prayerTopicApi.create({ title: encryptedTitle });
-  }, [encryptData]);
-
-  return { topics, fetchTopics, createTopic, isUnlocked };
-}
-```
+| 파일 | 역할 | 위치 |
+|------|------|------|
+| `keyDerivation.ts` | Client KEK 파생 (PIN + Salt → PBKDF2) | [`src/shared/lib/crypto/keyDerivation.ts`](./src/shared/lib/crypto/keyDerivation.ts) |
+| `hkdf.ts` | Combined KEK 생성 (Client KEK + Server Key) | [`src/shared/lib/crypto/hkdf.ts`](./src/shared/lib/crypto/hkdf.ts) |
+| `dek.ts` | DEK 생성/암호화/복호화 | [`src/shared/lib/crypto/dek.ts`](./src/shared/lib/crypto/dek.ts) |
+| `crypto.ts` | 데이터 암호화/복호화 (AES-256-GCM) | [`src/shared/lib/crypto/crypto.ts`](./src/shared/lib/crypto/crypto.ts) |
+| `recoveryKey.ts` | 복구 키 생성/검증 | [`src/shared/lib/crypto/recoveryKey.ts`](./src/shared/lib/crypto/recoveryKey.ts) |
+| `dekCache.ts` | DEK 브라우저 캐싱 (IndexedDB) | [`src/shared/lib/dekCache.ts`](./src/shared/lib/dekCache.ts) |
+| `encryptionStore.ts` | Zustand 암호화 상태 store | [`src/shared/stores/encryptionStore.ts`](./src/shared/stores/encryptionStore.ts) |
 
 ### ⚠️ Frontend 암호화 금지 사항
 
 | 금지 | 이유 |
 |------|------|
-| DEK를 localStorage/sessionStorage에 저장 | XSS 공격에 취약 |
-| DEK/KEK를 서버로 전송 | E2E 보안 무력화 |
+| DEK를 localStorage/sessionStorage에 저장 | XSS 공격에 취약 (IndexedDB 사용) |
+| Client KEK/DEK를 서버로 전송 | E2E 보안 무력화 |
 | 하드코딩된 IV/Salt 사용 | 보안 취약점 |
 | 복구 키를 서버에 저장 요청 | 사용자만 보관해야 함 |
-| 비밀번호를 상태에 저장 | KEK 파생 후 즉시 폐기 |
-| 별도 암호화 비밀번호 UI 제공 | 로그인 비밀번호 사용이 정책 |
+| PIN을 상태에 저장 | Client KEK 파생 후 즉시 폐기 |
 
 ---
 
@@ -862,7 +565,7 @@ import {format} from 'date-fns';
 
 // 3. 절대 경로 imports (@/)
 import {Button} from '@/components/ui/button';
-import {useAuth} from '@/features/auth/hooks/useAuth';
+import {useCurrentUser} from '@/features/member/hooks/useCurrentUser';
 
 // 4. 상대 경로 imports
 import {PrayerTopicCard} from './PrayerTopicCard';
@@ -946,10 +649,9 @@ export default function NotFound() {
 | API 직접 fetch        | api 레이어 사용       |
 | 콘솔 로그 남김            | 제거 또는 개발 환경 조건부  |
 | 매직 넘버 사용            | 상수로 추출           |
-| DEK를 localStorage에 저장 | 메모리에만 보관 |
-| DEK/KEK를 서버로 전송 | 클라이언트에만 존재해야 함 |
+| DEK를 localStorage에 저장 | IndexedDB를 통해 dekCache.ts로 저장 |
+| Client KEK/DEK를 서버로 전송 | 클라이언트에만 존재해야 함 |
 | 하드코딩된 IV/Salt 사용 | 매번 랜덤 생성 필수 |
-| 별도 암호화 비밀번호 요구 | 로그인 비밀번호에서 KEK 파생 |
 
 ### React Hook Form + React Compiler 호환성
 
@@ -994,14 +696,15 @@ const password = useWatch('password');
 
 ### E2E 암호화 체크리스트
 
-- [ ] DEK가 메모리에만 존재하는가? (localStorage/sessionStorage 금지)
-- [ ] DEK/KEK가 서버로 전송되지 않는가?
+- [ ] DEK가 IndexedDB(dekCache.ts)를 통해 안전하게 저장되는가?
+- [ ] Client KEK/DEK가 서버로 전송되지 않는가?
 - [ ] 민감 데이터(title, reflection, content) 저장 시 DEK로 암호화하는가?
 - [ ] 민감 데이터 조회 시 DEK로 복호화하는가?
 - [ ] IV/Salt가 매번 랜덤 생성되는가?
-- [ ] 로그인 시 자동으로 DEK가 복호화되는가? (별도 암호화 비밀번호 없음)
+- [ ] DEK 캐시가 있으면 바로 사용, 없으면 PIN 입력 화면이 표시되는가?
+- [ ] Combined KEK 생성 시 Server Key가 HKDF로 결합되는가?
 - [ ] 복호화 실패 시 적절한 에러 처리가 되어 있는가?
-- [ ] 암호화 함수가 순수 함수로 lib/ 폴더에 분리되어 있는가?
+- [ ] 암호화 함수가 순수 함수로 shared/lib/crypto/ 폴더에 분리되어 있는가?
 
 ## 금지 사항
 
@@ -1017,12 +720,23 @@ const password = useWatch('password');
 
 ### E2E 암호화 금지 사항
 
-- DEK를 localStorage/sessionStorage에 저장 (메모리 상태로만 유지)
-- DEK/KEK를 서버로 전송
+- DEK를 localStorage/sessionStorage에 저장 (IndexedDB의 dekCache.ts 사용)
+- Client KEK/DEK를 서버로 전송
 - 하드코딩된 IV/Salt 사용
 - 복구 키를 서버에 저장 요청
-- 비밀번호를 상태에 저장 (KEK 파생 후 즉시 폐기)
-- 별도 암호화 비밀번호 UI 제공 (로그인 비밀번호에서 KEK 파생)
+- PIN을 상태에 저장 (Client KEK 파생 후 즉시 폐기)
+
+## Git Commit 규칙
+
+> **📌 참고**: 커밋 메시지 형식은 [루트 CLAUDE.md](../CLAUDE.md#git-commit-규칙) 참조
+
+프론트엔드 관련 주요 scope:
+- `member`: 회원/인증 기능
+- `prayer-topic`: 기도제목 기능
+- `encryption`: E2E 암호화
+- `ui`: UI 컴포넌트
+
+---
 
 ## 빠른 참조 명령어
 

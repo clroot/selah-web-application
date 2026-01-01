@@ -23,6 +23,7 @@
 - **돌아보기**: 과거 기도제목 리마인드, 랜덤/주기적 선정
 - **통계**: 응답된 기도 통계, 타임라인 뷰
 - **인증**: 소셜 로그인 (Google, Apple, 카카오) + 이메일/비밀번호
+- **E2E 암호화**: 6자리 PIN + Server Key 기반 클라이언트 암호화
 
 ---
 
@@ -34,7 +35,7 @@
 | Language         | TypeScript        |
 | UI Components    | shadcn/ui         |
 | Styling          | Tailwind CSS 4    |
-| State Management | TBD (Zustand, Jotai 등) |
+| State Management | Zustand |
 | Package Manager  | pnpm              |
 | Linting          | ESLint            |
 
@@ -56,7 +57,8 @@ src/
 │   └── common/          # 프로젝트 공통 컴포넌트
 │
 ├── features/            # 기능별 폴더
-│   ├── auth/            # 인증 기능
+│   ├── member/          # 회원/인증 기능
+│   ├── encryption/      # E2E 암호화 기능
 │   ├── prayer-topic/    # 기도제목 기능
 │   ├── prayer/          # 기도문 기능
 │   └── reflection/      # 돌아보기 기능
