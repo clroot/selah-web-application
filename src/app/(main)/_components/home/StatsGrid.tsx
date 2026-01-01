@@ -2,9 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useHomeStats } from '@/features/home/hooks/useHomeStats';
-
 import { StatCard } from './StatCard';
+import { useHomeStats } from './useHomeStats';
 
 /**
  * 통계 그리드 컴포넌트

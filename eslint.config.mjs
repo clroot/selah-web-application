@@ -144,7 +144,7 @@ const eslintConfig = [
       //
       // 계층 구조:
       // app → feature, shared, ui, common
-      // feature → feature, shared, ui, common (다른 feature 허용, 순환만 금지)
+      // feature → shared, ui, common (다른 feature 금지!)
       // common → shared, ui, common
       // shared → ui
       // ui → shared (cn 함수 등)
@@ -159,10 +159,16 @@ const eslintConfig = [
               from: ['app'],
               allow: ['app', 'feature', 'shared', 'shared-providers', 'ui', 'common'],
             },
-            // feature: 다른 feature 허용 (순환은 별도 도구로 검출)
+            // feature: 같은 feature 내부, shared, ui, common만 허용 (다른 feature 금지!)
             {
               from: ['feature'],
-              allow: ['feature', 'shared', 'ui', 'common'],
+              allow: [
+                // 같은 feature 내 import 허용
+                ['feature', { featureName: '${from.featureName}' }],
+                'shared',
+                'ui',
+                'common',
+              ],
             },
             // common: shared, ui, 다른 common만 허용
             {

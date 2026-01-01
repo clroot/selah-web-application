@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, Lock, ShieldCheck } from 'lucide-react';
+import { Lock, ShieldCheck } from 'lucide-react';
 
 import { PasswordStrengthMeter } from '@/features/auth/components/PasswordStrengthMeter';
 import {
@@ -22,9 +21,6 @@ export function PasswordSetupForm({
   onSubmit,
   isLoading,
 }: PasswordSetupFormProps) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -77,46 +73,22 @@ export function PasswordSetupForm({
         {/* 비밀번호 */}
         <div className="space-y-2">
           <Input
-            type={showPassword ? 'text' : 'password'}
+            type="password"
             placeholder="비밀번호 (영문, 숫자 포함 8자 이상)"
             {...register('password')}
             error={errors.password?.message}
-            suffix={
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="text-soft-brown hover:text-deep-brown"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
-            }
+            showPasswordToggle
           />
           <PasswordStrengthMeter password={password} />
         </div>
 
         {/* 비밀번호 확인 */}
         <Input
-          type={showPasswordConfirm ? 'text' : 'password'}
+          type="password"
           placeholder="비밀번호 확인"
           {...register('passwordConfirm')}
           error={errors.passwordConfirm?.message}
-          suffix={
-            <button
-              type="button"
-              onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-              className="text-soft-brown hover:text-deep-brown"
-            >
-              {showPasswordConfirm ? (
-                <EyeOff className="h-5 w-5" />
-              ) : (
-                <Eye className="h-5 w-5" />
-              )}
-            </button>
-          }
+          showPasswordToggle
         />
 
         <Button type="submit" isLoading={isLoading}>

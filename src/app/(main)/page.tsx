@@ -6,8 +6,8 @@ import {
   PrayerTopicsPreview,
   RecentPrayersPreview,
   StatsGrid,
-} from '@/features/home/components';
-import { useHomeData } from '@/features/home/hooks';
+  useHomeData,
+} from './_components/home';
 
 export default function HomePage() {
   const { data, isLoading } = useHomeData();

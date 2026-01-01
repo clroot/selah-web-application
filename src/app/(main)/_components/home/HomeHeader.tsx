@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { User } from 'lucide-react';
 
 import { useAuthStore } from '@/features/auth/stores/authStore';
-import { useGreeting } from '@/features/home/hooks/useGreeting';
+
+import { useGreeting } from './useGreeting';
 
 /**
  * 홈 화면 헤더 (인사말 + 아바타)
