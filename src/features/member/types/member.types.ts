@@ -74,3 +74,14 @@ export interface ResetPasswordRequest {
   token: string;
   newPassword: string;
 }
+
+/** 비밀번호 변경 요청 (기존 비밀번호 있는 경우) */
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+/** 비밀번호 설정 요청 (OAuth 전용 계정) */
+export interface SetPasswordRequest {
+  newPassword: string;
+}

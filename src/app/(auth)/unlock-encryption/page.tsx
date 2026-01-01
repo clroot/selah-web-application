@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { PinUnlockForm } from "@/features/encryption/components";
@@ -81,16 +82,12 @@ export default function UnlockEncryptionPage() {
         <PinUnlockForm onSubmit={handleUnlock} isLoading={isLoading} />
 
         <div className="mt-8 text-center">
-          <button
-            type="button"
+          <Link
+            href="/recover-with-key"
             className="text-sm text-soft-brown hover:text-deep-brown hover:underline"
-            onClick={() => {
-              // TODO: 복구 키 입력 페이지로 이동
-              alert("복구 키 입력 기능은 준비 중입니다.");
-            }}
           >
             PIN을 잊으셨나요?
-          </button>
+          </Link>
         </div>
       </div>
     </div>

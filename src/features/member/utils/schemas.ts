@@ -64,7 +64,30 @@ export const resetPasswordFormSchema = z
 
 export type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>;
 
-// 비밀번호 강도 계산
+export const changePasswordFormSchema = z
+  .object({
+    currentPassword: z.string().min(1, "현재 비밀번호를 입력해주세요"),
+    newPassword: passwordSchema,
+    newPasswordConfirm: z.string().min(1, "새 비밀번호 확인을 입력해주세요"),
+  })
+  .refine((data) => data.newPassword === data.newPasswordConfirm, {
+    message: "새 비밀번호가 일치하지 않습니다",
+    path: ["newPasswordConfirm"],
+  });
+
+export type ChangePasswordFormData = z.infer<typeof changePasswordFormSchema>;
+
+export const setPasswordFormSchema = z
+  .object({
+    newPassword: passwordSchema,
+    newPasswordConfirm: z.string().min(1, "비밀번호 확인을 입력해주세요"),
+  })
+  .refine((data) => data.newPassword === data.newPasswordConfirm, {
+    message: "비밀번호가 일치하지 않습니다",
+    path: ["newPasswordConfirm"],
+  });
+
+export type SetPasswordFormData = z.infer<typeof setPasswordFormSchema>;
 export function calculatePasswordStrength(password: string): {
   score: number;
   label: string;

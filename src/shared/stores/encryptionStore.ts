@@ -135,6 +135,7 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       const { error: updateError } = await encryptionApi.updateEncryption({
         salt: uint8ArrayToBase64(salt),
         encryptedDEK,
+        rotateServerKey: false,
       });
 
       if (updateError) {
@@ -225,10 +226,11 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       // 기존 DEK를 새 Combined KEK로 재암호화
       const newEncryptedDEK = await encryptDEK(dek, newCombinedKEK);
 
-      // 서버에 업데이트 요청
+      // 서버에 업데이트 요청 (Server Key 유지)
       const { error } = await encryptionApi.updateEncryption({
         salt: uint8ArrayToBase64(newSalt),
         encryptedDEK: newEncryptedDEK,
+        rotateServerKey: false,
       });
 
       if (error) {
@@ -236,9 +238,61 @@ export const useEncryptionStore = create<EncryptionState & EncryptionActions>(
       }
     },
 
-    recoverWithKey: async () => {
-      // TODO: 복구 키로 DEK 복구 구현
-      throw new Error("Not implemented");
+    recoverWithKey: async (recoveryKey: string, newPIN: string) => {
+      // 1. 서버에서 복구 설정 조회
+      const { data: recoverySettings, error: recoveryError } =
+        await encryptionApi.getRecoverySettings();
+      if (recoveryError || !recoverySettings) {
+        throw new Error(recoveryError?.message ?? "복구 설정을 찾을 수 없습니다");
+      }
+
+      // 2. 복구 키로 DEK 복호화 (decryptDEKWithRecoveryKey는 포맷된 문자열도 처리)
+      const { decryptDEKWithRecoveryKey } = await import("@/shared/lib/crypto");
+      let dek: CryptoKey;
+      try {
+        dek = await decryptDEKWithRecoveryKey(
+          recoverySettings.recoveryEncryptedDEK,
+          recoveryKey,
+        );
+      } catch {
+        throw new Error("복구 키가 올바르지 않습니다");
+      }
+
+      // 3. 서버에서 현재 설정 조회 (serverKey 획득)
+      const { data: currentSettings, error: settingsError } =
+        await encryptionApi.getSettings();
+      if (settingsError || !currentSettings) {
+        throw new Error(settingsError?.message ?? "암호화 설정 조회 실패");
+      }
+
+      // 4. 새 Salt 생성 및 Client KEK 파생
+      const newSalt = generateSalt();
+      const newClientKEK = await deriveClientKEK(newPIN, newSalt);
+
+      // 5. Combined KEK 생성 (기존 Server Key 재사용)
+      const combinedKEK = await deriveCombinedKEK(
+        newClientKEK,
+        currentSettings.serverKey,
+        newSalt,
+      );
+
+      // 6. DEK 재암호화
+      const newEncryptedDEK = await encryptDEK(dek, combinedKEK);
+
+      // 7. 서버에 업데이트 (Server Key 유지)
+      const { error: updateError } = await encryptionApi.updateEncryption({
+        salt: uint8ArrayToBase64(newSalt),
+        encryptedDEK: newEncryptedDEK,
+        rotateServerKey: false,
+      });
+
+      if (updateError) {
+        throw new Error(updateError.message);
+      }
+
+      // 8. DEK 캐시에 저장 및 상태 업데이트
+      await cacheDEK(dek);
+      set({ isUnlocked: true, dek });
     },
 
     regenerateRecoveryKey: async () => {

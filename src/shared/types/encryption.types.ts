@@ -40,6 +40,7 @@ export interface SetupEncryptionResponse {
 export interface UpdateEncryptionRequest {
   salt: string; // 새 Salt (Base64)
   encryptedDEK: string; // 새 Combined KEK로 암호화된 DEK (Base64)
+  rotateServerKey?: boolean; // Server Key 재생성 여부 (기본값: false)
 }
 
 /** 암호화 키 업데이트 응답 */

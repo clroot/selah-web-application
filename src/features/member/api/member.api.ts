@@ -2,12 +2,14 @@ import { apiClient } from "@/shared/api/client";
 
 import type {
   ApiKey,
+  ChangePasswordRequest,
   CreateApiKeyRequest,
   CreateApiKeyResponse,
   MemberProfile,
   OAuthConnection,
   OAuthConnectionsResponse,
   OAuthProvider,
+  SetPasswordRequest,
   UpdateProfileRequest,
 } from "@/features/member/types/member.types";
 
@@ -32,6 +34,14 @@ export const memberApi = {
   /** API Key 삭제 */
   deleteApiKey: (apiKeyId: string) =>
     apiClient.delete<void>(`/api/v1/members/me/api-keys/${apiKeyId}`),
+
+  /** 비밀번호 변경 (기존 비밀번호가 있는 회원) */
+  changePassword: (data: ChangePasswordRequest) =>
+    apiClient.put<void>("/api/v1/members/me/password", data),
+
+  /** 비밀번호 설정 (OAuth 전용 계정) */
+  setPassword: (data: SetPasswordRequest) =>
+    apiClient.post<void>("/api/v1/members/me/password", data),
 };
 
 /**
