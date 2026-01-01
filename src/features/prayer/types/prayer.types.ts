@@ -27,4 +27,5 @@ export interface UpdatePrayerRequest {
 export interface PrayerListParams {
   page?: number;
   size?: number;
+  prayerTopicId?: string;
 }

@@ -2,7 +2,10 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { PrayerTopicDetail } from "@/features/prayer-topic/components";
+import {
+  PrayerTopicDetail,
+  RelatedPrayersSection,
+} from "@/features/prayer-topic/components";
 import { usePrayerTopicDetail } from "@/features/prayer-topic/hooks";
 import { FullPageSpinner, PageHeader } from "@/shared/components";
 
@@ -60,12 +63,11 @@ export default function PrayerTopicDetailPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* 헤더 */}
       <PageHeader onBack={handleBack} />
 
-      {/* 상세 내용 */}
       <div className="flex-1 px-4 py-6">
         <PrayerTopicDetail topic={prayerTopic} />
+        <RelatedPrayersSection prayerTopicId={id} />
       </div>
     </div>
   );

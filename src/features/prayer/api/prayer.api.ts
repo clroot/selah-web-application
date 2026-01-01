@@ -23,6 +23,8 @@ export const prayerApi = {
       searchParams.set("page", String(params.page));
     if (params.size !== undefined)
       searchParams.set("size", String(params.size));
+    if (params.prayerTopicId !== undefined)
+      searchParams.set("prayerTopicId", params.prayerTopicId);
 
     const query = searchParams.toString();
     const url = query ? `/api/v1/prayers?${query}` : "/api/v1/prayers";

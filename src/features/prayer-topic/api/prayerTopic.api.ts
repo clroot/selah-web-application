@@ -5,6 +5,8 @@ import type {
   MarkAsAnsweredRequest,
   PrayerTopic,
   PrayerTopicListParams,
+  RelatedPrayer,
+  RelatedPrayersParams,
   UpdatePrayerTopicRequest,
   UpdateReflectionRequest,
 } from "@/features/prayer-topic/types/prayerTopic.types";
@@ -60,4 +62,21 @@ export const prayerTopicApi = {
       `/api/v1/prayer-topics/${id}/reflection`,
       data,
     ),
+
+  /** 관련 기도문 조회 */
+  getRelatedPrayers: (
+    prayerTopicId: string,
+    params: RelatedPrayersParams = {},
+  ) => {
+    const searchParams = new URLSearchParams();
+    searchParams.set("prayerTopicId", prayerTopicId);
+    if (params.page !== undefined)
+      searchParams.set("page", String(params.page));
+    if (params.size !== undefined)
+      searchParams.set("size", String(params.size));
+
+    return apiClient.get<PageResponse<RelatedPrayer>>(
+      `/api/v1/prayers?${searchParams.toString()}`,
+    );
+  },
 };

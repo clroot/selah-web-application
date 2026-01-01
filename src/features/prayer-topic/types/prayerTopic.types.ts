@@ -48,3 +48,16 @@ export interface PrayerTopicListParams {
   size?: number;
   status?: PrayerTopicStatus;
 }
+
+export interface RelatedPrayer {
+  id: string;
+  prayerTopicIds: string[];
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RelatedPrayersParams {
+  page?: number;
+  size?: number;
+}
