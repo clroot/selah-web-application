@@ -18,6 +18,7 @@ export interface PrayerTopic {
   status: PrayerTopicStatus;
   answeredAt: string | null;
   reflection: string | null;
+  prayerCount: number;
   createdAt: string;
   updatedAt: string;
 }

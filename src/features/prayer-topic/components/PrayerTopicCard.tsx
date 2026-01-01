@@ -37,16 +37,23 @@ export function PrayerTopicCard({ topic, className }: PrayerTopicCardProps) {
       )}
     >
       <div className="flex flex-col gap-3">
-        {/* 상태 배지 */}
+        {/* 상태 배지 & 기도 횟수 */}
         <div className="flex items-center justify-between">
-          <span
-            className={cn(
-              "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
-              getStatusColorClass(topic.status),
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                getStatusColorClass(topic.status),
+              )}
+            >
+              {getStatusLabel(topic.status)}
+            </span>
+            {topic.prayerCount > 0 && (
+              <span className="text-xs text-soft-brown/60">
+                🙏 {topic.prayerCount}
+              </span>
             )}
-          >
-            {getStatusLabel(topic.status)}
-          </span>
+          </div>
           {isAnswered && topic.answeredAt && (
             <span className="text-xs text-soft-brown">
               {formatDate(topic.answeredAt)} 응답

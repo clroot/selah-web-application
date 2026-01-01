@@ -129,14 +129,18 @@ export function PrayerTopicDetail({
         </div>
       </div>
 
-      {/* 제목 */}
       <div>
         <h2 className="font-serif text-xl font-medium leading-relaxed text-deep-brown">
           {topic.title}
         </h2>
-        <p className="mt-2 text-sm text-soft-brown">
-          작성일: {formatDate(topic.createdAt)}
-        </p>
+        <div className="mt-2 flex items-center gap-3 text-sm text-soft-brown">
+          <span>작성일: {formatDate(topic.createdAt)}</span>
+          {topic.prayerCount > 0 && (
+            <span className="flex items-center gap-1">
+              🙏 {topic.prayerCount}번 기도
+            </span>
+          )}
+        </div>
       </div>
 
       {/* 응답 정보 (응답됨 상태일 때) */}
