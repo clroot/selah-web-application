@@ -4,6 +4,13 @@
 
 기도제목과 기도문을 기록하고, 응답의 과정을 확인하며 나만의 기도의 여정을 기록하는 **개인용 기도노트 서비스** Selah의 웹 애플리케이션입니다.
 
+### Highlights
+
+- 🔐 **E2E 암호화** - 서버는 암호문만 저장, 평문 접근 불가
+- 🏗️ **Feature-based 아키텍처** - ESLint로 모듈 경계 강제
+- ⚡ **Next.js 16 + React 19** - App Router, Server Components
+- 🔄 **TanStack Query** - 선언적 캐싱, Stale-While-Revalidate
+
 ---
 
 ## 프로젝트 개요
@@ -37,9 +44,11 @@
 
 기도 데이터의 프라이버시를 보호하기 위해 클라이언트 측 E2E 암호화를 적용합니다. 모든 민감한 데이터는 서버로 전송되기 전 브라우저에서 암호화됩니다.
 
-- **암호화 방식**: AES-256-GCM
-- **키 관리**: 6자리 PIN + Server Key 기반 키 파생 (PBKDF2, HKDF)
-- **평문 비저장**: 서버는 암호문만 저장하며, DB 유출만으로는 평문 복원이 어렵습니다.
+| 항목         | 내용                                       |
+|------------|------------------------------------------|
+| **암호화 방식** | AES-256-GCM (Web Crypto API)             |
+| **키 관리**   | 6자리 PIN + Server Key → PBKDF2/HKDF로 키 파생 |
+| **평문 비저장** | 서버는 암호문만 저장/처리, 복호화 키는 사용자 입력(PIN)에 의존   |
 
 > **🔒 상세 설계 문서**: [E2E Encryption Design Specification](./docs/E2E_ENCRYPTION.md)
 
@@ -84,6 +93,84 @@ src/
 
 - 하위 계층은 상위 계층을 import할 수 없음
 - Feature 간 직접 import 금지 (shared를 통해서만 공유)
+
+---
+
+## Technical Highlights
+
+E2E 암호화 도입으로 인해 프론트엔드에서 해결해야 했던 기술적 과제들입니다.
+
+### 1. E2E UX 플로우
+
+| 시나리오                    | 화면 전환                          | DEK 처리                   |
+|-------------------------|--------------------------------|--------------------------|
+| **첫 설정** (회원가입/OAuth 후) | PIN 설정 → Recovery Key 표시 → 홈   | DEK 생성 → 캐시              |
+| **캐시 존재** (같은 브라우저 세션)  | 로그인 → 홈 (PIN 입력 없음)            | 캐시된 DEK 사용               |
+| **새 기기/세션 만료**          | 로그인 → PIN 입력 → 홈               | 서버에서 복원 → 캐시             |
+| **PIN 분실**              | Recovery Key 입력 → 새 PIN 설정 → 홈 | Recovery Key로 복호화 → 재암호화 |
+
+### 2. DEK 캐시 정책
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Two-Layer Protection                                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   [DEK] ──▶ Wrap with [Wrap Key] ──▶ [Encrypted DEK]        │
+│                                              │              │
+│                                              ▼              │
+│                                      IndexedDB (persistent) │
+│                                                             │
+│   [Wrap Key] ──▶ sessionStorage (volatile)                  │
+│                                                             │
+│   Both required to recover DEK                              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| 조건                                    | DEK 복원       |
+|---------------------------------------|--------------|
+| IndexedDB ✓ + sessionStorage ✓        | ✅ 즉시 사용      |
+| IndexedDB ✓ + sessionStorage ✗ (탭 닫기) | ❌ PIN 재입력 필요 |
+| IndexedDB ✗ (브라우저 데이터 삭제)             | ❌ PIN 재입력 필요 |
+
+- **세션 종료 시 자동 잠금**: sessionStorage는 탭 닫기 시 자동 삭제
+- **수동 잠금**: `clearDEKCache()` 호출로 즉시 DEK 삭제 가능
+- **민감 데이터 최소 노출**: 평문은 React state에만 일시적으로 존재, 컴포넌트 언마운트 시 자동 정리
+
+### 3. 데이터 패칭/캐싱 전략
+
+**Query Key 설계 원칙**:
+
+```typescript
+// 리소스 타입 기반 계층 구조
+["prayerTopics"]              // 목록
+    ["prayerTopics", id]          // 상세
+    ["prayers", "byTopicId", id]  // 관계 기반 조회
+    ["home"]                      // 집계 데이터
+```
+
+**Invalidation 전략**:
+
+| 액션      | Invalidate 대상                              | 이유            |
+|---------|--------------------------------------------|---------------|
+| 기도제목 생성 | `prayerTopics`, `home`                     | 목록/통계 갱신      |
+| 기도제목 수정 | `prayerTopics`, `prayerTopics[id]`, `home` | 상세 + 목록 갱신    |
+| 응답 체크   | `prayerTopics`, `prayerTopics[id]`, `home` | 상태 변경으로 통계 영향 |
+| 기도문 작성  | `prayers`, `home`                          | 기도 횟수 통계 반영   |
+
+- **Stale-While-Revalidate**: 캐시된 데이터 즉시 표시, 백그라운드 갱신
+- **Mutation 후 명시적 Invalidation**: Optimistic update 대신 서버 상태 신뢰
+
+### 4. 보안 위협 모델 (프론트엔드 관점)
+
+| 위협             | 현재 대응                                 | 한계 인정                            |
+|----------------|---------------------------------------|----------------------------------|
+| **XSS**        | React의 기본 이스케이핑, 사용자 입력 암호화 후 저장      | XSS 성공 시 DEK 탈취 가능 (E2E의 본질적 한계) |
+| **DEK 메모리 노출** | sessionStorage 분리로 IndexedDB 단독 접근 차단 | DevTools 접근 시 확인 가능              |
+| **세션 탈취**      | httpOnly 쿠키 (서버 측), 세션 종료 시 DEK 자동 삭제 | 활성 세션 중 탈취 시 위험                  |
+
+> **XSS 대응**: CSP는 현재 미적용 상태이며, React의 기본 XSS 방어와 사용자 입력의 암호화 저장에 의존합니다.
 
 ---
 
@@ -149,7 +236,7 @@ pnpm format
 - 비즈니스 로직은 `features/` 폴더에 작성
 - `components/ui/` 폴더는 shadcn/ui 전용 (수정 금지)
 - Feature 간 직접 import 금지 (ESLint 규칙 적용)
-- E2E 암호화 키(DEK)는 절대 서버로 전송하지 않으며, 브라우저 세션에 안전하게 보관
+- DEK는 서버로 전송 금지, IndexedDB + sessionStorage 이중 보호로 캐싱
 
 ---
 
