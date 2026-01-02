@@ -12,11 +12,11 @@ import { NavItem } from "./NavItem";
 
 const leftNavItems = [
   { href: "/", icon: Home, label: "홈" },
-  { href: "/prayers", icon: BookOpen, label: "기도문" },
+  { href: "/prayer-topics", icon: Check, label: "기도제목" },
 ];
 
 const rightNavItems = [
-  { href: "/prayer-topics?status=ANSWERED", icon: Check, label: "응답" },
+  { href: "/prayers", icon: BookOpen, label: "기도문" },
   { href: "/settings", icon: Settings, label: "설정" },
 ];
 
@@ -53,13 +53,12 @@ export function BottomNavigation() {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-sand bg-white">
-        <div className="relative mx-auto grid h-16 max-w-[480px] grid-cols-5 items-center">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-sand bg-white lg:hidden">
+        <div className="relative mx-auto grid h-16 grid-cols-5 items-center">
           {leftNavItems.map((item) => (
             <NavItem key={item.href} {...item} isActive={isActive(item.href)} />
           ))}
 
-          {/* FAB placeholder - 실제 FAB는 absolute로 위에 배치 */}
           <div className="flex items-center justify-center">
             <FloatingActionButton onClick={handleFabClick} />
           </div>
@@ -69,7 +68,6 @@ export function BottomNavigation() {
           ))}
         </div>
 
-        {/* Safe area padding for iOS */}
         <div className="h-[env(safe-area-inset-bottom,0px)] bg-white" />
       </nav>
 

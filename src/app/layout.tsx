@@ -50,7 +50,7 @@ export default function RootLayout({
     >
       <body className="antialiased">
         <Providers>
-          <div className="app-container">{children}</div>
+          {children}
           <Toaster
             position="top-center"
             toastOptions={{

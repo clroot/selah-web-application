@@ -69,7 +69,7 @@ export function PrayerTopicList({
 
   // 일반 목록 렌더링
   return (
-    <div className={cn("flex flex-col gap-3", className)}>
+    <div className={cn("grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-6", className)}>
       {topics.map((topic) => (
         <PrayerTopicCard key={topic.id} topic={topic} />
       ))}

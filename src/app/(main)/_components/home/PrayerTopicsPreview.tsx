@@ -10,18 +10,15 @@ interface PrayerTopicsPreviewProps {
   isLoading?: boolean;
 }
 
-/**
- * 기도제목 미리보기 섹션
- */
 export function PrayerTopicsPreview({
   topics,
   isLoading,
 }: PrayerTopicsPreviewProps) {
   if (isLoading) {
     return (
-      <section className="px-6">
+      <section>
         <SectionHeader title="기도제목" />
-        <div className="space-y-3">
+        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
@@ -34,13 +31,13 @@ export function PrayerTopicsPreview({
   }
 
   if (topics.length === 0) {
-    return null; // EmptyHomeState에서 처리
+    return null;
   }
 
   return (
-    <section className="px-6">
+    <section>
       <SectionHeader title="기도제목" href="/prayer-topics" />
-      <div className="space-y-3">
+      <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
         {topics.map((topic) => (
           <TopicCard
             key={topic.id}

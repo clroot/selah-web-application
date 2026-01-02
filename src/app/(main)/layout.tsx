@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { BottomNavigation, FullPageSpinner } from "@/shared/components";
+import {
+  BottomNavigation,
+  FullPageSpinner,
+  Sidebar,
+} from "@/shared/components";
 import { useEncryptionStore } from "@/shared/stores/encryptionStore";
 
 interface MainLayoutProps {
@@ -18,7 +22,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const { isUnlocked, isRestoring, restoreFromCache, hasCachedSession } =
     useEncryptionStore();
 
-  // 앱 시작 시 캐시에서 DEK 복원 시도
   useEffect(() => {
     const checkEncryption = async () => {
       if (isUnlocked) {
@@ -41,19 +44,20 @@ export default function MainLayout({ children }: MainLayoutProps) {
     checkEncryption();
   }, [isUnlocked, hasCachedSession, restoreFromCache, router]);
 
-  // 로딩 중
   if (isChecking || isRestoring) {
     return <FullPageSpinner />;
   }
 
-  // 암호화 해제되지 않음 (리다이렉트 대기)
   if (!isUnlocked) {
     return <FullPageSpinner />;
   }
 
   return (
-    <div className="min-h-screen bg-cream pb-16">
-      {children}
+    <div className="flex min-h-screen bg-cream">
+      <Sidebar />
+      <div className="flex-1 pb-16 lg:pb-0">
+        {children}
+      </div>
       <BottomNavigation />
     </div>
   );

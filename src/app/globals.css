@@ -106,14 +106,6 @@ body {
     font-family: var(--font-sans);
 }
 
-/* App Container - Mobile First */
-.app-container {
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--cream);
-}
-
 /* Utility Classes */
 .font-serif {
     font-family: var(--font-serif);

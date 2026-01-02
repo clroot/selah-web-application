@@ -39,31 +39,34 @@ export default function PrayersPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-cream">
-      {/* 헤더 */}
       <PageHeader title="기도문 모아보기" showBackButton={false} />
 
-      {/* 캘린더 */}
-      <PrayerCalendar
-        selectedDate={selectedDate}
-        onDateSelect={setSelectedDate}
-        prayerDates={prayerDates}
-        className="pt-2 pb-6"
-      />
+      <div className="flex-1 px-4 md:px-6 lg:px-8 pb-8 pt-4">
+        <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+          <div className="lg:sticky lg:top-20">
+            <PrayerCalendar
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+              prayerDates={prayerDates}
+              className="mb-6 lg:mb-0"
+            />
+          </div>
 
-      {/* 선택된 날짜의 기도문 목록 */}
-      <div className="flex-1 px-4 pb-8">
-        <h2 className="mb-4 text-sm font-medium text-soft-brown">
-          {formattedDate}의 기도문
-        </h2>
-        <PrayerList
-          prayers={filteredPrayers}
-          prayerTopicTitles={prayerTopicTitles}
-          isLoading={isLoading}
-          isError={isError}
-          error={error}
-          emptyMessage="이 날 작성된 기도문이 없어요"
-          showWriteButton={isToday}
-        />
+          <div>
+            <h2 className="mb-4 text-sm font-medium text-soft-brown">
+              {formattedDate}의 기도문
+            </h2>
+            <PrayerList
+              prayers={filteredPrayers}
+              prayerTopicTitles={prayerTopicTitles}
+              isLoading={isLoading}
+              isError={isError}
+              error={error}
+              emptyMessage="이 날 작성된 기도문이 없어요"
+              showWriteButton={isToday}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

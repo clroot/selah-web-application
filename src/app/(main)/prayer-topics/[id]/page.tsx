@@ -65,9 +65,11 @@ export default function PrayerTopicDetailPage() {
     <div className="flex min-h-screen flex-col">
       <PageHeader onBack={handleBack} />
 
-      <div className="flex-1 px-4 py-6">
-        <PrayerTopicDetail topic={prayerTopic} />
-        <RelatedPrayersSection prayerTopicId={id} />
+      <div className="flex-1 px-4 md:px-6 py-6">
+        <div className="mx-auto max-w-2xl">
+          <PrayerTopicDetail topic={prayerTopic} />
+          <RelatedPrayersSection prayerTopicId={id} />
+        </div>
       </div>
     </div>
   );

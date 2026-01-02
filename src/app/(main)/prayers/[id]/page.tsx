@@ -146,9 +146,10 @@ export default function PrayerDetailPage() {
         }
       />
 
-      {/* 상세 내용 */}
-      <div className="flex-1 pt-4">
-        <PrayerDetail prayer={prayer} prayerTopicTitles={prayerTopicTitles} />
+      <div className="flex-1 px-4 md:px-6 pt-4">
+        <div className="mx-auto max-w-2xl">
+          <PrayerDetail prayer={prayer} prayerTopicTitles={prayerTopicTitles} />
+        </div>
       </div>
     </div>
   );

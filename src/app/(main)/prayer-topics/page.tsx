@@ -36,11 +36,11 @@ export default function PrayerTopicsPage() {
     <div className="flex min-h-screen flex-col">
       <PageHeader title="기도제목" showBackButton={false} />
 
-      <div className="px-4 py-3">
+      <div className="px-4 md:px-6 lg:px-8 py-3">
         <StatusFilter value={filterStatus} onChange={handleFilterChange} />
       </div>
 
-      <div className="flex-1 px-4 pb-4">
+      <div className="flex-1 px-4 md:px-6 lg:px-8 pb-4">
         <PrayerTopicList
           topics={prayerTopics}
           isLoading={isLoading}

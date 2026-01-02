@@ -3,13 +3,13 @@
 import { useCallback, useState } from "react";
 
 import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
-import { Button } from "@/shared/components";
+  Button,
+  ResponsiveModal,
+  ResponsiveModalContent,
+  ResponsiveModalFooter,
+  ResponsiveModalHeader,
+  ResponsiveModalTitle,
+} from "@/shared/components";
 import { cn } from "@/shared/lib/utils";
 
 interface AnswerCheckBottomSheetProps {
@@ -19,12 +19,6 @@ interface AnswerCheckBottomSheetProps {
   isLoading?: boolean;
 }
 
-/**
- * 응답 체크 바텀 시트 컴포넌트
- *
- * 기도 응답 체크 시 표시되는 바텀 시트입니다.
- * 선택적으로 응답 소감을 입력할 수 있습니다.
- */
 export function AnswerCheckBottomSheet({
   isOpen,
   onClose,
@@ -37,41 +31,31 @@ export function AnswerCheckBottomSheet({
     (open: boolean) => {
       if (!open) {
         onClose();
+        setReflection("");
       }
     },
     [onClose],
   );
-
-  // 열릴 때 입력값 초기화
-  const handleAnimationEnd = useCallback(() => {
-    if (isOpen) {
-      setReflection("");
-    }
-  }, [isOpen]);
 
   const handleConfirm = useCallback(() => {
     onConfirm(reflection.trim() || undefined);
   }, [reflection, onConfirm]);
 
   return (
-    <Drawer open={isOpen} onOpenChange={handleOpenChange}>
-      <DrawerContent
-        onAnimationEnd={handleAnimationEnd}
-        className="rounded-t-3xl bg-white"
-      >
-        <DrawerHeader className="pb-0">
+    <ResponsiveModal open={isOpen} onOpenChange={handleOpenChange}>
+      <ResponsiveModalContent className="gap-4 rounded-t-3xl bg-white lg:gap-8 lg:rounded-lg lg:bg-cream">
+        <ResponsiveModalHeader className="pb-0 lg:mb-2 lg:pb-0">
           <div className="mb-2 text-center">
             <span className="mb-2 block text-4xl" role="img" aria-label="축하">
               🎉
             </span>
-            <DrawerTitle className="font-serif text-lg font-medium text-deep-brown">
-              응답을 축하합니다!
-            </DrawerTitle>
           </div>
-        </DrawerHeader>
+          <ResponsiveModalTitle className="font-serif text-lg font-medium text-deep-brown">
+            응답을 축하합니다!
+          </ResponsiveModalTitle>
+        </ResponsiveModalHeader>
 
-        <div className="px-6">
-          {/* 소감 입력 */}
+        <div className="px-6 lg:px-0">
           <div className="mb-6">
             <label
               htmlFor="reflection-input"
@@ -99,27 +83,29 @@ export function AnswerCheckBottomSheet({
           </div>
         </div>
 
-        <DrawerFooter className="flex-row gap-3 pb-8">
+        <ResponsiveModalFooter
+          drawerClassName="flex-row gap-3 pb-8"
+          dialogClassName=""
+        >
           <Button
             variant="secondary"
             onClick={onClose}
             disabled={isLoading}
-            className="flex-1"
+            className="min-w-24 flex-1 lg:flex-initial"
           >
             취소
           </Button>
           <Button
             onClick={handleConfirm}
             isLoading={isLoading}
-            className="flex-1"
+            className="min-w-24 flex-1 lg:flex-initial"
           >
             완료
           </Button>
-        </DrawerFooter>
+        </ResponsiveModalFooter>
 
-        {/* Safe area padding for iOS */}
-        <div className="h-[env(safe-area-inset-bottom,0px)] bg-white" />
-      </DrawerContent>
-    </Drawer>
+        <div className="h-[env(safe-area-inset-bottom,0px)] bg-white lg:hidden" />
+      </ResponsiveModalContent>
+    </ResponsiveModal>
   );
 }

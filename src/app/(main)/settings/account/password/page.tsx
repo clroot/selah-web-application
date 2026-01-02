@@ -67,7 +67,7 @@ export default function PasswordSettingsPage() {
 
   return (
     <div className="min-h-screen bg-cream pb-safe">
-      <header className="flex items-center gap-1 px-3 pb-4 pt-14">
+      <header className="flex items-center gap-1 px-3 pb-4 pt-14 lg:hidden">
         <Link
           href="/settings/account"
           className="-ml-1 flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-sand/50"
@@ -77,7 +77,11 @@ export default function PasswordSettingsPage() {
         <h1 className="text-base font-medium text-deep-brown">{title}</h1>
       </header>
 
-      <section className="px-6 py-4">
+      <header className="hidden px-4 pb-6 pt-14 md:px-6 lg:block lg:px-8">
+        <h1 className="text-2xl font-bold text-deep-brown">{title}</h1>
+      </header>
+
+      <section className="px-4 py-4 md:px-6 lg:px-8">
         <div className="mb-6 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sand/50">
             <Icon className="h-6 w-6 text-soft-brown" strokeWidth={1.5} />

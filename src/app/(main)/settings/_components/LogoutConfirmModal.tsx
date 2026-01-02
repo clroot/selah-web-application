@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
-import { Button } from "@/shared/components/Button";
+  Button,
+  ResponsiveModal,
+  ResponsiveModalContent,
+  ResponsiveModalDescription,
+  ResponsiveModalFooter,
+  ResponsiveModalHeader,
+  ResponsiveModalTitle,
+} from "@/shared/components";
 
 interface LogoutConfirmModalProps {
   isOpen: boolean;
@@ -17,9 +17,6 @@ interface LogoutConfirmModalProps {
   isLoading: boolean;
 }
 
-/**
- * 로그아웃 확인 모달 (바텀시트)
- */
 export function LogoutConfirmModal({
   isOpen,
   onClose,
@@ -27,23 +24,26 @@ export function LogoutConfirmModal({
   isLoading,
 }: LogoutConfirmModalProps) {
   return (
-    <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent>
-        <DrawerHeader className="text-center">
-          <DrawerTitle className="font-serif text-lg text-deep-brown">
+    <ResponsiveModal open={isOpen} onOpenChange={onClose}>
+      <ResponsiveModalContent className="gap-4 lg:gap-8">
+        <ResponsiveModalHeader className="text-center lg:mb-2">
+          <ResponsiveModalTitle className="font-serif text-lg text-deep-brown">
             로그아웃
-          </DrawerTitle>
-          <DrawerDescription className="text-soft-brown">
+          </ResponsiveModalTitle>
+          <ResponsiveModalDescription className="text-soft-brown">
             정말 로그아웃 하시겠습니까?
-          </DrawerDescription>
-        </DrawerHeader>
+          </ResponsiveModalDescription>
+        </ResponsiveModalHeader>
 
-        <DrawerFooter className="flex-row gap-3 px-6 pb-8">
+        <ResponsiveModalFooter
+          drawerClassName="flex-row gap-3 px-6 pb-8"
+          dialogClassName=""
+        >
           <Button
             variant="secondary"
             onClick={onClose}
             disabled={isLoading}
-            className="flex-1"
+            className="min-w-24 flex-1 lg:flex-initial"
           >
             취소
           </Button>
@@ -51,12 +51,12 @@ export function LogoutConfirmModal({
             variant="primary"
             onClick={onConfirm}
             isLoading={isLoading}
-            className="flex-1"
+            className="min-w-24 flex-1 lg:flex-initial"
           >
             로그아웃
           </Button>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+        </ResponsiveModalFooter>
+      </ResponsiveModalContent>
+    </ResponsiveModal>
   );
 }

@@ -10,16 +10,13 @@ interface RecentPrayersPreviewProps {
   isLoading?: boolean;
 }
 
-/**
- * 최근 기도문 미리보기 섹션
- */
 export function RecentPrayersPreview({
   prayers,
   isLoading,
 }: RecentPrayersPreviewProps) {
   if (isLoading) {
     return (
-      <section className="px-6">
+      <section>
         <SectionHeader title="최근 기도문" />
         <div className="space-y-3">
           {[1, 2].map((i) => (
@@ -34,11 +31,11 @@ export function RecentPrayersPreview({
   }
 
   if (prayers.length === 0) {
-    return null; // EmptyHomeState에서 처리
+    return null;
   }
 
   return (
-    <section className="px-6">
+    <section>
       <SectionHeader title="최근 기도문" href="/prayers" />
       <div className="space-y-3">
         {prayers.map((prayer) => (

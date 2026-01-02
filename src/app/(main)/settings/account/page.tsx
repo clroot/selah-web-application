@@ -53,15 +53,21 @@ export default function AccountPage() {
 
   return (
     <div className="min-h-screen bg-cream pb-safe">
-      {/* 헤더 */}
-      <header className="flex items-center gap-1 px-3 pb-4 pt-14">
-        <Link
-          href="/settings"
-          className="-ml-1 flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-sand/50"
-        >
-          <ArrowLeft className="h-5 w-5 text-deep-brown" strokeWidth={1.5} />
-        </Link>
-        <h1 className="text-base font-medium text-deep-brown">계정 관리</h1>
+      <header className="px-4 md:px-6 lg:px-8">
+        <div className="flex items-center gap-1 pb-4 pt-14 lg:hidden">
+          <Link
+            href="/settings"
+            className="-ml-1 flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-sand/50"
+          >
+            <ArrowLeft className="h-5 w-5 text-deep-brown" strokeWidth={1.5} />
+          </Link>
+          <h1 className="text-base font-medium text-deep-brown">계정 관리</h1>
+        </div>
+        <div className="hidden lg:block lg:py-8">
+          <h1 className="font-serif text-2xl font-bold text-deep-brown">
+            계정 관리
+          </h1>
+        </div>
       </header>
 
       {/* 연결된 소셜 계정 */}

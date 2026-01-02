@@ -41,25 +41,32 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-cream pb-safe">
-      <ProfileCard
-        nickname={user.nickname}
-        email={user.email}
-        profileImageUrl={user.profileImageUrl}
-      />
+    <div className="min-h-screen bg-cream pb-safe px-4 md:px-6 lg:px-8 pt-4">
+      <div className="mx-auto max-w-4xl">
+        <div className="lg:grid lg:grid-cols-2 lg:gap-8">
+          <div>
+            <ProfileCard
+              nickname={user.nickname}
+              email={user.email}
+              profileImageUrl={user.profileImageUrl}
+            />
+          </div>
 
-      <div className="mx-6 h-px bg-sand" />
+          <div className="lg:pt-16">
+            <div className="lg:hidden mx-6 h-px bg-sand mb-2" />
+            
+            <SettingsMenu onLogoutClick={handleLogoutClick} />
+            <AppVersion />
+          </div>
+        </div>
 
-      <SettingsMenu onLogoutClick={handleLogoutClick} />
-
-      <AppVersion />
-
-      <LogoutConfirmModal
-        isOpen={showLogoutModal}
-        onClose={handleLogoutCancel}
-        onConfirm={handleLogoutConfirm}
-        isLoading={isPending}
-      />
+        <LogoutConfirmModal
+          isOpen={showLogoutModal}
+          onClose={handleLogoutCancel}
+          onConfirm={handleLogoutConfirm}
+          isLoading={isPending}
+        />
+      </div>
     </div>
   );
 }

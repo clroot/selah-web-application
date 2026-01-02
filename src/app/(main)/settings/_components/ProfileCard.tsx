@@ -18,8 +18,7 @@ export function ProfileCard({
   profileImageUrl,
 }: ProfileCardProps) {
   return (
-    <div className="flex flex-col items-center px-6 pb-10 pt-16">
-      {/* 아바타 */}
+    <div className="flex flex-col items-center pb-10 pt-16">
       <div className="mb-4 flex h-[88px] w-[88px] items-center justify-center rounded-full border border-sand bg-sand/50">
         {profileImageUrl ? (
           <Image
@@ -34,13 +33,10 @@ export function ProfileCard({
         )}
       </div>
 
-      {/* 닉네임 */}
       <h2 className="mb-1 text-xl font-medium text-deep-brown">{nickname}</h2>
 
-      {/* 이메일 */}
       <p className="mb-5 text-sm text-soft-brown/70">{email}</p>
 
-      {/* 프로필 수정 버튼 */}
       <Link
         href="/settings/profile/edit"
         className="rounded-full border border-sand px-7 py-3 text-sm font-medium text-soft-brown transition-colors hover:border-warm-beige hover:bg-sand/30"

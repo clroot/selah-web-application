@@ -16,7 +16,7 @@ export function LookbackSection() {
   const { mutate: refresh, isPending: isRefreshing } = useRefreshLookback();
 
   return (
-    <section className="px-6">
+    <section>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-base font-medium text-deep-brown">
           오늘의 돌아보기

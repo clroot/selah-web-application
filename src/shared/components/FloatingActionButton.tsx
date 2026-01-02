@@ -22,6 +22,7 @@ export function FloatingActionButton({
     "transition-all duration-200",
     "hover:bg-gold/90 hover:shadow-xl",
     "active:scale-95",
+    "lg:hidden",
   );
 
   if (onClick) {

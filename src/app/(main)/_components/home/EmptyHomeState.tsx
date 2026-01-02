@@ -5,7 +5,7 @@ import { BookOpen } from "lucide-react";
  */
 export function EmptyHomeState() {
   return (
-    <div className="px-6 py-12 text-center">
+    <div className="py-12 text-center">
       <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sand">
         <BookOpen className="h-7 w-7 text-soft-brown" strokeWidth={1.5} />
       </div>

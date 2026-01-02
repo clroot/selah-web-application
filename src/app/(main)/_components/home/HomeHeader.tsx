@@ -20,7 +20,7 @@ export function HomeHeader() {
   const profileImageUrl = user?.profileImageUrl;
 
   return (
-    <header className="px-6 pt-14 pb-6">
+    <header className="px-4 md:px-6 lg:px-8 pt-14 pb-6">
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <p className="text-sm text-soft-brown">{greeting}</p>

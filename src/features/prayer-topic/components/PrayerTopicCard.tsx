@@ -29,7 +29,7 @@ export function PrayerTopicCard({ topic, className }: PrayerTopicCardProps) {
     <Link
       href={`/prayer-topics/${topic.id}`}
       className={cn(
-        "block rounded-2xl border border-sand bg-white p-4",
+        "block rounded-2xl border border-sand bg-white p-4 md:p-5",
         "transition-all duration-200",
         "hover:border-soft-brown hover:shadow-sm",
         "focus:outline-none focus:ring-2 focus:ring-deep-brown focus:ring-offset-2",
