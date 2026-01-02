@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   Button,
@@ -17,6 +17,7 @@ interface AnswerCheckBottomSheetProps {
   onClose: () => void;
   onConfirm: (reflection?: string) => void;
   isLoading?: boolean;
+  initialReflection?: string;
 }
 
 export function AnswerCheckBottomSheet({
@@ -24,8 +25,15 @@ export function AnswerCheckBottomSheet({
   onClose,
   onConfirm,
   isLoading = false,
+  initialReflection,
 }: AnswerCheckBottomSheetProps) {
-  const [reflection, setReflection] = useState("");
+  const [reflection, setReflection] = useState(initialReflection ?? "");
+
+  useEffect(() => {
+    if (isOpen) {
+      setReflection(initialReflection ?? "");
+    }
+  }, [isOpen, initialReflection]);
 
   const handleOpenChange = useCallback(
     (open: boolean) => {

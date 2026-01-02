@@ -10,6 +10,7 @@ import {
   useCancelAnswer,
   useDeletePrayerTopic,
   useMarkAsAnswered,
+  useUpdateReflection,
 } from "@/features/prayer-topic/hooks";
 import {
   formatDate,
@@ -44,6 +45,8 @@ export function PrayerTopicDetail({
 
   const { mutateAsync: markAsAnswered, isPending: isMarking } =
     useMarkAsAnswered();
+  const { mutateAsync: updateReflection, isPending: isUpdating } =
+    useUpdateReflection();
   const { mutateAsync: cancelAnswer, isPending: isCanceling } =
     useCancelAnswer();
   const { mutateAsync: deleteTopic, isPending: isDeleting } =
@@ -63,10 +66,17 @@ export function PrayerTopicDetail({
 
   const handleAnswerCheck = useCallback(
     async (reflection?: string) => {
-      await markAsAnswered({ id: topic.id, reflection });
+      if (isAnswered) {
+        await updateReflection({
+          id: topic.id,
+          reflection: reflection ?? null,
+        });
+      } else {
+        await markAsAnswered({ id: topic.id, reflection });
+      }
       setIsAnswerSheetOpen(false);
     },
-    [markAsAnswered, topic.id],
+    [isAnswered, updateReflection, markAsAnswered, topic.id],
   );
 
   const handleCancelAnswer = useCallback(async () => {
@@ -149,12 +159,30 @@ export function PrayerTopicDetail({
           <p className="mb-1 text-sm font-medium text-deep-brown">
             응답일: {topic.answeredAt ? formatDate(topic.answeredAt) : "-"}
           </p>
-          {topic.reflection && (
+          {topic.reflection ? (
             <div className="mt-4 border-l-4 border-sand pl-4">
-              <p className="font-serif text-base italic leading-relaxed text-soft-brown">
-                &ldquo;{topic.reflection}&rdquo;
-              </p>
+              <div className="flex items-start justify-between gap-3">
+                <p className="flex-1 font-serif text-base italic leading-relaxed text-soft-brown">
+                  &ldquo;{topic.reflection}&rdquo;
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsAnswerSheetOpen(true)}
+                  className="flex-shrink-0 rounded-lg p-1.5 text-soft-brown hover:bg-warm-beige hover:text-deep-brown"
+                  aria-label="소감 수정"
+                >
+                  <Edit className="h-4 w-4" />
+                </button>
+              </div>
             </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsAnswerSheetOpen(true)}
+              className="mt-3 text-sm text-soft-brown hover:text-deep-brown"
+            >
+              + 소감 추가하기
+            </button>
           )}
         </div>
       )}
@@ -184,7 +212,8 @@ export function PrayerTopicDetail({
         isOpen={isAnswerSheetOpen}
         onClose={() => setIsAnswerSheetOpen(false)}
         onConfirm={handleAnswerCheck}
-        isLoading={isMarking}
+        isLoading={isMarking || isUpdating}
+        initialReflection={topic.reflection ?? undefined}
       />
 
       {/* 삭제 확인 모달 */}
