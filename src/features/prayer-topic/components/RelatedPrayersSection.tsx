@@ -73,7 +73,7 @@ export function RelatedPrayersSection({
     return (
       <section className={cn("mt-8", className)}>
         <h3 className="mb-4 text-base font-medium text-deep-brown">
-          관련 기도문
+          기도 기록
         </h3>
         <div className="space-y-3">
           {[1, 2].map((i) => (
@@ -91,7 +91,7 @@ export function RelatedPrayersSection({
     return (
       <section className={cn("mt-8", className)}>
         <h3 className="mb-4 text-base font-medium text-deep-brown">
-          관련 기도문
+          기도 기록
         </h3>
         <div className="rounded-2xl bg-warm-beige/30 p-6 text-center">
           <p className="text-sm text-soft-brown">
@@ -101,7 +101,7 @@ export function RelatedPrayersSection({
             href={`/prayers/new?prayerTopicId=${prayerTopicId}`}
             className="mt-3 inline-block text-sm font-medium text-deep-brown underline underline-offset-2"
           >
-            기도문 작성하기
+            첫 기도 드리기
           </Link>
         </div>
       </section>
@@ -112,7 +112,7 @@ export function RelatedPrayersSection({
     <section className={cn("mt-8", className)}>
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-base font-medium text-deep-brown">
-          관련 기도문 ({totalElements})
+          기도 기록 ({totalElements})
         </h3>
         {totalElements > 5 && (
           <Link

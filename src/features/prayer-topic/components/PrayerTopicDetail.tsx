@@ -134,7 +134,7 @@ export function PrayerTopicDetail({
           {topic.title}
         </h2>
         <div className="mt-2 flex items-center gap-3 text-sm text-soft-brown">
-          <span>시작일: {formatDate(topic.createdAt)}</span>
+          <span>시작한 날: {formatDate(topic.createdAt)}</span>
           {topic.prayerCount > 0 && (
             <span className="flex items-center gap-1">
               🙏 {topic.prayerCount}번 기도
